@@ -8,9 +8,9 @@
    version="1.1"
    id="svg1"
    xml:space="preserve"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
    sodipodi:docname="feature-original-pt_br.svg"
-   inkscape:export-filename="feature-original.png"
+   inkscape:export-filename="../../fastlane/metadata/android/pt-BR/images/featureGraphic.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -27,8 +27,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.71713664"
-     inkscape:cx="466.43831"
-     inkscape:cy="209.86238"
+     inkscape:cx="467.13552"
+     inkscape:cy="210.55959"
      inkscape:window-width="1920"
      inkscape:window-height="1011"
      inkscape:window-x="0"
@@ -42,156 +42,223 @@
      id="layer1"><g
        id="g11"
        transform="translate(1.9667542e-5,-14.949324)"><g
-         id="g10"
-         transform="translate(-42.803877)"><g
+         id="g10"><g
            id="g9"
-           transform="matrix(0.17033404,0,0,0.17033404,66.804799,45.445094)"><g
-             id="msrod-app">&#10;	<rect
+           transform="matrix(0.17033404,0,0,0.17033404,24.000922,45.445094)"><g
+             id="msrod-app">
+	<rect
    x="14"
    y="17"
    class="st0"
    width="401"
    height="401"
-   id="rect1" />&#10;	<path
+   id="rect1" />
+	<path
    id="XMLID_198_"
    class="st1"
-   d="m 356.68,311.22 51.89,-47.9 c 3.5,-3.23 5.49,-7.77 5.49,-12.54 V 51.96 c 0,-13.08 -10.6,-23.68 -23.68,-23.68 H 311.87 V 46.39 H 232.83 V 28.28 H 40.09 c -13.08,0 -23.68,10.6 -23.68,23.68 v 240.1 c 0,13.08 10.6,23.68 23.68,23.68 h 305.02 c 4.29,0 8.42,-1.62 11.57,-4.52 z" />&#10;	<path
+   d="m 356.68,311.22 51.89,-47.9 c 3.5,-3.23 5.49,-7.77 5.49,-12.54 V 51.96 c 0,-13.08 -10.6,-23.68 -23.68,-23.68 H 311.87 V 46.39 H 232.83 V 28.28 H 40.09 c -13.08,0 -23.68,10.6 -23.68,23.68 v 240.1 c 0,13.08 10.6,23.68 23.68,23.68 h 305.02 c 4.29,0 8.42,-1.62 11.57,-4.52 z" />
+	<path
    id="XMLID_197_"
    class="st2"
-   d="m 336.62,76.06 c 0,-4.37 -3.22,-7.9 -7.2,-7.9 H 320.45 210.97 202 v 210.41 h 8.97 109.49 8.97 c 3.97,0 7.2,-3.54 7.2,-7.9 V 76.06 Z" />&#10;	<path
+   d="m 336.62,76.06 c 0,-4.37 -3.22,-7.9 -7.2,-7.9 H 320.45 210.97 202 v 210.41 h 8.97 109.49 8.97 c 3.97,0 7.2,-3.54 7.2,-7.9 V 76.06 Z" />
+	<path
    id="XMLID_201_"
    class="st3"
-   d="M 98.91,68.16 H 70.4 c -5.32,0 -9.63,3.54 -9.63,7.9 v 194.61 c 0,4.36 4.31,7.9 9.63,7.9 H 98.91 202 V 68.16 Z" />&#10;	<g
-   id="g1">&#10;		&#10;			<rect
+   d="M 98.91,68.16 H 70.4 c -5.32,0 -9.63,3.54 -9.63,7.9 v 194.61 c 0,4.36 4.31,7.9 9.63,7.9 H 98.91 202 V 68.16 Z" />
+	<g
+   id="g1">
+		
+			<rect
    id="XMLID_00000177476149549461345060000013679366643204466854_"
    x="349.42001"
    y="76.169998"
    class="st4"
    width="64.639999"
-   height="13.07" />&#10;		&#10;			<rect
+   height="13.07" />
+		
+			<rect
    id="XMLID_00000169546053277236752240000005784948157316626106_"
    x="349.42001"
    y="118.34"
    class="st4"
    width="64.639999"
-   height="13.07" />&#10;		&#10;			<rect
+   height="13.07" />
+		
+			<rect
    id="XMLID_00000093142685573112660780000002542754467003524494_"
    x="366.13"
    y="139.42"
    class="st4"
    width="47.93"
-   height="13.07" />&#10;		&#10;			<rect
+   height="13.07" />
+		
+			<rect
    id="XMLID_00000009568882668821142370000013264646741150175128_"
    x="349.42001"
    y="160.50999"
    class="st4"
    width="64.639999"
-   height="13.07" />&#10;		&#10;			<rect
+   height="13.07" />
+		
+			<rect
    id="XMLID_00000093875098780103332830000012448213369764187053_"
    x="366.13"
    y="181.59"
    class="st4"
    width="47.93"
-   height="13.07" />&#10;		&#10;			<rect
+   height="13.07" />
+		
+			<rect
    id="XMLID_00000085973438587028534860000010099899504133536422_"
    x="349.42001"
    y="202.67999"
    class="st4"
    width="64.639999"
-   height="13.07" />&#10;		&#10;			<rect
+   height="13.07" />
+		
+			<rect
    id="XMLID_00000165913657869519627630000016809011409723135401_"
    x="366.13"
    y="97.25"
    class="st4"
    width="47.93"
-   height="13.07" />&#10;	</g>&#10;	<g
+   height="13.07" />
+	</g>
+	<g
    class="st0"
-   id="g3">&#10;		<polygon
+   id="g3">
+		<polygon
    class="st5"
-   points="206.36,333.59 206.36,235.65 281.27,235.65 281.27,333.59 320.8,333.59 243.81,405.47 166.83,333.59 "
-   id="polygon1" />&#10;		<g
+   points="281.27,235.65 281.27,333.59 320.8,333.59 243.81,405.47 166.83,333.59 206.36,333.59 206.36,235.65 "
+   id="polygon1" />
+		<g
    class="st6"
-   id="g2">&#10;			<path
+   id="g2">
+			<path
    class="st1"
    d="m 276.28,240.32 v 97.92 h 32.47 l -64.93,60.64 -64.92,-60.64 h 32.46 v -97.92 h 32.46 z m 9.98,-9.33 h -9.98 -32.47 -32.46 -9.98 v 9.33 88.6 H 178.9 154.76 l 17.08,15.94 64.91,60.62 7.06,6.59 7.07,-6.59 64.92,-60.62 17.04,-15.94 h -24.1 -22.48 v -88.6 z"
-   id="path1" />&#10;		</g>&#10;	</g>&#10;	<g
+   id="path1" />
+		</g>
+	</g>
+	<g
    class="st0"
-   id="g4">&#10;		&#10;			<rect
+   id="g4">
+		
+			<rect
    id="XMLID_00000078723693106931034790000002330301062538430890_"
    x="349.28"
    y="76.389999"
    class="st7"
    width="64.720001"
-   height="13.08" />&#10;		&#10;			<rect
+   height="13.08" />
+		
+			<rect
    id="XMLID_00000126323578876455002500000004865043836716040367_"
    x="349.28"
    y="118.59"
    class="st7"
    width="64.720001"
-   height="13.08" />&#10;		&#10;			<rect
+   height="13.08" />
+		
+			<rect
    id="XMLID_00000142166479435524122780000012213991136924747905_"
    x="366.01001"
    y="139.67999"
    class="st7"
    width="47.990002"
-   height="13.08" />&#10;		&#10;			<rect
+   height="13.08" />
+		
+			<rect
    id="XMLID_00000136399608247845073490000015388725630274905529_"
    x="349.28"
    y="160.78"
    class="st7"
    width="64.720001"
-   height="13.08" />&#10;		&#10;			<rect
+   height="13.08" />
+		
+			<rect
    id="XMLID_00000067223652842908300850000010719164576657014944_"
    x="366.01001"
    y="181.88"
    class="st7"
    width="47.990002"
-   height="13.08" />&#10;		&#10;			<rect
+   height="13.08" />
+		
+			<rect
    id="XMLID_00000132780733853115923440000012588448241182016693_"
    x="349.28"
    y="202.97"
    class="st7"
    width="64.720001"
-   height="13.08" />&#10;		&#10;			<rect
+   height="13.08" />
+		
+			<rect
    id="XMLID_00000104678395462155062930000013043695287669291392_"
    x="366.01001"
    y="97.489998"
    class="st7"
    width="47.990002"
-   height="13.08" />&#10;	</g>&#10;	<g
+   height="13.08" />
+	</g>
+	<g
    class="st0"
-   id="g6">&#10;		<polygon
+   id="g6">
+		<polygon
    class="st8"
-   points="206.13,333.97 206.13,235.97 281.08,235.97 281.08,333.97 320.64,333.97 243.6,405.89 166.57,333.97 "
-   id="polygon4" />&#10;		<g
+   points="281.08,235.97 281.08,333.97 320.64,333.97 243.6,405.89 166.57,333.97 206.13,333.97 206.13,235.97 "
+   id="polygon4" />
+		<g
    class="st6"
-   id="g5">&#10;			<path
+   id="g5">
+			<path
    class="st3"
    d="m 276.09,240.64 v 97.98 h 32.49 L 243.6,399.3 178.64,338.62 h 32.48 v -97.98 h 32.48 z m 9.99,-9.33 h -9.99 -32.49 -32.48 -9.99 v 9.33 88.65 H 178.64 154.5 l 17.09,15.95 64.95,60.65 7.06,6.59 7.08,-6.59 64.96,-60.65 17.05,-15.95 h -24.12 -22.5 v -88.65 -9.33 z"
-   id="path4" />&#10;		</g>&#10;	</g>&#10;	<g
-   id="g8">&#10;		<polygon
+   id="path4" />
+		</g>
+	</g>
+	<g
+   id="g8">
+		<polygon
    class="st9"
-   points="156.47,295.67 156.47,177.57 246.8,177.57 246.8,295.67 294.48,295.67 201.64,382.35 108.81,295.67 "
-   id="polygon6" />&#10;		<g
-   id="g7">&#10;			<path
+   points="246.8,177.57 246.8,295.67 294.48,295.67 201.64,382.35 108.81,295.67 156.47,295.67 156.47,177.57 "
+   id="polygon6" />
+		<g
+   id="g7">
+			<path
    class="st10"
    d="m 240.79,183.2 v 118.08 h 39.15 l -78.3,73.13 -78.28,-73.13 H 162.5 V 183.2 h 39.15 z m 12.03,-11.25 h -12.04 -39.15 -39.15 -12.04 v 11.25 106.84 h -27.1 -29.1 l 20.6,19.22 78.27,73.1 8.51,7.95 8.53,-7.95 78.29,-73.1 L 309,290.04 H 279.94 252.83 V 183.2 171.95 Z"
-   id="path6" />&#10;		</g>&#10;	</g>&#10;</g><g
-             id="Camada_2">&#10;</g></g><text
+   id="path6" />
+		</g>
+	</g>
+</g><g
+             id="Camada_2">
+</g></g><text
            xml:space="preserve"
-           style="font-size:22.5778px;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans';fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583"
-           x="168.76888"
+           style="font-size:22.5778px;font-family:FiraGO;-inkscape-font-specification:FiraGO;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+           x="125.965"
            y="75.315239"
            id="text9"><tspan
              sodipodi:role="line"
-             style="font-size:22.5778px;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583"
-             x="168.76888"
+             style="font-size:22.5778px;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583;-inkscape-font-specification:FiraGO;font-family:FiraGO;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+             x="125.965"
              y="75.315239"
              id="tspan2">Salvar</tspan><tspan
              sodipodi:role="line"
-             style="font-size:22.5778px;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583"
-             x="168.76888"
+             style="font-size:22.5778px;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583;-inkscape-font-specification:FiraGO;font-family:FiraGO;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+             x="125.965"
              y="103.53749"
              id="tspan3">Localmente</tspan></text></g></g></g><style
      type="text/css"
-     id="style1">&#10;	.st0{display:none;}&#10;	.st1{fill:#3C3C3B;}&#10;	.st2{opacity:0.57;fill:#989898;}&#10;	.st3{fill:#2D2D2D;}&#10;	.st4{fill:#FFCB00;}&#10;	.st5{display:inline;fill:#E34949;}&#10;	.st6{display:inline;}&#10;	.st7{display:inline;fill:#B5B5B5;}&#10;	.st8{display:inline;fill:#6C6C6C;}&#10;	.st9{fill:#E34949;}&#10;	.st10{fill:#232323;}&#10;</style></svg>
+     id="style1">
+	.st0{display:none;}
+	.st1{fill:#3C3C3B;}
+	.st2{opacity:0.57;fill:#989898;}
+	.st3{fill:#2D2D2D;}
+	.st4{fill:#FFCB00;}
+	.st5{display:inline;fill:#E34949;}
+	.st6{display:inline;}
+	.st7{display:inline;fill:#B5B5B5;}
+	.st8{display:inline;fill:#6C6C6C;}
+	.st9{fill:#E34949;}
+	.st10{fill:#232323;}
+</style></svg>
