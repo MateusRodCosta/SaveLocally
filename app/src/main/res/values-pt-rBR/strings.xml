@@ -48,7 +48,6 @@
     <string name="toast_saved_file_success">Arquivo salvo com sucesso!</string>
     <string name="toast_saved_file_failure">Ocorreu um erro ao salvar o arquivo.</string>
 
-    <string name="clear_button">Limpar</string>
     <string name="save_button">Salvar</string>
     <string name="back_arrow">Voltar</string>
 </resources>
