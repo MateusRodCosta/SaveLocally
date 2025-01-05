@@ -48,9 +48,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DetailsActivity : ComponentActivity() {
-    private lateinit var createFile: ActivityResultLauncher<String>
-    private lateinit var fileUri: Uri
-    private lateinit var uriData: UriData
+    private var createFile: ActivityResultLauncher<String>? = null
+    private var fileUri: Uri? = null
+    private var uriData: UriData? = null
 
     private var defaultSaveLocation: Uri? = null
     private var shouldSkipFilePicker: Boolean = false
@@ -64,16 +64,18 @@ class DetailsActivity : ComponentActivity() {
 
         getPreferences()
         handleIntent(intent)
-        val launchFilePicker = {
+        val launchFilePicker = launchFilePicker@{
+            if(uriData == null) return@launchFilePicker
+            val uriData = uriData!!
             if (shouldSkipFilePicker) {
                 lifecycleScope.launch {
                     val dir = DocumentFile.fromTreeUri(applicationContext, defaultSaveLocation!!)
                     val file = dir!!.createFile(uriData.type, uriData.displayName)
 
-                    if (file?.uri != null) handleFileSave(file.uri, fileUri)
+                    if (file?.uri != null) handleFileSave(file.uri, fileUri!!)
                 }
             } else {
-                createFile.launch(uriData.displayName)
+                    createFile?.launch(uriData.displayName)
             }
             Unit
         }
