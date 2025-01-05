@@ -1,0 +1,3 @@
+Implemented a fix for "lateinit property createFile has not been initialized".
+
+IMPORTANT: This is the last planned release with Android O (8.x) support.

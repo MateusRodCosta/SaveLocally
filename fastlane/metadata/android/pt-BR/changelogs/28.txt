@@ -1,0 +1,3 @@
+Implementado correção para o erro "lateinit property createFile has not been initialized".
+
+IMPORTANTE: Este é o último lançamento planejado com suporte ao Android O (8.x).
