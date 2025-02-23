@@ -30,7 +30,6 @@ import com.mateusrodcosta.apps.share2storage.model.UriData
 import java.io.*
 
 object Utils {
-    const val BUFFER_SIZE: Int = 1024
     const val CONTENT_ALPHA_DISABLED = 0.38f
 }
 
@@ -107,42 +106,54 @@ private fun getInputStreamForVirtualFile(
 
 fun saveFile(
     context: Context,
-    targeturi: Uri,
-    sourceuri: Uri,
+    targetUri: Uri,
+    sourceUri: Uri,
 ): Boolean {
-    val bis: BufferedInputStream?
-    var bos: BufferedOutputStream? = null
-    val input: InputStream?
-    var hasError = false
     try {
-        input = if (isVirtualFile(context, sourceuri)) {
-            getInputStreamForVirtualFile(context, sourceuri)
+        val inputStream = if (isVirtualFile(context, sourceUri)) {
+            getInputStreamForVirtualFile(context, sourceUri)
         } else {
-            context.contentResolver.openInputStream(sourceuri)
+            context.contentResolver.openInputStream(sourceUri)
         }
-        val output = context.contentResolver.openOutputStream(targeturi)
+        context.contentResolver.openOutputStream(targetUri)?.use { outputStream ->
 
-        bis = BufferedInputStream(input)
-        bos = BufferedOutputStream(output)
-
-        val buf = ByteArray(Utils.BUFFER_SIZE)
-        var numBytes = bis.read(buf)
-        while (numBytes != -1) {
-            bos.write(buf, 0, numBytes)
-            numBytes = bis.read(buf)
-        }
+            inputStream?.use {
+                BufferedInputStream(it).use { bis ->
+                    BufferedOutputStream(outputStream).use { bos ->
+                        bis.copyTo(bos)
+                    }
+                }
+            } ?: return false
+        } ?: return false
     } catch (e: Exception) {
         e.printStackTrace()
-        hasError = true
-    } finally {
-        try {
-            if (bos != null) {
-                bos.flush()
-                bos.close()
-            }
-        } catch (_: Exception) {
-        }
+        return false
     }
-    return !hasError
+    return true
 }
 
+fun saveTextToFile(
+    context: Context,
+    targetUri: Uri,
+    content: CharSequence?,
+): Boolean {
+    content?.let {
+
+        try {
+            context.contentResolver.openOutputStream(targetUri)?.use { outputStream ->
+                it.toString().byteInputStream().use { inputStream ->
+                    BufferedInputStream(inputStream).use { bis ->
+                        BufferedOutputStream(outputStream).use { bos ->
+                            bis.copyTo(bos)
+                        }
+                    }
+                }
+            } ?: return false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+        return true
+    }
+    return false
+}

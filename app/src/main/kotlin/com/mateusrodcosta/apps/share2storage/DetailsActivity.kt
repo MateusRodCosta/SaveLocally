@@ -43,6 +43,7 @@ import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferencesDefaultValues
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFile
+import com.mateusrodcosta.apps.share2storage.utils.saveTextToFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,11 +52,13 @@ class DetailsActivity : ComponentActivity() {
     private var createFile: ActivityResultLauncher<String>? = null
     private var fileUri: Uri? = null
     private var uriData: UriData? = null
+    private var content: CharSequence? = null
 
     private var defaultSaveLocation: Uri? = null
     private var shouldSkipFilePicker: Boolean = false
     private var skipFileDetails: Boolean = false
     private var shouldShowFilePreview: Boolean = true
+    private var shouldFinishAfterSave: Boolean = false
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +68,11 @@ class DetailsActivity : ComponentActivity() {
         getPreferences()
         handleIntent(intent)
         val launchFilePicker = launchFilePicker@{
-            if(uriData == null) return@launchFilePicker
+            if (content != null) {
+                createFile?.launch("text.txt")
+                return@launchFilePicker
+            }
+            if (uriData == null) return@launchFilePicker
             val uriData = uriData!!
             if (shouldSkipFilePicker) {
                 lifecycleScope.launch {
@@ -75,7 +82,7 @@ class DetailsActivity : ComponentActivity() {
                     if (file?.uri != null) handleFileSave(file.uri, fileUri!!)
                 }
             } else {
-                    createFile?.launch(uriData.displayName)
+                createFile?.launch(uriData.displayName)
             }
             Unit
         }
@@ -118,7 +125,6 @@ class DetailsActivity : ComponentActivity() {
         // Only skip file picker if both a default folder is set and "Skip File Picker is selected"
         this.shouldSkipFilePicker = defaultSaveLocation != null && skipFilePicker
 
-
         val skipFileDetails = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT
@@ -132,17 +138,45 @@ class DetailsActivity : ComponentActivity() {
         )
         Log.d("details] showFilePreview", showFilePreview.toString())
         this.shouldShowFilePreview = !skipFileDetails && showFilePreview
+        this.shouldFinishAfterSave = skipFileDetails || shouldSkipFilePicker
     }
 
     private fun handleIntent(intent: Intent?) {
-        val fileUri: Uri? = if (intent?.action == Intent.ACTION_SEND) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
-                Intent.EXTRA_STREAM, Uri::class.java
-            )
-            else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
-        } else if (intent?.action == Intent.ACTION_VIEW) intent.data
+        if (intent == null) return
+        var fileUri: Uri? = null
+        var content: CharSequence? = null
+
+        if (intent.action == Intent.ACTION_SEND) {
+            if (intent.type == "text/plain") {
+                content = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
+                Log.d("content", content.toString())
+            }
+            if (content == null) {
+                fileUri =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
+                        Intent.EXTRA_STREAM, Uri::class.java
+                    )
+                    else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
+            }
+        } else if (intent.action == Intent.ACTION_VIEW) intent.data
         else null
-        Log.d("fileUri", "Action: ${intent?.action}, uri: $fileUri")
+        Log.d("fileUri", "Action: ${intent.action}, uri: $fileUri")
+
+        if (content != null) {
+            createFile = registerForActivityResult(
+                CreateDocumentWithInitialUri("text/plain", defaultSaveLocation)
+            ) { uri ->
+                if (uri == null) {
+                    if (skipFileDetails) finish()
+                } else {
+                    lifecycleScope.launch {
+                        handleTextSave(uri, content)
+                    }
+                }
+            }
+            this.content = content
+            return
+        }
 
         if (fileUri == null) return
         this.fileUri = fileUri
@@ -177,9 +211,25 @@ class DetailsActivity : ComponentActivity() {
                 ).show()
             }
 
-            if (skipFileDetails || shouldSkipFilePicker) {
-                finish()
+            if (shouldFinishAfterSave) finish()
+        }
+    }
+
+    private suspend fun handleTextSave(uri: Uri, content: CharSequence) {
+        return withContext(Dispatchers.IO) {
+            val isSuccess = saveTextToFile(baseContext, uri, content)
+
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    baseContext, if (isSuccess) {
+                        R.string.toast_saved_file_success
+                    } else {
+                        R.string.toast_saved_file_failure
+                    }, Toast.LENGTH_LONG
+                ).show()
             }
+
+            if (shouldFinishAfterSave) finish()
         }
     }
 }
