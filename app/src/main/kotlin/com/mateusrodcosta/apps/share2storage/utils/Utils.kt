@@ -38,7 +38,8 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
     val displayName: String?
     val size: Long?
 
-    val cursor = contentResolver.query(uri, null, null, null, null)
+    val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE)
+    val cursor = contentResolver.query(uri, projection, null, null, null)
     if (cursor == null) return null
 
     /*
