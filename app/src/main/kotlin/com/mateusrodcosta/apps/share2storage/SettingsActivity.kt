@@ -33,17 +33,19 @@ class SettingsActivity : ComponentActivity() {
 
     private val getSaveLocationDirIntent =
         registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-            if (uri == null) return@registerForActivityResult
+            when (uri) {
+                null -> Log.i("settings] getSaveLocationDir] uri", "cancelled directory selection")
+                else -> {
+                    Log.i("settings] getSaveLocationDir] uri", uri.toString())
+                    Log.i("settings] getSaveLocationDir] uri.path", uri.path.toString())
 
-            Log.d("settings] getSaveLocationDir] uri", uri.toString())
-            Log.d("settings] getSaveLocationDir] uri.path", uri.path.toString())
-
-            settingsViewModel.updateDefaultSaveLocation(uri)
+                    settingsViewModel.updateDefaultSaveLocation(uri)
+                }
+            }
         }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 

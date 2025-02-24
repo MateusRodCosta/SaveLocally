@@ -19,10 +19,7 @@ package com.mateusrodcosta.apps.share2storage
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -32,6 +29,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.LaunchedEffect
+import androidx.core.content.IntentCompat
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
@@ -67,39 +65,40 @@ class DetailsActivity : ComponentActivity() {
 
         getPreferences()
         handleIntent(intent)
-        val launchFilePicker = launchFilePicker@{
-            if (content != null) {
-                createFile?.launch("text.txt")
-                return@launchFilePicker
-            }
-            if (uriData == null) return@launchFilePicker
-            val uriData = uriData!!
-            if (shouldSkipFilePicker) {
-                lifecycleScope.launch {
-                    val dir = DocumentFile.fromTreeUri(applicationContext, defaultSaveLocation!!)
-                    val file = dir!!.createFile(uriData.type, uriData.displayName)
-
-                    if (file?.uri != null) handleFileSave(file.uri, fileUri!!)
+        val launchFilePicker = {
+            when {
+                content != null -> createFile?.launch("text.txt")
+                uriData != null -> {
+                    if (shouldSkipFilePicker) {
+                        lifecycleScope.launch {
+                            val dir = defaultSaveLocation?.let {
+                                DocumentFile.fromTreeUri(
+                                    applicationContext, it
+                                )
+                            }
+                            val file = dir?.createFile(uriData!!.type, uriData!!.displayName)
+                            file?.uri?.let { handleFileSave(it, fileUri!!) }
+                        }
+                    } else {
+                        createFile?.launch(uriData!!.displayName)
+                    }
                 }
-            } else {
-                createFile?.launch(uriData.displayName)
             }
-            Unit
         }
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
             if (skipFileDetails) {
-                LaunchedEffect(key1 = Unit) {
+                LaunchedEffect(Unit) {
                     launchFilePicker()
                 }
                 DetailsScreenSkipped()
             } else {
                 DetailsScreen(
-                    uriData = uriData,
-                    windowSizeClass = windowSizeClass,
-                    launchFilePicker = launchFilePicker,
+                    uriData,
+                    windowSizeClass,
+                    launchFilePicker,
                 )
             }
         }
@@ -110,18 +109,18 @@ class DetailsActivity : ComponentActivity() {
 
         val defaultSaveLocationRaw =
             sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
-        Log.d("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
+        Log.i("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
         val defaultSaveLocation =
             if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
             else null
-        Log.d("details] defaultSaveLocation", defaultSaveLocation.toString())
+        Log.i("details] defaultSaveLocation", defaultSaveLocation.toString())
         this.defaultSaveLocation = defaultSaveLocation
 
         val skipFilePicker = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SKIP_FILE_PICKER_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT
         )
-        Log.d("details] skipFilePicker", skipFilePicker.toString())
+        Log.i("details] skipFilePicker", skipFilePicker.toString())
         // Only skip file picker if both a default folder is set and "Skip File Picker is selected"
         this.shouldSkipFilePicker = defaultSaveLocation != null && skipFilePicker
 
@@ -129,40 +128,47 @@ class DetailsActivity : ComponentActivity() {
             SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT
         )
-        Log.d("details] skipFileDetails", skipFileDetails.toString())
+        Log.i("details] skipFileDetails", skipFileDetails.toString())
         this.skipFileDetails = skipFileDetails
 
         val showFilePreview = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY,
             SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT
         )
-        Log.d("details] showFilePreview", showFilePreview.toString())
+        Log.i("details] showFilePreview", showFilePreview.toString())
+
         this.shouldShowFilePreview = !skipFileDetails && showFilePreview
         this.shouldFinishAfterSave = skipFileDetails || shouldSkipFilePicker
     }
 
     private fun handleIntent(intent: Intent?) {
-        if (intent == null) return
-        var fileUri: Uri? = null
-        var content: CharSequence? = null
+        val intent = intent ?: return
 
-        if (intent.action == Intent.ACTION_SEND) {
-            if (intent.type == "text/plain") {
-                content = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
-                Log.d("content", content.toString())
-            }
-            if (content == null) {
-                fileUri =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getParcelableExtra(
-                        Intent.EXTRA_STREAM, Uri::class.java
-                    )
-                    else @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
-            }
-        } else if (intent.action == Intent.ACTION_VIEW) intent.data
-        else null
+        val (action, type, data) = intent.let {
+            Triple(it.action, it.type, it.data)
+        }
+
+        val content = when (action) {
+            Intent.ACTION_SEND -> if (type == "text/plain") {
+                intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
+            } else null
+
+            else -> null
+        }
+        Log.i("content", content.toString())
+
+        val fileUri = when (action) {
+            Intent.ACTION_SEND -> if (content == null) {
+                IntentCompat.getParcelableExtra<Uri>(intent, Intent.EXTRA_STREAM, Uri::class.java)
+            } else null
+
+            Intent.ACTION_VIEW -> data
+            else -> null
+        }
+        Log.d("fileUri raw", fileUri.toString())
         Log.d("fileUri", "Action: ${intent.action}, uri: $fileUri")
 
-        if (content != null) {
+        content?.let {
             createFile = registerForActivityResult(
                 CreateDocumentWithInitialUri("text/plain", defaultSaveLocation)
             ) { uri ->
@@ -174,62 +180,64 @@ class DetailsActivity : ComponentActivity() {
                     }
                 }
             }
-            this.content = content
+            this.content = it
             return
         }
 
-        if (fileUri == null) return
-        this.fileUri = fileUri
-        val uriData = getUriData(contentResolver, fileUri, getPreview = shouldShowFilePreview)
-        if (uriData == null) return
-        this.uriData = uriData
+        fileUri?.let {
+            this.fileUri = fileUri
+            val uriData =
+                getUriData(contentResolver, fileUri, getPreview = shouldShowFilePreview) ?: return
 
-        createFile = registerForActivityResult(
-            CreateDocumentWithInitialUri(uriData.type, defaultSaveLocation)
-        ) { uri ->
-            if (uri == null) {
-                if (skipFileDetails) finish()
-            } else {
-                lifecycleScope.launch {
-                    handleFileSave(uri, fileUri)
+            this.uriData = uriData
+
+            createFile = registerForActivityResult(
+                CreateDocumentWithInitialUri(uriData.type, defaultSaveLocation)
+            ) { uri ->
+                if (uri == null) {
+                    if (skipFileDetails) finish()
+                } else {
+                    lifecycleScope.launch {
+                        handleFileSave(uri, fileUri)
+                    }
                 }
             }
         }
     }
 
     private suspend fun handleFileSave(uri: Uri, fileUri: Uri) {
-        return withContext(Dispatchers.IO) {
-            val isSuccess = saveFileToFile(baseContext, baseContext.contentResolver, uri, fileUri)
-
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    baseContext, if (isSuccess) {
-                        R.string.toast_saved_file_success
-                    } else {
-                        R.string.toast_saved_file_failure
-                    }, Toast.LENGTH_LONG
-                ).show()
-            }
-
-            if (shouldFinishAfterSave) finish()
+        val isSuccess = withContext(Dispatchers.IO) {
+            saveFileToFile(baseContext, baseContext.contentResolver, uri, fileUri)
         }
+
+        withContext(Dispatchers.Main) {
+            Toast.makeText(
+                baseContext, if (isSuccess) {
+                    R.string.toast_saved_file_success
+                } else {
+                    R.string.toast_saved_file_failure
+                }, Toast.LENGTH_LONG
+            ).show()
+        }
+
+        if (shouldFinishAfterSave) finish()
     }
 
     private suspend fun handleTextSave(uri: Uri, content: CharSequence) {
-        return withContext(Dispatchers.IO) {
-            val isSuccess = saveTextToFile(baseContext.contentResolver, uri, content)
-
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    baseContext, if (isSuccess) {
-                        R.string.toast_saved_file_success
-                    } else {
-                        R.string.toast_saved_file_failure
-                    }, Toast.LENGTH_LONG
-                ).show()
-            }
-
-            if (shouldFinishAfterSave) finish()
+        val isSuccess = withContext(Dispatchers.IO) {
+            saveTextToFile(baseContext.contentResolver, uri, content)
         }
+
+        withContext(Dispatchers.Main) {
+            Toast.makeText(
+                baseContext, if (isSuccess) {
+                    R.string.toast_saved_file_success
+                } else {
+                    R.string.toast_saved_file_failure
+                }, Toast.LENGTH_LONG
+            ).show()
+        }
+
+        if (shouldFinishAfterSave) finish()
     }
 }
