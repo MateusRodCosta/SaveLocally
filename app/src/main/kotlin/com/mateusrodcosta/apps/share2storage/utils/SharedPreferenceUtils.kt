@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
