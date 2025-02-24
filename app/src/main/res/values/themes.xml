@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.App" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.App" parent="Theme.Material3.DynamicColors.DayNight">
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
