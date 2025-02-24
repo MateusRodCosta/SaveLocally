@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
+ *     Copyright (C) 2025 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -18,25 +18,41 @@
 package com.mateusrodcosta.apps.share2storage
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.mateusrodcosta.apps.share2storage.screens.MainScreen
+import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
+import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
 
-class MainActivity : ComponentActivity() {
+class SettingsActivity : ComponentActivity() {
+
+    private val settingsViewModel: SettingsViewModel = SettingsViewModel()
+
+    private val getSaveLocationDirIntent =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            if (uri == null) return@registerForActivityResult
+
+            Log.d("settings] getSaveLocationDir] uri", uri.toString())
+            Log.d("settings] getSaveLocationDir] uri.path", uri.path.toString())
+
+            settingsViewModel.updateDefaultSaveLocation(uri)
+        }
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        setContent {
-            val windowSizeClass = calculateWindowSizeClass(this)
+        settingsViewModel.initializeWithContext(applicationContext)
+        settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
+        settingsViewModel.initPreferences()
 
-            MainScreen(windowSizeClass)
+        setContent {
+            SettingsScreen(settingsViewModel)
         }
     }
 }
