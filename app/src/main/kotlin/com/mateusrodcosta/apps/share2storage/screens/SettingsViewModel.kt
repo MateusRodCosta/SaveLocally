@@ -28,8 +28,8 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
-import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
+import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceUtils
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferencesDefaultValues
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -66,7 +66,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun initializeWithContext(context: Context) {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        sharedPreferences = SharedPreferenceUtils.getDefaultSharedPreferences(context)
         contentResolver = context.contentResolver
         packageManager = context.packageManager
         packageName = context.packageName

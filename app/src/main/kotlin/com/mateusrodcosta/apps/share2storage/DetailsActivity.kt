@@ -32,12 +32,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.IntentCompat
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.PreferenceManager
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSkipped
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
+import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceUtils
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferencesDefaultValues
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFileToFile
@@ -105,7 +105,7 @@ class DetailsActivity : ComponentActivity() {
     }
 
     private fun getPreferences() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val sharedPreferences = SharedPreferenceUtils.getDefaultSharedPreferences(this)
 
         val defaultSaveLocationRaw =
             sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)

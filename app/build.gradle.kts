@@ -68,8 +68,7 @@ android {
     }
 
     androidResources {
-        @Suppress("UnstableApiUsage")
-        generateLocaleConfig = true
+        @Suppress("UnstableApiUsage") generateLocaleConfig = true
     }
     buildFeatures {
         buildConfig = true
@@ -96,9 +95,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.coroutines)
+    implementation(libs.bundles.androidx.integration)
     implementation(libs.bundles.androidx.ktx)
-    implementation(libs.splashscreen)
+    implementation(libs.coroutines)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)

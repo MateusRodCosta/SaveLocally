@@ -1,22 +1,23 @@
 [versions]
 agp = "8.8.1"
 kotlin = "2.1.10"
-ktx = "1.15.0"
-preference-ktx = "1.2.1"
-lifecycle-runtime-ktx = "2.8.7"
+appcompat = "1.7.0"
+documentfile = "1.0.1"
 splashscreen = "1.0.1"
+ktx = "1.15.0"
+lifecycle-runtime-ktx = "2.8.7"
+coroutines = "1.7.3"
 composeBom = "2025.02.00"
 activityCompose = "1.10.0"
-navigationCompose = "2.8.7"
 junit = "4.13.2"
 androidxTestRunner = "1.6.2"
 androidxTestRules = "1.6.1"
-coroutines = "1.7.3"
 
 [libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference-ktx" }
+documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -28,16 +29,16 @@ compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
 
 [bundles]
-androidx-ktx = ["core.ktx", "preference.ktx", "lifecycle.runtime.ktx"]
+androidx-integration = ["appcompat", "documentfile", "splashscreen"]
+androidx-ktx = ["core.ktx", "lifecycle.runtime.ktx"]
 compose = ["compose.material3", "compose.material3.window.size.classes", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
 compose-debug = ["compose.ui.tooling", "compose.ui.test.manifest"]
-compose-integration = ["activity.compose", "navigation.compose"]
+compose-integration = ["activity.compose"]
 testing = ["junit"]
 ui-testing = ["test.runner", "test.rules", "compose.ui.test.junit4"]
 
