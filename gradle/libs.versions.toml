@@ -5,7 +5,6 @@ appcompat = "1.7.0"
 documentfile = "1.0.1"
 splashscreen = "1.0.1"
 ktx = "1.15.0"
-lifecycle-runtime-ktx = "2.8.7"
 coroutines = "1.7.3"
 composeBom = "2025.02.00"
 activityCompose = "1.10.0"
@@ -18,7 +17,6 @@ appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat"
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
@@ -35,12 +33,9 @@ test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxT
 
 [bundles]
 androidx-integration = ["appcompat", "documentfile", "splashscreen"]
-androidx-ktx = ["core.ktx", "lifecycle.runtime.ktx"]
+androidx-ktx = ["core.ktx"]
 compose = ["compose.material3", "compose.material3.window.size.classes", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
-compose-debug = ["compose.ui.tooling", "compose.ui.test.manifest"]
 compose-integration = ["activity.compose"]
-testing = ["junit"]
-ui-testing = ["test.runner", "test.rules", "compose.ui.test.junit4"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

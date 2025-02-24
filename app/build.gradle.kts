@@ -97,16 +97,19 @@ android {
 dependencies {
     implementation(libs.bundles.androidx.integration)
     implementation(libs.bundles.androidx.ktx)
-    implementation(libs.coroutines)
+    runtimeOnly(libs.coroutines)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
     implementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose.debug)
     implementation(libs.bundles.compose.integration)
+    debugImplementation(libs.compose.ui.tooling)
+    debugRuntimeOnly(libs.compose.ui.test.manifest)
 
-    testImplementation(libs.bundles.testing)
-    androidTestImplementation(libs.bundles.ui.testing)
+    testImplementation(libs.junit)
+    androidTestRuntimeOnly(libs.test.runner)
+    androidTestImplementation(libs.test.rules)
+    androidTestImplementation(libs.compose.ui.test.junit4)
 }
