@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -23,9 +23,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-import android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-import android.content.pm.PackageManager.DONT_KILL_APP
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -76,38 +73,41 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun initPreferences() {
-        val spDefaultSaveLocationRaw =
-            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
-        val spDefaultSaveLocation = if (spDefaultSaveLocationRaw != null) try {
-            val uri = Uri.parse(spDefaultSaveLocationRaw)
-
-            Log.d("settings] initSharedPreferences] uri", uri.toString())
-            Log.d("settings] initSharedPreferences] uri.path", uri.path.toString())
-
-            uri
-        } catch (_: Exception) {
-            null
+        val spDefaultSaveLocation =
+            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null).let {
+                Log.i("settings] initSharedPreferences] saveLocationRaw", it.toString())
+                try {
+                    Uri.parse(it)
+                } catch (_: Exception) {
+                    null
+                }
+            }
+        Log.i("settings] initSharedPreferences] saveLocation", spDefaultSaveLocation.toString())
+        spDefaultSaveLocation?.path?.let {
+            Log.i(
+                "settings] initSharedPreferences] saveLocation.path",
+                spDefaultSaveLocation.path.toString()
+            )
         }
-        else null
 
         val spSkipFilePicker = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SKIP_FILE_PICKER_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT
         )
-        Log.d("settings] initSharedPreferences] skipFilePicker", spSkipFilePicker.toString())
+        Log.i("settings] initSharedPreferences] skipFilePicker", spSkipFilePicker.toString())
 
 
         val spSkipFileDetails = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT
         )
-        Log.d("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
+        Log.i("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
 
         val spShowFilePreview = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY,
             SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT
         )
-        Log.d(
+        Log.i(
             "settings] initSharedPreferences] showFilePreview", spShowFilePreview.toString()
         )
 
@@ -115,7 +115,7 @@ class SettingsViewModel : ViewModel() {
             SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY,
             SharedPreferencesDefaultValues.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT
         )
-        Log.d(
+        Log.i(
             "settings] initSharedPreferences] interceptActionViewIntents",
             spInterceptActionViewIntents.toString()
         )
@@ -183,7 +183,7 @@ class SettingsViewModel : ViewModel() {
     fun updateInterceptActionViewIntents(value: Boolean) {
         sharedPreferences.edit(commit = true) {
             putBoolean(SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, value)
-            Log.e("settings] updateInterceptActionViewIntents", value.toString())
+            Log.i("settings] updateInterceptActionViewIntents", value.toString())
 
             try {
                 val component = ComponentName(
@@ -192,13 +192,13 @@ class SettingsViewModel : ViewModel() {
                 )
                 packageManager.setComponentEnabledSetting(
                     component,
-                    if (value) COMPONENT_ENABLED_STATE_ENABLED else COMPONENT_ENABLED_STATE_DISABLED,
-                    DONT_KILL_APP
+                    if (value) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP
                 )
 
                 _interceptActionViewIntents.value = value
             } catch (e: Exception) {
-                Log.e("settings] updateInterceptActionViewIntents", e.toString())
+                Log.i("settings] updateInterceptActionViewIntents", e.toString())
             }
         }
     }
@@ -206,7 +206,7 @@ class SettingsViewModel : ViewModel() {
     fun updateShowFilePreview(value: Boolean) {
         sharedPreferences.edit(commit = true) {
             putBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, value)
-            Log.e("settings] updateShowFilePreview", value.toString())
+            Log.i("settings] updateShowFilePreview", value.toString())
             _showFilePreview.value = value
         }
     }
@@ -214,7 +214,7 @@ class SettingsViewModel : ViewModel() {
     fun updateSkipFilePicker(value: Boolean) {
         sharedPreferences.edit(commit = true) {
             putBoolean(SharedPreferenceKeys.SKIP_FILE_PICKER_KEY, value)
-            Log.e("settings] updateSkipFilePicker", value.toString())
+            Log.i("settings] updateSkipFilePicker", value.toString())
             _skipFilePicker.value = value
         }
     }
