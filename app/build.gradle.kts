@@ -99,8 +99,6 @@ dependencies {
     implementation(libs.bundles.androidx.ktx)
     implementation(libs.coroutines)
 
-    implementation(libs.material)
-
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
