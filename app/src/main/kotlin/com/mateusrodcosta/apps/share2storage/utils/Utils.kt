@@ -72,12 +72,12 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
     return UriData(displayName, type, size, previewImage = bitmap)
 }
 
-private fun isVirtualFile(context: Context, uri: Uri): Boolean {
+private fun isVirtualFile(context: Context, contentResolver: ContentResolver, uri: Uri): Boolean {
 
     if (!DocumentsContract.isDocumentUri(context, uri)) {
         return false
     }
-    val cursor: Cursor = context.contentResolver.query(
+    val cursor: Cursor = contentResolver.query(
         uri, arrayOf(DocumentsContract.Document.COLUMN_FLAGS), null, null, null
     ) ?: return false
     var flags = 0
@@ -91,38 +91,33 @@ private fun isVirtualFile(context: Context, uri: Uri): Boolean {
 
 @Throws(IOException::class)
 private fun getInputStreamForVirtualFile(
-    context: Context,
+    contentResolver: ContentResolver,
     uri: Uri,
 ): InputStream? {
-    val resolver = context.contentResolver
     val filter = "*/*"
-    val openableMimeTypes = resolver.getStreamTypes(uri, filter)
+    val openableMimeTypes = contentResolver.getStreamTypes(uri, filter)
     if (openableMimeTypes.isNullOrEmpty()) {
         throw FileNotFoundException()
     }
-    return resolver.openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
+    return contentResolver.openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
         ?.createInputStream()
 }
 
-fun saveFile(
+fun saveFileToFile(
     context: Context,
+    contentResolver: ContentResolver,
     targetUri: Uri,
     sourceUri: Uri,
 ): Boolean {
     try {
-        val inputStream = if (isVirtualFile(context, sourceUri)) {
-            getInputStreamForVirtualFile(context, sourceUri)
+        val inputStream = if (isVirtualFile(context, contentResolver, sourceUri)) {
+            getInputStreamForVirtualFile(contentResolver, sourceUri)
         } else {
-            context.contentResolver.openInputStream(sourceUri)
+            contentResolver.openInputStream(sourceUri)
         }
-        context.contentResolver.openOutputStream(targetUri)?.use { outputStream ->
-
-            inputStream?.use {
-                BufferedInputStream(it).use { bis ->
-                    BufferedOutputStream(outputStream).use { bos ->
-                        bis.copyTo(bos)
-                    }
-                }
+        contentResolver.openOutputStream(targetUri)?.use { outputStream ->
+            inputStream?.use { inputStream ->
+                saveToFile(inputStream, outputStream)
             } ?: return false
         } ?: return false
     } catch (e: Exception) {
@@ -133,20 +128,15 @@ fun saveFile(
 }
 
 fun saveTextToFile(
-    context: Context,
+    contentResolver: ContentResolver,
     targetUri: Uri,
     content: CharSequence?,
 ): Boolean {
     content?.let {
-
         try {
-            context.contentResolver.openOutputStream(targetUri)?.use { outputStream ->
+            contentResolver.openOutputStream(targetUri)?.use { outputStream ->
                 it.toString().byteInputStream().use { inputStream ->
-                    BufferedInputStream(inputStream).use { bis ->
-                        BufferedOutputStream(outputStream).use { bos ->
-                            bis.copyTo(bos)
-                        }
-                    }
+                    saveToFile(inputStream, outputStream)
                 }
             } ?: return false
         } catch (e: Exception) {
@@ -156,4 +146,25 @@ fun saveTextToFile(
         return true
     }
     return false
+}
+
+fun saveToFile(
+    inputStream: InputStream,
+    outputStream: OutputStream,
+): Boolean {
+    try {
+        outputStream.use { outputStream ->
+            inputStream.use { inputStream ->
+                BufferedInputStream(inputStream).use { bis ->
+                    BufferedOutputStream(outputStream).use { bos ->
+                        bis.copyTo(bos)
+                    }
+                }
+            }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return false
+    }
+    return true
 }

@@ -42,7 +42,7 @@ import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferencesDefaultValues
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
-import com.mateusrodcosta.apps.share2storage.utils.saveFile
+import com.mateusrodcosta.apps.share2storage.utils.saveFileToFile
 import com.mateusrodcosta.apps.share2storage.utils.saveTextToFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -199,7 +199,7 @@ class DetailsActivity : ComponentActivity() {
 
     private suspend fun handleFileSave(uri: Uri, fileUri: Uri) {
         return withContext(Dispatchers.IO) {
-            val isSuccess = saveFile(baseContext, uri, fileUri)
+            val isSuccess = saveFileToFile(baseContext, baseContext.contentResolver, uri, fileUri)
 
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(
@@ -217,7 +217,7 @@ class DetailsActivity : ComponentActivity() {
 
     private suspend fun handleTextSave(uri: Uri, content: CharSequence) {
         return withContext(Dispatchers.IO) {
-            val isSuccess = saveTextToFile(baseContext, uri, content)
+            val isSuccess = saveTextToFile(baseContext.contentResolver, uri, content)
 
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(
