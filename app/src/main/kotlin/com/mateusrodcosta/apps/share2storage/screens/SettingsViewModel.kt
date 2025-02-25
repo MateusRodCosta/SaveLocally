@@ -131,44 +131,46 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun updateDefaultSaveLocation(value: Uri?) {
-        val currentSaveLocationRaw =
-            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
+        val currentSaveLocation =
+            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null).let {
+                try {
+                    Uri.parse(it)
+                } catch (_: Exception) {
+                    null
+                }
+            }
 
-        sharedPreferences.edit(commit = true) {
+        sharedPreferences.edit {
             if (value != null) putString(
                 SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, value.toString()
             )
             else remove(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY)
-
         }
 
-        val currentSaveLocation: Uri? = if (currentSaveLocationRaw != null) try {
-            Uri.parse(currentSaveLocationRaw)
-        } catch (_: Exception) {
-            null
-        }
-        else null
+        if (currentSaveLocation != value) {
+            currentSaveLocation?.let { saveLocationUri ->
+                contentResolver.persistedUriPermissions.find { it.uri == saveLocationUri }
+                    ?.let { permission ->
+                        val flags =
+                            (if (permission.isReadPermission) Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            else 0) or (if (permission.isWritePermission) Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                            else 0)
 
-        if (currentSaveLocation != null) {
-            contentResolver.persistedUriPermissions.forEach {
-                if (it.uri == currentSaveLocation) {
-                    val isRead = if (it.isReadPermission) Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    else 0
-                    val isWrite = if (it.isWritePermission) Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                    else 0
+                        contentResolver.releasePersistableUriPermission(
+                            currentSaveLocation, flags
+                        )
 
-                    contentResolver.releasePersistableUriPermission(
-                        currentSaveLocation, isRead or isWrite
-                    )
-                }
+                    }
             }
+
+            value?.let { newUri ->
+                contentResolver.takePersistableUriPermission(
+                    newUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }
+
+            _defaultSaveLocation.value = value
         }
-
-        if (value != null) contentResolver.takePersistableUriPermission(
-            value, Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-        )
-
-        _defaultSaveLocation.value = value
     }
 
     fun clearDefaultSaveLocation() {
@@ -176,7 +178,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun updateSkipFileDetails(value: Boolean) {
-        sharedPreferences.edit(commit = true) {
+        sharedPreferences.edit {
             putBoolean(SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY, value)
         }
 
@@ -184,7 +186,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun updateInterceptActionViewIntents(value: Boolean) {
-        sharedPreferences.edit(commit = true) {
+        sharedPreferences.edit {
             putBoolean(SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, value)
             Log.d("SettingsViewModel] updateInterceptActionViewIntents", value.toString())
 
@@ -207,7 +209,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun updateShowFilePreview(value: Boolean) {
-        sharedPreferences.edit(commit = true) {
+        sharedPreferences.edit {
             putBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, value)
             Log.d("SettingsViewModel] updateShowFilePreview", value.toString())
             _showFilePreview.value = value
@@ -215,7 +217,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun updateSkipFilePicker(value: Boolean) {
-        sharedPreferences.edit(commit = true) {
+        sharedPreferences.edit {
             putBoolean(SharedPreferenceKeys.SKIP_FILE_PICKER_KEY, value)
             Log.d("SettingsViewModel] updateSkipFilePicker", value.toString())
             _skipFilePicker.value = value
