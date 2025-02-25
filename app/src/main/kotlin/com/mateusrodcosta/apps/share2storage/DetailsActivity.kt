@@ -107,20 +107,25 @@ class DetailsActivity : ComponentActivity() {
     private fun getPreferences() {
         val sharedPreferences = SharedPreferenceUtils.getDefaultSharedPreferences(this)
 
-        val defaultSaveLocationRaw =
-            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null)
-        Log.i("details] defaultSaveLocationRaw", defaultSaveLocationRaw.toString())
         val defaultSaveLocation =
-            if (defaultSaveLocationRaw != null) Uri.parse(defaultSaveLocationRaw)
-            else null
-        Log.i("details] defaultSaveLocation", defaultSaveLocation.toString())
+            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null).let {
+                Log.d("DetailsActivity] getPreferences] defaultSaveLocationRaw", it.toString())
+                try {
+                    Uri.parse(it)
+                } catch (_: Exception) {
+                    null
+                }
+            }
+        Log.d(
+            "DetailsActivity] getPreferences] defaultSaveLocation", defaultSaveLocation.toString()
+        )
         this.defaultSaveLocation = defaultSaveLocation
 
         val skipFilePicker = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SKIP_FILE_PICKER_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT
         )
-        Log.i("details] skipFilePicker", skipFilePicker.toString())
+        Log.d("DetailsActivity] getPreferences] skipFilePicker", skipFilePicker.toString())
         // Only skip file picker if both a default folder is set and "Skip File Picker is selected"
         this.shouldSkipFilePicker = defaultSaveLocation != null && skipFilePicker
 
@@ -128,14 +133,14 @@ class DetailsActivity : ComponentActivity() {
             SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT
         )
-        Log.i("details] skipFileDetails", skipFileDetails.toString())
+        Log.d("DetailsActivity] getPreferences] skipFileDetails", skipFileDetails.toString())
         this.skipFileDetails = skipFileDetails
 
         val showFilePreview = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY,
             SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT
         )
-        Log.i("details] showFilePreview", showFilePreview.toString())
+        Log.d("DetailsActivity] getPreferences] showFilePreview", showFilePreview.toString())
 
         this.shouldShowFilePreview = !skipFileDetails && showFilePreview
         this.shouldFinishAfterSave = skipFileDetails || shouldSkipFilePicker
@@ -147,6 +152,7 @@ class DetailsActivity : ComponentActivity() {
         val (action, type, data) = intent.let {
             Triple(it.action, it.type, it.data)
         }
+        Log.d("getPreferences] handleIntent] intent", "action: $action, type: $type, data: $data")
 
         val content = when (action) {
             Intent.ACTION_SEND -> if (type == "text/plain") {
@@ -155,7 +161,7 @@ class DetailsActivity : ComponentActivity() {
 
             else -> null
         }
-        Log.i("content", content.toString())
+        Log.d("getPreferences] handleIntent] content", content.toString())
 
         val fileUri = when (action) {
             Intent.ACTION_SEND -> if (content == null) {
@@ -165,8 +171,7 @@ class DetailsActivity : ComponentActivity() {
             Intent.ACTION_VIEW -> data
             else -> null
         }
-        Log.d("fileUri raw", fileUri.toString())
-        Log.d("fileUri", "Action: ${intent.action}, uri: $fileUri")
+        Log.d("getPreferences] handleIntent] fileUri", fileUri.toString())
 
         content?.let {
             createFile = registerForActivityResult(

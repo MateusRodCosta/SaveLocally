@@ -65,7 +65,7 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
             }
             fileDescriptor?.close()
         } catch (e: Exception) {
-            Log.w("getUriData] bitmap", e.toString())
+            Log.e("getUriData] bitmap", e.message, e)
             bitmap = null
         }
     }

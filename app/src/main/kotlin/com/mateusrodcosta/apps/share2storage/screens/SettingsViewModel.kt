@@ -75,17 +75,20 @@ class SettingsViewModel : ViewModel() {
     fun initPreferences() {
         val spDefaultSaveLocation =
             sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null).let {
-                Log.i("settings] initSharedPreferences] saveLocationRaw", it.toString())
+                Log.d("SettingsViewModel] initPreferences] defaultSaveLocationRaw", it.toString())
                 try {
                     Uri.parse(it)
                 } catch (_: Exception) {
                     null
                 }
             }
-        Log.i("settings] initSharedPreferences] saveLocation", spDefaultSaveLocation.toString())
+        Log.d(
+            "SettingsViewModel] initPreferences] defaultSaveLocation",
+            spDefaultSaveLocation.toString()
+        )
         spDefaultSaveLocation?.path?.let {
-            Log.i(
-                "settings] initSharedPreferences] saveLocation.path",
+            Log.d(
+                "SettingsViewModel] initPreferences] defaultSaveLocation.path",
                 spDefaultSaveLocation.path.toString()
             )
         }
@@ -94,29 +97,29 @@ class SettingsViewModel : ViewModel() {
             SharedPreferenceKeys.SKIP_FILE_PICKER_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT
         )
-        Log.i("settings] initSharedPreferences] skipFilePicker", spSkipFilePicker.toString())
+        Log.d("SettingsViewModel] initPreferences] skipFilePicker", spSkipFilePicker.toString())
 
 
         val spSkipFileDetails = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY,
             SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT
         )
-        Log.i("settings] initSharedPreferences] skipFileDetails", spSkipFileDetails.toString())
+        Log.d("SettingsViewModel] initPreferences] skipFileDetails", spSkipFileDetails.toString())
 
         val spShowFilePreview = sharedPreferences.getBoolean(
             SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY,
             SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT
         )
-        Log.i(
-            "settings] initSharedPreferences] showFilePreview", spShowFilePreview.toString()
+        Log.d(
+            "SettingsViewModel] initPreferences] showFilePreview", spShowFilePreview.toString()
         )
 
         val spInterceptActionViewIntents = sharedPreferences.getBoolean(
             SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY,
             SharedPreferencesDefaultValues.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT
         )
-        Log.i(
-            "settings] initSharedPreferences] interceptActionViewIntents",
+        Log.d(
+            "SettingsViewModel] initPreferences] interceptActionViewIntents",
             spInterceptActionViewIntents.toString()
         )
 
@@ -183,7 +186,7 @@ class SettingsViewModel : ViewModel() {
     fun updateInterceptActionViewIntents(value: Boolean) {
         sharedPreferences.edit(commit = true) {
             putBoolean(SharedPreferenceKeys.INTERCEPT_ACTION_VIEW_INTENTS_KEY, value)
-            Log.i("settings] updateInterceptActionViewIntents", value.toString())
+            Log.d("SettingsViewModel] updateInterceptActionViewIntents", value.toString())
 
             try {
                 val component = ComponentName(
@@ -198,7 +201,7 @@ class SettingsViewModel : ViewModel() {
 
                 _interceptActionViewIntents.value = value
             } catch (e: Exception) {
-                Log.i("settings] updateInterceptActionViewIntents", e.toString())
+                Log.e("SettingsViewModel] updateInterceptActionViewIntents", e.message, e)
             }
         }
     }
@@ -206,7 +209,7 @@ class SettingsViewModel : ViewModel() {
     fun updateShowFilePreview(value: Boolean) {
         sharedPreferences.edit(commit = true) {
             putBoolean(SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY, value)
-            Log.i("settings] updateShowFilePreview", value.toString())
+            Log.d("SettingsViewModel] updateShowFilePreview", value.toString())
             _showFilePreview.value = value
         }
     }
@@ -214,7 +217,7 @@ class SettingsViewModel : ViewModel() {
     fun updateSkipFilePicker(value: Boolean) {
         sharedPreferences.edit(commit = true) {
             putBoolean(SharedPreferenceKeys.SKIP_FILE_PICKER_KEY, value)
-            Log.i("settings] updateSkipFilePicker", value.toString())
+            Log.d("SettingsViewModel] updateSkipFilePicker", value.toString())
             _skipFilePicker.value = value
         }
     }
