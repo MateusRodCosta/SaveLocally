@@ -9,12 +9,18 @@ Save files locally via the Android share menu and the native file picker.
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=com.mateusrodcosta.apps.share2storage)
 
-Or download the latest APK from the [Releases Section](https://github.com/MateusRodCosta/Share2Storage/releases/latest).
+Or download the latest APK from the [Releases Section](https://github.com/MateusRodCosta/SaveLocally/releases/latest).
+
+## Translations
+
+<a href="https://hosted.weblate.org/engage/save-locally/">
+<img src="https://hosted.weblate.org/widget/save-locally/multi-auto.svg" alt="Translation status" />
+</a>
 
 ## Screenshots
 
-<img src="https://raw.githubusercontent.com/MateusRodCosta/Share2Storage/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="270" alt="Main Screen">
-<img src="https://raw.githubusercontent.com/MateusRodCosta/Share2Storage/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="270" alt="Details Screen">
+<img src="https://raw.githubusercontent.com/MateusRodCosta/SaveLocally/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="270" alt="Main Screen">
+<img src="https://raw.githubusercontent.com/MateusRodCosta/SaveLocally/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="270" alt="Details Screen">
 
 ## License
 
