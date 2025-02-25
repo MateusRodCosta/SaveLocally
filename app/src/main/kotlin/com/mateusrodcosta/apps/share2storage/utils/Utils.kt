@@ -122,7 +122,7 @@ fun saveFileToFile(
             } ?: return false
         } ?: return false
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e("saveFileToFile", e.message, e)
         return false
     }
     return true
@@ -141,7 +141,7 @@ fun saveTextToFile(
                 }
             } ?: return false
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("saveTextToFile", e.message, e)
             return false
         }
         return true
@@ -164,7 +164,7 @@ fun saveToFile(
             }
         }
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e("saveToFile", e.message, e)
         return false
     }
     return true
