@@ -1,8 +1,0 @@
----
-
-- ignore-rules:
-  - android_kotlin_logging
-  - android_manifest_allow_backup
-  - android_prevent_screenshot
-  - android_root_detection
-  - android_safetynet
