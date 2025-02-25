@@ -211,16 +211,9 @@ class DetailsActivity : ComponentActivity() {
         }
 
         withContext(Dispatchers.Main) {
-            Toast.makeText(
-                baseContext, if (isSuccess) {
-                    R.string.toast_saved_file_success
-                } else {
-                    R.string.toast_saved_file_failure
-                }, Toast.LENGTH_LONG
-            ).show()
+            showResultToast(isSuccess)
+            if (shouldFinishAfterSave) finish()
         }
-
-        if (shouldFinishAfterSave) finish()
     }
 
     private suspend fun handleTextSave(uri: Uri, content: CharSequence) {
@@ -229,15 +222,18 @@ class DetailsActivity : ComponentActivity() {
         }
 
         withContext(Dispatchers.Main) {
-            Toast.makeText(
-                baseContext, if (isSuccess) {
-                    R.string.toast_saved_file_success
-                } else {
-                    R.string.toast_saved_file_failure
-                }, Toast.LENGTH_LONG
-            ).show()
+            showResultToast(isSuccess)
+            if (shouldFinishAfterSave) finish()
         }
+    }
 
-        if (shouldFinishAfterSave) finish()
+    private fun showResultToast(isSuccess: Boolean) {
+        Toast.makeText(
+            baseContext, if (isSuccess) {
+                R.string.toast_saved_file_success
+            } else {
+                R.string.toast_saved_file_failure
+            }, Toast.LENGTH_LONG
+        ).show()
     }
 }
