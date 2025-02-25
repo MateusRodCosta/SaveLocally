@@ -76,7 +76,7 @@ class DetailsActivity : ComponentActivity() {
                                     applicationContext, it
                                 )
                             }
-                            val file = dir?.createFile(uriData!!.type, uriData!!.displayName)
+                            val file = dir?.createFile(uriData!!.mimeType, uriData!!.displayName)
                             file?.uri?.let { handleFileSave(it, fileUri!!) }
                         }
                     } else {
@@ -192,7 +192,7 @@ class DetailsActivity : ComponentActivity() {
             this.uriData = uriData
 
             createFile = registerForActivityResult(
-                CreateDocumentWithInitialUri(uriData.type, defaultSaveLocation)
+                CreateDocumentWithInitialUri(uriData.mimeType, defaultSaveLocation)
             ) { uri ->
                 if (uri == null) {
                     if (skipFileDetails) finish()
