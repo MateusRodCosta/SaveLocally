@@ -1,0 +1,10 @@
+---
+
+- ignore-rules:
+  - android_kotlin_logging
+  - android_safetynet_api
+  - android_prevent_screenshot
+  - android_detect_tapjacking
+  - android_certificate_pinning
+  - android_root_detection
+  - android_certificate_transparency
