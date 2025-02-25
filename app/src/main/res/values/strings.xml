@@ -43,12 +43,10 @@
     <string name="file_name">File name</string>
     <string name="file_type">File type</string>
     <string name="file_size">File size</string>
-    <string name="unknown">Unknown</string>
 
     <string name="toast_saved_file_success">File saved successfully!</string>
     <string name="toast_saved_file_failure">An error occurred while saving the file.</string>
 
-    <string name="clear_button">Clear</string>
     <string name="save_button">Save</string>
     <string name="back_arrow">Back Arrow</string>
 </resources>
