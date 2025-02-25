@@ -32,13 +32,11 @@ class CreateDocumentWithInitialUri(
     override fun createIntent(context: Context, input: String): Intent {
         return super.createIntent(context, input).also { i ->
             Log.d("CreateDocumentWithInitialUri] initialUri", initialUri.toString())
-            if (initialUri != null)
-            {
+            initialUri?.let {
                 val documentUri = DocumentsContract.buildDocumentUriUsingTree(initialUri, DocumentsContract.getTreeDocumentId(initialUri))
                 Log.d("CreateDocumentWithInitialUri] documentUri", documentUri.toString())
                 i.putExtra(EXTRA_INITIAL_URI, documentUri)
             }
         }
     }
-
 }
