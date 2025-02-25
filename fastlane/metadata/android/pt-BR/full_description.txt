@@ -2,7 +2,7 @@ Já lidou com essa situação: você está usando um aplicativo (como um app de 
 
 Isso acontece porque muitos apps decidem usar a funcionalidade de compartilhamento do sistema ao invés de implementar a lógica necessária para o salvamento de arquivos. Então, o que pode ser feito?
 
-Nesses casos o Salvar Localmente (anteriormente Share2Storage) pode vir a calhar, apenas escolha-o nas opções de compartilhamento e isso permitirá que você salve o arquivo em qualquer lugar localmente no seu dispositivo, também serão exibidos detales dom arquivo antes (apesar de que isso pode ser pulado).
+Nesses casos o Salvar Localmente pode vir a calhar, apenas escolha-o nas opções de compartilhamento e isso permitirá que você salve o arquivo em qualquer lugar localmente no seu dispositivo, também serão exibidos detales dom arquivo antes (apesar de que isso pode ser pulado).
 Uma opção para interceptar intents de "Abrir com" também está disponível, te permitindo salvar um arquivo mesmo que o aplicativo anterior tente forçar a visualização do arquivo com um visualizador padrão para aquele tpo de arquivo.
 
-Salvar Localmente é software livre desenvolvido com Jetpack Compose. O código-fonte está disponível em <a href="https://github.com/MateusRodCosta/Share2Storage">https://github.com/MateusRodCosta/Share2Storage</a> e licenciado sob AGPLv3+.
+Salvar Localmente é software livre desenvolvido com Jetpack Compose. O código-fonte está disponível em <a href="https://github.com/MateusRodCosta/SaveLocally">https://github.com/MateusRodCosta/SaveLocally</a> e licenciado sob AGPLv3+.
