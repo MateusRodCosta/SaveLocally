@@ -2,7 +2,7 @@ Have you ever ran into this scenario: you are using an app (such as a bank app) 
 
 This happens because many apps choose to use the system's share functionality instead of doing the work to implement the required file saving logic. So, what can be done?
 
-In those cases Save Locally (previously Share2Storage) might come in handy, you just choose it on the share sheet that comes up and it allows you to save the file anywhere locally in your device, it also shows the file details beforehand (though that can be skipped).
+In those cases Save Locally might come in handy, you just choose it on the share sheet that comes up and it allows you to save the file anywhere locally in your device, it also shows the file details beforehand (though that can be skipped).
 An option to intercept "Open with" intents is also available, allowing you to save files even if the source app were to try force viewing with a default viewer for that file type.
 
-Save Locally is FLOSS software (Free and Libre Open Source Software) developed with Jetpack Compose. Source code is available at <a href="https://github.com/MateusRodCosta/Share2Storage">https://github.com/MateusRodCosta/Share2Storage</a> licensed under AGPLv3+.
+Save Locally is FLOSS software (Free and Libre Open Source Software) developed with Jetpack Compose. Source code is available at <a href="https://github.com/MateusRodCosta/SaveLocally">https://github.com/MateusRodCosta/SaveLocally</a> licensed under AGPLv3+.

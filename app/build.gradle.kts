@@ -25,8 +25,8 @@ android {
         minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 34
-        versionCode = 28
-        versionName = "1.4.2"
+        versionCode = 29
+        versionName = "1.4.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -68,8 +68,7 @@ android {
     }
 
     androidResources {
-        @Suppress("UnstableApiUsage")
-        generateLocaleConfig = true
+        @Suppress("UnstableApiUsage") generateLocaleConfig = true
     }
     buildFeatures {
         buildConfig = true
@@ -96,18 +95,21 @@ android {
 }
 
 dependencies {
-    implementation(libs.coroutines)
+    implementation(libs.bundles.androidx.integration)
     implementation(libs.bundles.androidx.ktx)
-    implementation(libs.splashscreen)
+    runtimeOnly(libs.coroutines)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
     implementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose.debug)
     implementation(libs.bundles.compose.integration)
+    debugImplementation(libs.compose.ui.tooling)
+    debugRuntimeOnly(libs.compose.ui.test.manifest)
 
-    testImplementation(libs.bundles.testing)
-    androidTestImplementation(libs.bundles.ui.testing)
+    testImplementation(libs.junit)
+    androidTestRuntimeOnly(libs.test.runner)
+    androidTestImplementation(libs.test.rules)
+    androidTestImplementation(libs.compose.ui.test.junit4)
 }

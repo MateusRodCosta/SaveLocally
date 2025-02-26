@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -30,7 +30,6 @@ import com.mateusrodcosta.apps.share2storage.model.UriData
 import java.io.*
 
 object Utils {
-    const val BUFFER_SIZE: Int = 1024
     const val CONTENT_ALPHA_DISABLED = 0.38f
 }
 
@@ -39,7 +38,8 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
     val displayName: String?
     val size: Long?
 
-    val cursor = contentResolver.query(uri, null, null, null, null)
+    val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE)
+    val cursor = contentResolver.query(uri, projection, null, null, null)
     if (cursor == null) return null
 
     /*
@@ -65,7 +65,7 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
             }
             fileDescriptor?.close()
         } catch (e: Exception) {
-            Log.w("getUriData] bitmap", e.toString())
+            Log.e("getUriData] bitmap", e.message, e)
             bitmap = null
         }
     }
@@ -73,12 +73,12 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
     return UriData(displayName, type, size, previewImage = bitmap)
 }
 
-private fun isVirtualFile(context: Context, uri: Uri): Boolean {
+private fun isVirtualFile(context: Context, contentResolver: ContentResolver, uri: Uri): Boolean {
 
     if (!DocumentsContract.isDocumentUri(context, uri)) {
         return false
     }
-    val cursor: Cursor = context.contentResolver.query(
+    val cursor: Cursor = contentResolver.query(
         uri, arrayOf(DocumentsContract.Document.COLUMN_FLAGS), null, null, null
     ) ?: return false
     var flags = 0
@@ -92,57 +92,80 @@ private fun isVirtualFile(context: Context, uri: Uri): Boolean {
 
 @Throws(IOException::class)
 private fun getInputStreamForVirtualFile(
-    context: Context,
+    contentResolver: ContentResolver,
     uri: Uri,
 ): InputStream? {
-    val resolver = context.contentResolver
     val filter = "*/*"
-    val openableMimeTypes = resolver.getStreamTypes(uri, filter)
+    val openableMimeTypes = contentResolver.getStreamTypes(uri, filter)
     if (openableMimeTypes.isNullOrEmpty()) {
         throw FileNotFoundException()
     }
-    return resolver.openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
+    return contentResolver.openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
         ?.createInputStream()
 }
 
-fun saveFile(
+fun saveFileToFile(
     context: Context,
-    targeturi: Uri,
-    sourceuri: Uri,
+    contentResolver: ContentResolver,
+    targetUri: Uri,
+    sourceUri: Uri,
 ): Boolean {
-    val bis: BufferedInputStream?
-    var bos: BufferedOutputStream? = null
-    val input: InputStream?
-    var hasError = false
     try {
-        input = if (isVirtualFile(context, sourceuri)) {
-            getInputStreamForVirtualFile(context, sourceuri)
+        val inputStream = if (isVirtualFile(context, contentResolver, sourceUri)) {
+            getInputStreamForVirtualFile(contentResolver, sourceUri)
         } else {
-            context.contentResolver.openInputStream(sourceuri)
+            contentResolver.openInputStream(sourceUri)
         }
-        val output = context.contentResolver.openOutputStream(targeturi)
-
-        bis = BufferedInputStream(input)
-        bos = BufferedOutputStream(output)
-
-        val buf = ByteArray(Utils.BUFFER_SIZE)
-        var numBytes = bis.read(buf)
-        while (numBytes != -1) {
-            bos.write(buf, 0, numBytes)
-            numBytes = bis.read(buf)
-        }
+        contentResolver.openOutputStream(targetUri)?.use { outputStream ->
+            inputStream?.use { inputStream ->
+                saveToFile(inputStream, outputStream)
+            } ?: return false
+        } ?: return false
     } catch (e: Exception) {
-        e.printStackTrace()
-        hasError = true
-    } finally {
-        try {
-            if (bos != null) {
-                bos.flush()
-                bos.close()
-            }
-        } catch (_: Exception) {
-        }
+        Log.e("saveFileToFile", e.message, e)
+        return false
     }
-    return !hasError
+    return true
 }
 
+fun saveTextToFile(
+    contentResolver: ContentResolver,
+    targetUri: Uri,
+    content: CharSequence?,
+): Boolean {
+    content?.let {
+        try {
+            contentResolver.openOutputStream(targetUri)?.use { outputStream ->
+                it.toString().byteInputStream().use { inputStream ->
+                    saveToFile(inputStream, outputStream)
+                }
+            } ?: return false
+        } catch (e: Exception) {
+            Log.e("saveTextToFile", e.message, e)
+            return false
+        }
+        return true
+    }
+    return false
+}
+
+fun saveToFile(
+    inputStream: InputStream,
+    outputStream: OutputStream,
+): Boolean {
+    try {
+        outputStream.use { outputStream ->
+            inputStream.use { inputStream ->
+                BufferedInputStream(inputStream).use { bis ->
+                    BufferedOutputStream(outputStream).use { bos ->
+                        bis.copyTo(bos)
+                    }
+                }
+            }
+        }
+    } catch (e: Exception) {
+        Log.e("saveToFile", e.message, e)
+        return false
+    }
+    return true
+}

@@ -18,6 +18,7 @@
 package com.mateusrodcosta.apps.share2storage.screens
 
 import android.net.Uri
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +46,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.dialogs.DefaultFolderDialog
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
@@ -102,9 +102,8 @@ fun SettingsScreenPreviewPtBr() {
 }
 
 @Composable
-fun SettingsScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
+fun SettingsScreen(settingsViewModel: SettingsViewModel) {
     SettingsScreenContent(
-        navController = navController,
         spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
         spSkipFilePicker = settingsViewModel.skipFilePicker,
         spSkipFileDetails = settingsViewModel.skipFileDetails,
@@ -130,7 +129,6 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreenContent(
-    navController: NavController? = null,
     spDefaultSaveLocation: StateFlow<Uri?>,
     spSkipFilePicker: StateFlow<Boolean>,
     spSkipFileDetails: StateFlow<Boolean>,
@@ -143,10 +141,11 @@ fun SettingsScreenContent(
     updateInterceptActionViewIntents: (Boolean) -> Unit = {},
     updateShowFilePreview: (Boolean) -> Unit = {},
 ) {
+    val activity = LocalActivity.current
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(title = { Text(stringResource(R.string.settings_title)) }, navigationIcon = {
-                IconButton(onClick = { navController?.navigateUp() }) {
+                IconButton(onClick = { activity?.finish() }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         stringResource(R.string.back_arrow),

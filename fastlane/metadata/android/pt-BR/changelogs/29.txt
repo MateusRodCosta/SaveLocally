@@ -1,0 +1,2 @@
+• Adicionada a habilidade de também salvar textos compatilhado ao invés de apenas arquivos compartilhados
+• Várias correções e melhorias por debaixo dos panos

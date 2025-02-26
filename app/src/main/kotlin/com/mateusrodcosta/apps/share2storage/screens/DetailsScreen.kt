@@ -201,7 +201,7 @@ fun FileInfo(uriData: UriData) {
         )
         FileInfoLine(
             label = stringResource(R.string.file_type),
-            content = uriData.type
+            content = uriData.mimeType
         )
         FileInfoLine(
             label = stringResource(R.string.file_size),
@@ -221,7 +221,7 @@ fun FileInfoLine(label: String, content: String) {
 
 @Composable
 fun FilePreview(uriData: UriData) {
-    val mimeType = uriData.type
+    val mimeType = uriData.mimeType
     val fallbackFileIcon = if (mimeType.startsWith("image/")) Icons.Outlined.Image
     else if (mimeType.startsWith("audio/")) Icons.Outlined.AudioFile
     else if (mimeType.startsWith("video/")) Icons.Outlined.VideoFile

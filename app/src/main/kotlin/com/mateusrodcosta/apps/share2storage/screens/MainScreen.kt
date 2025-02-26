@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -17,6 +17,8 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
+import android.content.Intent
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -56,8 +58,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.SettingsActivity
 import com.mateusrodcosta.apps.share2storage.screens.dialogs.AboutDialog
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
 import com.mateusrodcosta.apps.share2storage.screens.shared.ListItemWithURL
@@ -83,9 +85,8 @@ fun MainScreenPreviewPtBr() {
 }
 
 @Composable
-fun MainScreen(navController: NavController, windowSizeClass: WindowSizeClass) {
+fun MainScreen(windowSizeClass: WindowSizeClass) {
     MainScreenContent(
-        navController = navController,
         widthSizeClass = windowSizeClass.widthSizeClass,
         heightSizeClass = windowSizeClass.heightSizeClass,
     )
@@ -94,10 +95,10 @@ fun MainScreen(navController: NavController, windowSizeClass: WindowSizeClass) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenContent(
-    navController: NavController? = null,
     widthSizeClass: WindowWidthSizeClass,
     heightSizeClass: WindowHeightSizeClass,
 ) {
+    val activity = LocalActivity.current
     val openAboutDialog = remember { mutableStateOf(false) }
 
     if (openAboutDialog.value) {
@@ -114,7 +115,10 @@ fun MainScreenContent(
                     IconButton(onClick = { openAboutDialog.value = true }) {
                         Icon(Icons.Rounded.Info, stringResource(R.string.about_title))
                     }
-                    IconButton(onClick = { navController?.navigate("settings") }) {
+                    IconButton(onClick = {
+                        val i = Intent(activity, SettingsActivity::class.java)
+                        activity?.startActivity(i)
+                    }) {
                         Icon(Icons.Rounded.Settings, stringResource(R.string.settings_title))
                     }
                 },
