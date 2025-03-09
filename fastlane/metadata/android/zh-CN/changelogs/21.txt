@@ -1,0 +1,2 @@
+现在已取消对支持文件类型的限制。
+请报告可能出现的任何问题：https://github.com/MateusRodCosta/Share2Storage/issues
