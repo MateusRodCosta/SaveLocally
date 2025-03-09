@@ -1,0 +1,5 @@
+重要信息：未来版本可能会放弃对 Android O 的支持，更多信息请参阅 https://github.com/MateusRodCosta/Share2Storage/issues/38。
+
+- 更新依赖关系
+- 设置默认文件夹时新增 “跳过文件选取器 ”选项
+- 改进了用户体验和默认设置值，以减少摩擦（部分用户提出了要求）

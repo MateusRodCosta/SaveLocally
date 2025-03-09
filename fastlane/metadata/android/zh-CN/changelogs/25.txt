@@ -1,0 +1,9 @@
+重要提示：未来版本可能会放弃对Android O的支持，请访问https://github.com/MateusRodCosta/Share2Storage/issues/38了解更多信息。
+
+·更新的依赖关系
+·添加了一个快捷方式到应用程序偏好设置的应用程序信息页面
+·对UI的许多底层改进
+·改进的主题（添加了Material You）
+·改进的边到边支持
+·将“关于"信息移至对话框
+·未压缩的DEX（应导致稍大的APK，但较小的安装大小）
