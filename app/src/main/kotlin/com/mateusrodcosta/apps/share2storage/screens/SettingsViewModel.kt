@@ -27,6 +27,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceUtils
@@ -77,7 +78,7 @@ class SettingsViewModel : ViewModel() {
             sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null).let {
                 Log.d("SettingsViewModel] initPreferences] defaultSaveLocationRaw", it.toString())
                 try {
-                    Uri.parse(it)
+                    it?.toUri()
                 } catch (_: Exception) {
                     null
                 }
@@ -134,7 +135,7 @@ class SettingsViewModel : ViewModel() {
         val currentSaveLocation =
             sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null).let {
                 try {
-                    Uri.parse(it)
+                    it?.toUri()
                 } catch (_: Exception) {
                     null
                 }
