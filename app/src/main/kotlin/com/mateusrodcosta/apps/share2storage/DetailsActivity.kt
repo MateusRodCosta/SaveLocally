@@ -30,6 +30,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.IntentCompat
+import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import com.mateusrodcosta.apps.share2storage.model.UriData
@@ -111,7 +112,7 @@ class DetailsActivity : ComponentActivity() {
             sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null).let {
                 Log.d("DetailsActivity] getPreferences] defaultSaveLocationRaw", it.toString())
                 try {
-                    Uri.parse(it)
+                    it?.toUri()
                 } catch (_: Exception) {
                     null
                 }
