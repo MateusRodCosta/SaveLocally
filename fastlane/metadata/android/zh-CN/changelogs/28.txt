@@ -1,0 +1,3 @@
+修复了“lateinit属性createFile尚未初始化”的问题。
+
+重要提示：这是最后一个支持Android O（8.x）的计划版本。
