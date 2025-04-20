@@ -9,7 +9,7 @@
     <string name="how_to_use_step_4">கோப்பு எடுப்பவர் திறந்து, எங்கு சேமிக்க வேண்டும் மற்றும் கோப்பு பெயர் என்பதைத் தேர்ந்தெடுக்கவும்</string>
     <string name="donation_content">பயன்பாடு போன்றதா? நன்கொடை அளிப்பதைக் கவனியுங்கள்! மேலும் தகவலுக்கு, %s ஐப் பார்வையிடவும்</string>
     <string name="about_icon_credits">\@ச்விசெரா வடிவமைத்த பயன்பாட்டு படவுரு</string>
-    <string name="about_github">Github இல் %s இல் கிடைக்கும் மூலக் குறியீடு, AgPlv3+ இன் கீழ் உரிமம் பெற்றது</string>
+    <string name="about_github">அறிவிலிமையத்தில் %s கிடைக்கும் மூலக் குறியீடு, AgPlv3+ இன் கீழ் உரிமம் பெற்றது</string>
     <string name="settings_title">அமைப்புகள்</string>
     <string name="about_developer">மேடியச் ரோட்ரிக்ச் கோச்டாவால் உருவாக்கப்பட்டது</string>
     <string name="settings_category_file_picker">கோப்பு எடுப்பவர்</string>
