@@ -1,2 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="how_to_use_step_1">Поделитесь файлом через значок «Поделиться»</string>
+    <string name="how_to_use_step_3">Откроется окном с информацией о файле, нажмите «Сохранить»</string>
+    <string name="donation_title">Пожертвовать</string>
+    <string name="donation_content">Вам нравится приложение? Подумайте о пожертвовании! Для получения дополнительной информации посетите %s</string>
+    <string name="about_title">О приложении</string>
+    <string name="about_developer">Разработано Mateus Rodrigues Costa</string>
+    <string name="about_icon_credits">Значок приложения разработал @swyzera</string>
+    <string name="about_github">Исходный код доступен на Github %s, лицензируется под условиями AGPLv3+</string>
+    <string name="settings_title">Настройки</string>
+    <string name="settings_category_file_picker">Выбор файла</string>
+    <string name="settings_default_save_location_last_used">Последняя папка</string>
+    <string name="settings_skip_file_picker">Пропускать «Выбор файлов»</string>
+    <string name="settings_category_file_details">Информация о файле</string>
+    <string name="settings_skip_file_details_page">Пропускать страницу «Информация о файле»</string>
+    <string name="settings_skip_file_details_page_info">Открывать «Выбор файлов» сразу после получения файла</string>
+    <string name="settings_category_intents">Действия</string>
+    <string name="settings_intercept_action_view_intents">Перехватывать действие ACTION_VIEW</string>
+    <string name="no_file_found">Файлы не найдены</string>
+    <string name="saving_file">Сохранение файла…</string>
+    <string name="file_details">Информация о файле</string>
+    <string name="file_name">Название файла</string>
+    <string name="file_type">Тип файла</string>
+    <string name="save_button">Сохранить</string>
+    <string name="back_arrow">Назад</string>
+    <string name="how_to_use">Как использовать</string>
+    <string name="how_to_use_step_2">Выберите «%s» в меню «Поделиться»</string>
+    <string name="app_name">Сохранить локально</string>
+    <string name="how_to_use_step_4">Откроется диалог выбора файла, выберите папку где сохранить и название файла</string>
+    <string name="settings_default_save_location">Папка сохранения по умолчанию</string>
+    <string name="settings_default_save_location_select_folder">Выбрать папку…</string>
+    <string name="settings_intercept_action_view_intents_info">Разрешить регистрацию в качестве опции, когда приложения пытаются автоматически открыть просмотрщик файла</string>
+    <string name="settings_skip_file_picker_info">Пропускать «Выбор файлов» и сразу сохранять файлы (доступно только если установлена папка сохранений по умолчанию)</string>
+    <string name="settings_show_file_preview">Показывать предварительный просмотр файла</string>
+    <string name="settings_show_file_preview_info">Показывать предварительный просмотр файлов для совместимых типов файлов. Сейчас поддерживаются только некоторые файлы изображений.</string>
+    <string name="file_size">Размер файла</string>
+    <string name="toast_saved_file_success">Файл успешно сохранён!</string>
+    <string name="toast_saved_file_failure">При сохранении файла произошла ошибка.</string>
+</resources>
