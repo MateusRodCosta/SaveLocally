@@ -1,0 +1,2 @@
+This is a minor maintenance release. Development will shift to new features in a new release which will also drop Android O (8.x) support.
+Users who may still need Android O support should download a past build from GitHub at https://github.com/MateusRodCosta/SaveLocally/releases

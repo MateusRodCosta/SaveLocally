@@ -1,0 +1,2 @@
+Esta é uma versão de manutenção. A partir de agora o desenvolviemnto se foca em novas funcionalidades em uma nova versão que deixará de suportar o Android O (8.x).
+Usuários que precisem de suporte ao Android O devem baixar uma versão anterior do GitHub em https://github.com/MateusRodCosta/SaveLocally/releases
