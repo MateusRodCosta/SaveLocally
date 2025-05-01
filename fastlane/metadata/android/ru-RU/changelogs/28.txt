@@ -1,0 +1,3 @@
+Решена ошибка "lateinit property createFile has not been initialized".
+
+ВАЖНО: Это последняя запланированная версия с поддержкой Android O (8.x).
