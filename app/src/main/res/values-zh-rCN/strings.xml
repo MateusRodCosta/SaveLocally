@@ -29,10 +29,8 @@
     <string name="file_details">文件详情</string>
     <string name="file_name">文件名称</string>
     <string name="file_type">文件类型</string>
-    <string name="unknown">未知</string>
     <string name="toast_saved_file_success">文件保存成功！</string>
     <string name="toast_saved_file_failure">保存文件时出错。</string>
-    <string name="clear_button">清除</string>
     <string name="save_button">保存</string>
     <string name="back_arrow">返回箭头</string>
     <string name="how_to_use">如何使用</string>

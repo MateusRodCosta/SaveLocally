@@ -23,7 +23,6 @@
     <string name="saving_file">Salvataggio del file…</string>
     <string name="file_details">Dettagli del file</string>
     <string name="toast_saved_file_failure">Si è verificato un errore durante il salvataggio del file.</string>
-    <string name="clear_button">Pulisci</string>
     <string name="save_button">Salva</string>
     <string name="back_arrow">Freccia Indietro</string>
     <string name="how_to_use_step_2">Seleziona \"%s\" nelle opzioni di condivisione</string>
@@ -37,6 +36,5 @@
     <string name="settings_skip_file_details_page">Salta la pagina dei dettagli del file</string>
     <string name="file_type">Tipo di file</string>
     <string name="settings_intercept_action_view_intents_info">Consenti la registrazione come opzione quando le app tentano di aprire automaticamente un visualizzatore di file</string>
-    <string name="unknown">Sconosciuto</string>
     <string name="donation_content">Ti piace l\'app? Considera di fare una donazione! Per maggiori informazioni, visita %s</string>
 </resources>

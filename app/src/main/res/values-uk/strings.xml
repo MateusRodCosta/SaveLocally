@@ -21,8 +21,6 @@
     <string name="settings_intercept_action_view_intents_info">Дозволити реєстрацію як параметр, коли застосунок намагаються автоматично відкрити переглядач файлів</string>
     <string name="file_name">Назва файлу</string>
     <string name="file_type">Тип файлу</string>
-    <string name="unknown">Невідомо</string>
-    <string name="clear_button">Очистити</string>
     <string name="about_icon_credits">Значок застосунку розроблено @swyzera</string>
     <string name="toast_saved_file_success">Файл успішно збережено!</string>
     <string name="about_github">Вихідний код доступний на Github за адресою %s по ліцензії AGPLv3+</string>
