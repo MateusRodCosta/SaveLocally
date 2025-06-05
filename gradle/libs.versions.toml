@@ -1,12 +1,12 @@
 [versions]
-agp = "8.9.2"
-kotlin = "2.1.20"
+agp = "8.10.0"
+kotlin = "2.1.21"
 appcompat = "1.7.0"
-documentfile = "1.0.1"
+documentfile = "1.1.0"
 splashscreen = "1.0.1"
 ktx = "1.16.0"
 coroutines = "1.7.3"
-composeBom = "2025.04.01"
+composeBom = "2025.05.01"
 activityCompose = "1.10.1"
 junit = "4.13.2"
 androidxTestRunner = "1.6.2"
@@ -16,7 +16,7 @@ androidxTestRules = "1.6.1"
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
+documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_skip_file_details_page">Pomiń stronę ze szczegółami pliku</string>
+    <string name="settings_skip_file_details_page_info">Otwórz selektor plików zaraz po otrzymaniu pliku</string>
+    <string name="settings_intercept_action_view_intents">Przechwyć intencje ACTION_VIEW</string>
+    <string name="donation_title">Dotacja</string>
+    <string name="app_name">Zapisz lokalnie</string>
+    <string name="settings_default_save_location">Domyślna lokalizacja zapisu</string>
+    <string name="save_button">Zapisz</string>
+    <string name="settings_intercept_action_view_intents_info">Zezwól na rejestrację jako opcję, gdy aplikacje próbują automatycznie otworzyć przeglądarkę plików</string>
+    <string name="how_to_use_step_4">Otworzy się selektor plików, wybierz miejsce zapisu i nazwę pliku</string>
+    <string name="donation_content">Podoba Ci się aplikacja? Rozważ przekazanie darowizny! Aby uzyskać więcej informacji, odwiedź %s</string>
+    <string name="how_to_use">Instrukcja</string>
+    <string name="how_to_use_step_2">Wybierz „%s” w opcjach udostępniania</string>
+    <string name="how_to_use_step_3">Otworzy się ekran ze szczegółami pliku, naciśnij Zapisz</string>
+    <string name="about_title">O aplikacji</string>
+    <string name="about_developer">Opracowana przez Mateusa Rodriguesa Costę</string>
+    <string name="about_icon_credits">Ikona aplikacji zaprojektowana przez @swyzera</string>
+    <string name="settings_title">Ustawienia</string>
+    <string name="settings_category_file_picker">Selektor pliku</string>
+    <string name="settings_default_save_location_last_used">Ostatnio używany folder</string>
+    <string name="settings_default_save_location_select_folder">Wybierz folder…</string>
+    <string name="settings_skip_file_picker">Pomiń selektor plików</string>
+    <string name="settings_category_file_details">Szczegóły pliku</string>
+    <string name="settings_show_file_preview">Pokaż podgląd pliku</string>
+    <string name="settings_show_file_preview_info">Pokaż podglądy plików dla zgodnych typów plików. Obecnie obsługiwane są tylko niektóre pliki graficzne.</string>
+    <string name="settings_category_intents">Intencje</string>
+    <string name="no_file_found">Nie znaleziono pliku</string>
+    <string name="saving_file">Zapisywanie pliku…</string>
+    <string name="file_details">Szczegóły pliku</string>
+    <string name="file_name">Nazwa pliku</string>
+    <string name="file_type">Typ pliku</string>
+    <string name="file_size">Rozmiar pliku</string>
+    <string name="toast_saved_file_success">Plik zapisano pomyślnie!</string>
+    <string name="toast_saved_file_failure">Wystąpił błąd podczas zapisywania pliku.</string>
+    <string name="back_arrow">Strzałka wstecz</string>
+    <string name="how_to_use_step_1">Udostępnij plik za pomocą ikony udostępniania</string>
+    <string name="about_github">Kod źródłowy dostępny na GitHubie pod adresem %s, licencja AGPLv3+</string>
+    <string name="settings_skip_file_picker_info">Pomiń selektor plików i natychmiast zapisz pliki (dostępne tylko, gdy ustawiony jest domyślny folder)</string>
+</resources>

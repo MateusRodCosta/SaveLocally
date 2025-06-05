@@ -1,0 +1,4 @@
+Version 2.0.0 drops Android O (8.x) support, users that need Android O support should download the last compatible version at https://github.com/MateusRodCosta/SaveLocally/releases/tag/v1.4.4a
+
+This is also the first version adding crowd-sourced translations, many thanks for the volunteer translators.
+See https://hosted.weblate.org/engage/save-locally/ for more info.

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sauvegarder sur l\'appareil</string>
+    <string name="about_github">Code source disponible sur Github à l\'adresse %s, licence AGPLv3+</string>
+    <string name="settings_default_save_location_select_folder">Choisissez un répertoire…</string>
+    <string name="settings_show_file_preview_info">Montre un aperçu du fichier pour les types de fichiers compatibles. Pour l\'instant seulement certaines types d\'images sont gérés.</string>
+    <string name="saving_file">Enregistrement du fichier…</string>
+    <string name="settings_skip_file_picker">Sauter le navigateur de fichier</string>
+    <string name="how_to_use">Mode d\'emploi</string>
+    <string name="how_to_use_step_1">Partagez le fichier avec l\'icône de partage</string>
+    <string name="how_to_use_step_3">Un écran s\'ouvre avec les détails du fichier ; pressez \"Sauvegarder\"</string>
+    <string name="donation_title">Faire un don</string>
+    <string name="donation_content">Vous aimez cette application ? N\'hésitez pas à faire un don ! Pour plus d\'informations, visitez %s</string>
+    <string name="about_title">À propos</string>
+    <string name="about_icon_credits">Dessin de l\'icône de l\'application par @swyzera</string>
+    <string name="settings_category_file_details">Détails du fichier</string>
+    <string name="settings_skip_file_details_page">Sauter la page de détails du fichier</string>
+    <string name="settings_skip_file_details_page_info">Ouvrir le navigateur de fichiers dès qu\'un fichier est reçu</string>
+    <string name="settings_show_file_preview">Montrer un aperçu du fichier</string>
+    <string name="settings_category_intents">Intents</string>
+    <string name="settings_intercept_action_view_intents">Intercepter les intents ACTION_VIEW</string>
+    <string name="file_name">Nom du fichier</string>
+    <string name="toast_saved_file_success">Fichier correctement sauvegardé !</string>
+    <string name="toast_saved_file_failure">Une erreur est survenue pendant la sauvegarde du fichier.</string>
+    <string name="save_button">Sauvegarder</string>
+    <string name="back_arrow">Flèche de retour arrière</string>
+    <string name="settings_category_file_picker">Navigateur de fichiers</string>
+    <string name="settings_title">Paramètres</string>
+    <string name="how_to_use_step_4">Le navigateur de fichiers s\'ouvre ; sélectionnez l\'emplacement souhaité et le nom du fichier</string>
+    <string name="settings_default_save_location_last_used">Dernier répertoire utilisé</string>
+    <string name="about_developer">Développé par Mateus Rodrigues Costa</string>
+    <string name="settings_default_save_location">Emplacement de sauvegarde par défaut</string>
+    <string name="settings_skip_file_picker_info">Saute le navigateur de fichiers et enregistrer le fichier immédiatement (uniquement possible si un répertoire par défaut a été configuré)</string>
+    <string name="no_file_found">Aucun fichier trouvé</string>
+    <string name="how_to_use_step_2">Choisissez \"%s\" dans les options de partage</string>
+    <string name="settings_intercept_action_view_intents_info">Proposer l\'enregistrement comme une option lorsqu\'une application essaie d\'ouvrir automatiquement une visionneuse de fichier</string>
+    <string name="file_details">Détails du fichier</string>
+    <string name="file_type">Type du fichier</string>
+    <string name="file_size">Taille du fichier</string>
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="how_to_use_step_1">通过共享图标共享文件</string>
+    <string name="settings_show_file_preview_info">显示兼容文件类型的文件预览。目前仅支持部分图像文件。</string>
+    <string name="how_to_use_step_2">在分享选项中选择“%s”</string>
+    <string name="how_to_use_step_3">文件详情页面打开后，请点击「保存」按钮</string>
+    <string name="app_name">本地保存</string>
+    <string name="how_to_use_step_4">系统将打开文件选择器，请选择保存路径并输入文件名</string>
+    <string name="donation_content">喜欢这个应用吗？考虑捐赠！更多信息请访问 %s</string>
+    <string name="about_title">关于</string>
+    <string name="about_developer">开发者：Mateus Rodrigues Costa</string>
+    <string name="about_icon_credits">应用图标设计 @swyzera</string>
+    <string name="about_github">源代码可在Github %s上获得，在AGPLv3+下授权</string>
+    <string name="settings_title">设置</string>
+    <string name="settings_category_file_picker">文件选择器</string>
+    <string name="settings_default_save_location">默认保存位置</string>
+    <string name="settings_default_save_location_last_used">上次使用的文件夹</string>
+    <string name="settings_default_save_location_select_folder">选择文件夹…</string>
+    <string name="settings_skip_file_picker">跳过文件选择器</string>
+    <string name="settings_category_file_details">文件详情</string>
+    <string name="settings_skip_file_details_page">跳过文件详情页</string>
+    <string name="settings_skip_file_details_page_info">收到文件后立即打开文件选择器</string>
+    <string name="settings_show_file_preview">显示文件预览</string>
+    <string name="settings_category_intents">意图(Intents)</string>
+    <string name="settings_intercept_action_view_intents">拦截 ACTION_VIEW 意图(intents)</string>
+    <string name="settings_intercept_action_view_intents_info">当应用尝试自动打开文件查看器时，允许注册为选项</string>
+    <string name="no_file_found">未找到文件</string>
+    <string name="saving_file">正在保存文件…</string>
+    <string name="file_details">文件详情</string>
+    <string name="file_name">文件名称</string>
+    <string name="file_type">文件类型</string>
+    <string name="toast_saved_file_success">文件保存成功！</string>
+    <string name="toast_saved_file_failure">保存文件时出错。</string>
+    <string name="save_button">保存</string>
+    <string name="back_arrow">返回箭头</string>
+    <string name="how_to_use">如何使用</string>
+    <string name="donation_title">捐赠</string>
+    <string name="settings_skip_file_picker_info">跳过文件选择器并立即保存文件（仅在设置默认文件夹时可用）</string>
+    <string name="file_size">文件大小</string>
+</resources>

@@ -1,0 +1,4 @@
+A versão 2.0.0 remove suporte para o Android O (8.x), usuários nessas versões podem baixar a última versão compatível em https://github.com/MateusRodCosta/SaveLocally/releases/tag/v1.4.4a
+
+Esta também é a primeira versão que traz traduções voluntárias, muito obrigado aos tradutores voluntários.
+Veja https://hosted.weblate.org/engage/save-locally/ para mais informações.

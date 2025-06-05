@@ -22,11 +22,10 @@ android {
 
     defaultConfig {
         applicationId = "com.mateusrodcosta.apps.share2storage"
-        minSdk = 26
-        //noinspection OldTargetApi
-        targetSdk = 34
-        versionCode = 31
-        versionName = "1.4.4a"
+        minSdk = 28
+        targetSdk = 35
+        versionCode = 32
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,8 +37,8 @@ android {
             storeFile = file(keystoreProperties["storeFile"] as String)
             storePassword = keystoreProperties["storePassword"] as String
 
-            // Always enable v2 and v3 signing schemes, which will be used on modern Android OSes
-            enableV2Signing = true
+            // Disable v2 signing and force enable v3 signing, which will be used on modern Android (9+)
+            enableV2Signing = false
             enableV3Signing = true
         }
     }
@@ -76,14 +75,6 @@ android {
         compose = true
     }
     packaging {
-        // This is set to false starting with minSdk >= 28, but I want uncompressed DEX files with minSdk 26
-        // According to https://developer.android.com/build/releases/past-releases/agp-4-2-0-release-notes#dex-files-uncompressed-in-apks-when-minsdk-=-28-or-higher:
-        //
-        // > This causes an increase in APK size, but it results in a smaller installation size on the device, and the download size is roughly the same.
-        //
-        // Currently this makes the APK ~1MB heavier
-        //
-        dex.useLegacyPackaging = false
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }

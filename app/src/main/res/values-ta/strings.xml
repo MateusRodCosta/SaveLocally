@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">உள்ளூரில் சேமிக்கவும்</string>
+    <string name="how_to_use">எவ்வாறு பயன்படுத்துவது</string>
+    <string name="how_to_use_step_1">பகிர்வு படவுரு வழியாக கோப்பைப் பகிரவும்</string>
+    <string name="how_to_use_step_2">பங்கு விருப்பங்களில் \"%s\" ஐத் தேர்ந்தெடுக்கவும்</string>
+    <string name="donation_title">நன்கொடை</string>
+    <string name="how_to_use_step_3">கோப்பைப் பற்றிய விவரங்களைக் கொண்ட ஒரு திரை திறக்கப்படும், சேமி அழுத்தவும்</string>
+    <string name="how_to_use_step_4">கோப்பு எடுப்பவர் திறந்து, எங்கு சேமிக்க வேண்டும் மற்றும் கோப்பு பெயர் என்பதைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="donation_content">பயன்பாடு போன்றதா? நன்கொடை அளிப்பதைக் கவனியுங்கள்! மேலும் தகவலுக்கு, %s ஐப் பார்வையிடவும்</string>
+    <string name="about_icon_credits">\@ச்விசெரா வடிவமைத்த பயன்பாட்டு படவுரு</string>
+    <string name="about_github">அறிவிலிமையத்தில் %s கிடைக்கும் மூலக் குறியீடு, AgPlv3+ இன் கீழ் உரிமம் பெற்றது</string>
+    <string name="settings_title">அமைப்புகள்</string>
+    <string name="about_developer">மேடியச் ரோட்ரிக்ச் கோச்டாவால் உருவாக்கப்பட்டது</string>
+    <string name="settings_category_file_picker">கோப்பு எடுப்பவர்</string>
+    <string name="settings_default_save_location">இயல்புநிலை சேமிப்பு இருப்பிடம்</string>
+    <string name="settings_skip_file_picker">கோப்பு தேர்வாளரைத் தவிர்க்கவும்</string>
+    <string name="settings_skip_file_picker_info">கோப்பு தேர்வாளரைத் தவிர்த்து உடனடியாக கோப்புகளைச் சேமிக்கவும் (இயல்புநிலை கோப்புறை அமைக்கப்படும்போது மட்டுமே கிடைக்கும்)</string>
+    <string name="settings_default_save_location_last_used">கடைசியாக பயன்படுத்தப்பட்ட கோப்புறை</string>
+    <string name="settings_default_save_location_select_folder">கோப்புறையைத் தேர்ந்தெடுக்கவும்…</string>
+    <string name="settings_category_file_details">கோப்பு விவரங்கள்</string>
+    <string name="settings_skip_file_details_page">கோப்பு விவரங்கள் பக்கத்தைத் தவிர்க்கவும்</string>
+    <string name="settings_skip_file_details_page_info">கோப்பு கிடைத்தவுடன் கோப்பு பிக்கர் திறக்கவும்</string>
+    <string name="settings_show_file_preview">கோப்பு முன்னோட்டத்தைக் காட்டு</string>
+    <string name="settings_show_file_preview_info">இணக்கமான கோப்பு வகைகளுக்கான கோப்பு முன்னோட்டங்களைக் காட்டு. தற்போது சில படக் கோப்புகள் மட்டுமே ஆதரிக்கப்படுகின்றன.</string>
+    <string name="settings_category_intents">நோக்கங்கள்</string>
+    <string name="settings_intercept_action_view_intents">இடைமறிப்பு அதிரடி_வியூ நோக்கங்கள்</string>
+    <string name="settings_intercept_action_view_intents_info">பயன்பாடுகள் தானாகவே கோப்பு பார்வையாளரைத் திறக்க முயற்சிக்கும்போது பதிவு செய்வதை ஒரு விருப்பமாக அனுமதிக்கவும்</string>
+    <string name="no_file_found">கோப்பு எதுவும் கிடைக்கவில்லை</string>
+    <string name="saving_file">சேமிப்பு கோப்பு…</string>
+    <string name="file_details">கோப்பு விவரங்கள்</string>
+    <string name="file_name">கோப்பு பெயர்</string>
+    <string name="file_type">கோப்பு வகை</string>
+    <string name="file_size">கோப்பு அளவு</string>
+    <string name="toast_saved_file_success">கோப்பு வெற்றிகரமாக சேமிக்கப்பட்டது!</string>
+    <string name="save_button">சேமி</string>
+    <string name="back_arrow">பின் அம்பு</string>
+    <string name="about_title">பற்றி</string>
+    <string name="toast_saved_file_failure">கோப்பைச் சேமிக்கும்போது பிழை ஏற்பட்டது.</string>
+</resources>

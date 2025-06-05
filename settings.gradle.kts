@@ -18,10 +18,10 @@ dependencyResolutionManagement {
 plugins {
     id("com.autonomousapps.build-health") version "2.17.0"
 
-    id("org.jetbrains.kotlin.jvm") version "2.1.20" apply false
+    id("org.jetbrains.kotlin.jvm") version "2.1.21" apply false
 
-    id("com.android.application") version "8.9.2" apply false
-    id("org.jetbrains.kotlin.android") version "2.1.20" apply false
+    id("com.android.application") version "8.10.0" apply false
+    id("org.jetbrains.kotlin.android") version "2.1.21" apply false
 }
 
 rootProject.name = "Save Locally"

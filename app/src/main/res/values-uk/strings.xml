@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Про застосуєте</string>
+    <string name="save_button">Зберегти</string>
+    <string name="how_to_use_step_1">Поділіться файлом за допомогою значка «Поділитися»</string>
+    <string name="saving_file">Збереження файл…</string>
+    <string name="file_size">Розмір файлу</string>
+    <string name="how_to_use">Як використовувати</string>
+    <string name="app_name">Локальне збереження</string>
+    <string name="no_file_found">Файлів не знайдено</string>
+    <string name="file_details">Інформація про файл</string>
+    <string name="toast_saved_file_failure">Під час збереження файлу сталася помилка.</string>
+    <string name="back_arrow">Назад</string>
+    <string name="how_to_use_step_3">Відкриється вікно з інформацією про файл, натисніть «Зберегти»</string>
+    <string name="how_to_use_step_2">Виберіть «%s» у параметрах «Поділитися»</string>
+    <string name="how_to_use_step_4">Відкриється вікно вибору файлу, виберіть місце збереження та назву файлу</string>
+    <string name="donation_title">Пожертва</string>
+    <string name="donation_content">Подобається застосунок? Подумайте про пожертву! Для отримання додаткової інформації відвідайте %s</string>
+    <string name="about_developer">Розроблено Mateus Rodrigues Costa</string>
+    <string name="settings_intercept_action_view_intents">Перехопити наміри ACTION_VIEW</string>
+    <string name="settings_intercept_action_view_intents_info">Дозволити реєстрацію як параметр, коли застосунок намагаються автоматично відкрити переглядач файлів</string>
+    <string name="file_name">Назва файлу</string>
+    <string name="file_type">Тип файлу</string>
+    <string name="about_icon_credits">Значок застосунку розроблено @swyzera</string>
+    <string name="toast_saved_file_success">Файл успішно збережено!</string>
+    <string name="about_github">Вихідний код доступний на Github за адресою %s по ліцензії AGPLv3+</string>
+    <string name="settings_title">Налаштування</string>
+    <string name="settings_category_file_picker">Вибір файлів</string>
+    <string name="settings_default_save_location">Типове місце збереження</string>
+    <string name="settings_default_save_location_last_used">Остання використана тека</string>
+    <string name="settings_default_save_location_select_folder">Виберіть теку…</string>
+    <string name="settings_category_file_details">Інформація про файл</string>
+    <string name="settings_skip_file_details_page">Пропустити сторінку «Інформація про файл»</string>
+    <string name="settings_skip_file_picker">Пропустити «Вибір файлів»</string>
+    <string name="settings_skip_file_picker_info">Пропустити «Вибір файлів» і негайно зберегти файли (доступно лише у випадку, коли встановлено типову теку)</string>
+    <string name="settings_skip_file_details_page_info">Відкрити «Вибір файлів» одразу після отримання файлу</string>
+    <string name="settings_show_file_preview">Показувати передперегляд файлу</string>
+    <string name="settings_show_file_preview_info">Показувати передперегляд файлів для сумісних типів файлів. Наразі підтримуються лише деякі файли зображень.</string>
+    <string name="settings_category_intents">Наміри</string>
+</resources>

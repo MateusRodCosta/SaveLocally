@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_intercept_action_view_intents">Intercetta gli intenti ACTION_VIEW</string>
+    <string name="toast_saved_file_success">File salvato con successo!</string>
+    <string name="donation_title">Donazione</string>
+    <string name="how_to_use_step_1">Condividi il file tramite l\'icona Condividi</string>
+    <string name="how_to_use_step_3">Si aprirà una schermata con i dettagli del file, premere Salva</string>
+    <string name="how_to_use_step_4">Si aprirà il selettore file, seleziona dove salvare e il nome del file</string>
+    <string name="about_icon_credits">Icona dell\'app progettata da @swyzera</string>
+    <string name="about_github">Codice sorgente disponibile su Github all\'indirizzo %s, concesso in licenza AGPLv3+</string>
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_category_file_picker">Selettore file</string>
+    <string name="settings_default_save_location">Posizione di salvataggio predefinita</string>
+    <string name="settings_default_save_location_last_used">Ultima cartella utilizzata</string>
+    <string name="settings_default_save_location_select_folder">Seleziona cartella…</string>
+    <string name="settings_skip_file_picker">Salta il selettore file</string>
+    <string name="settings_skip_file_picker_info">Salta il selettore file e salva immediatamente i file (disponibile solo quando è impostata una cartella predefinita)</string>
+    <string name="settings_category_file_details">Dettagli del file</string>
+    <string name="settings_show_file_preview">Mostra anteprima file</string>
+    <string name="settings_show_file_preview_info">Mostra anteprime di file per tipi di file compatibili. Attualmente sono supportati solo alcuni file immagine.</string>
+    <string name="settings_category_intents">Intenti</string>
+    <string name="no_file_found">Nessun file trovato</string>
+    <string name="saving_file">Salvataggio del file…</string>
+    <string name="file_details">Dettagli del file</string>
+    <string name="toast_saved_file_failure">Si è verificato un errore durante il salvataggio del file.</string>
+    <string name="save_button">Salva</string>
+    <string name="back_arrow">Freccia Indietro</string>
+    <string name="how_to_use_step_2">Seleziona \"%s\" nelle opzioni di condivisione</string>
+    <string name="app_name">Save Locally</string>
+    <string name="how_to_use">Come si usa</string>
+    <string name="file_name">Nome del file</string>
+    <string name="about_title">Informazioni</string>
+    <string name="about_developer">Sviluppato da Mateus Rodrigues Costa</string>
+    <string name="file_size">Dimensione del file</string>
+    <string name="settings_skip_file_details_page_info">Apri il selettore file non appena il file viene ricevuto</string>
+    <string name="settings_skip_file_details_page">Salta la pagina dei dettagli del file</string>
+    <string name="file_type">Tipo di file</string>
+    <string name="settings_intercept_action_view_intents_info">Consenti la registrazione come opzione quando le app tentano di aprire automaticamente un visualizzatore di file</string>
+    <string name="donation_content">Ti piace l\'app? Considera di fare una donazione! Per maggiori informazioni, visita %s</string>
+</resources>
