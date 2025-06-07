@@ -28,7 +28,7 @@
     <string name="settings_category_file_picker">Вибір файлів</string>
     <string name="settings_default_save_location">Типове місце збереження</string>
     <string name="settings_default_save_location_last_used">Остання використана тека</string>
-    <string name="settings_default_save_location_select_folder">Виберіть теку…</string>
+    <string name="settings_default_save_location_select_folder">Вибрати теку…</string>
     <string name="settings_category_file_details">Інформація про файл</string>
     <string name="settings_skip_file_details_page">Пропустити сторінку «Інформація про файл»</string>
     <string name="settings_skip_file_picker">Пропустити «Вибір файлів»</string>
