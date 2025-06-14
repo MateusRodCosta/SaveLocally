@@ -1,3 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="how_to_use_step_1">Sdílej soubor pomocí Sdílející ikony</string>
+    <string name="app_name">Lokální ukládání</string>
+    <string name="how_to_use_step_2">Vyberte \"%s\" ve možnostech sdílení</string>
+    <string name="about_title">O nás</string>
+    <string name="about_developer">Vytvořil Mateus Rodrigues Costa</string>
+    <string name="about_icon_credits">Ikona aplikace vytvořena @swyzera</string>
+    <string name="how_to_use_step_4">Okno s výběrem souborů se otevře, vyberte kde se soubor uloží a taky jeho název</string>
+    <string name="settings_title">Nastavení</string>
+    <string name="settings_default_save_location">Základní ukládací lokace</string>
+    <string name="about_github">Zdrojový kód zveřejněn na Github %s, licencováno pod AGPLv3+</string>
+    <string name="settings_category_file_picker">Prohlížeč souborů</string>
+    <string name="settings_skip_file_picker">Přeskočit prohlížeč souborů</string>
+    <string name="settings_category_file_details">Detaily souboru</string>
+    <string name="settings_skip_file_details_page">Přeskočit stránku s detaily souboru</string>
+    <string name="settings_show_file_preview">Ukázat ukázku souboru</string>
+    <string name="saving_file">Ukládání souboru…</string>
+    <string name="file_details">Detaily souboru</string>
+    <string name="settings_intercept_action_view_intents">Zachytit ACTION_VIEW záměry</string>
+    <string name="settings_category_intents">Záměry</string>
+    <string name="settings_intercept_action_view_intents_info">Povolit registraci jako možnost, když se aplikace snaží automaticky otevřít prohlížeč souborů</string>
+    <string name="settings_skip_file_details_page_info">Otevřít prohlížeč souborů, jakmile je soubor přijat</string>
+    <string name="settings_skip_file_picker_info">Přeskočit prohlížeč souborů a hned uložit (možné jenom když je vybraná základní složka)</string>
+    <string name="toast_saved_file_failure">Při ukládání souboru došlo k chybě.</string>
+    <string name="settings_show_file_preview_info">Zobrazit náhledy souborů pro kompatibilní typy souborů. V současné době jsou podporovány pouze některé obrazové soubory.</string>
+    <string name="file_size">Velikost souboru</string>
+    <string name="settings_default_save_location_select_folder">Vyberte složku…</string>
+    <string name="file_name">Jméno souboru</string>
+    <string name="file_type">Typ souboru</string>
+    <string name="how_to_use">Jak na to</string>
+    <string name="back_arrow">Šipka zpátky</string>
+    <string name="no_file_found">Nebyl nalezen žádný soubor</string>
+    <string name="save_button">Uložit</string>
+    <string name="donation_title">Darovat</string>
+    <string name="donation_content">Milujete aplikaci? Po přemýšlejte o darování! Pro více informací navštivte %s</string>
+    <string name="how_to_use_step_3">Otevře se obrazovka s detaily souboru, klikněte uložit</string>
+    <string name="settings_default_save_location_last_used">Poslední použitá složka</string>
+    <string name="toast_saved_file_success">Ukládání souboru se povedlo!</string>
 </resources>
