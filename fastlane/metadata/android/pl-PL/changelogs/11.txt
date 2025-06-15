@@ -1,0 +1,2 @@
+- Minimalna obsługiwana wersja Androida to obecnie 8.0 (Oreo)
+- Zaktualizowano zależności

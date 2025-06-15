@@ -1,0 +1,8 @@
+Czy zdarzył Ci się kiedyś taki scenariusz: korzystasz z aplikacji (np. bankowej) i musisz pilnie wyeksportować plik (np. wyciąg bankowy w formacie PDF). Chcesz pobrać ten plik lokalnie na swoje urządzenie, ale aplikacja nie oferuje żadnego łatwego sposobu, aby to zrobić, maksimum, jakie oferuje, to opcja udostępnienia pliku, co oznacza, że musisz wysłać go do siebie (lub kogoś innego) za pośrednictwem poczty e-mail lub komunikatora internetowego, aby dopiero wtedy mieć możliwość zapisania tego pliku.
+
+Dzieje się tak, ponieważ wiele aplikacji decyduje się na korzystanie z funkcji udostępniania systemu zamiast wykonywania pracy w celu zaimplementowania wymaganej logiki zapisywania plików. Więc co można zrobić?
+
+W takich przypadkach przydatna może okazać się opcja Zapisz lokalnie, którą wystarczy wybrać na liście udostępniania i która umożliwia zapisanie pliku w dowolnym miejscu lokalnie na urządzeniu, a także wcześniejsze wyświetlenie szczegółów pliku (choć można to pominąć).
+Dostępna jest również opcja przechwytywania intencji „Otwórz za pomocą”, umożliwiająca zapisywanie plików, nawet jeśli aplikacja źródłowa próbowałaby wymusić przeglądanie za pomocą domyślnej przeglądarki dla tego typu pliku.
+
+Zapisz lokalnie to oprogramowanie FLOSS (Free and Libre Open Source Software) opracowane przy użyciu Jetpack Compose. Kod źródłowy jest dostępny pod adresem <a href="https://github.com/MateusRodCosta/SaveLocally">https://github.com/MateusRodCosta/SaveLocally</a> na licencji AGPLv3+.

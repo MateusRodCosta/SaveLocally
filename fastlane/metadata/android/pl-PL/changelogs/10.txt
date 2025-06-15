@@ -1,0 +1,4 @@
+Zaktualizowano biblioteki Jetpack Compose i dodano obsługę Material 3.
+
+Ulepszenia funkcji głównych i udostępnianych, takich jak przewijanie i informacje o aplikacji.
+Zmieniono sposób, w jaki aplikacja pobiera dane o udostępnianych plikach.
