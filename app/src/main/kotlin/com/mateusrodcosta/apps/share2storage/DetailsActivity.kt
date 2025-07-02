@@ -166,7 +166,7 @@ class DetailsActivity : ComponentActivity() {
 
         val fileUri = when (action) {
             Intent.ACTION_SEND -> if (content == null) {
-                IntentCompat.getParcelableExtra<Uri>(intent, Intent.EXTRA_STREAM, Uri::class.java)
+                IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
             } else null
 
             Intent.ACTION_VIEW -> data
