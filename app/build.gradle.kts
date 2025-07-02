@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -12,17 +13,14 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
 
-kotlin {
-    jvmToolchain(21)
-}
-
 android {
     namespace = "com.mateusrodcosta.apps.share2storage"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 28
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 32
         versionName = "2.0.0"
@@ -62,9 +60,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
-    }
 
     androidResources {
         @Suppress("UnstableApiUsage")
@@ -83,6 +78,13 @@ android {
         // Requested by F-Droid (https://github.com/MateusRodCosta/Share2Storage/issues/44)
         // Disables dependency metadata when building APKs.
         includeInApk = false
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
     }
 }
 
