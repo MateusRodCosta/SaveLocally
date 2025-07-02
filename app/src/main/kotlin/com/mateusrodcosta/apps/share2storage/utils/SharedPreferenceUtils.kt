@@ -36,8 +36,8 @@ object SharedPreferencesDefaultValues {
 }
 
 // Sourced from https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:preference/preference/src/main/java/androidx/preference/PreferenceManager.java
-// and converted to Kotlin
-// Instead of relying on androidx's https://developer.android.com/jetpack/androidx/releases/preference
+// and converted to Kotlin with tweaks
+// Preferred instead of relying on androidx's https://developer.android.com/jetpack/androidx/releases/preference
 class SharedPreferenceUtils {
     companion object {
         /**
@@ -51,7 +51,7 @@ class SharedPreferenceUtils {
         @JvmStatic
         fun getDefaultSharedPreferences(context: Context): SharedPreferences {
             return context.getSharedPreferences(
-                getDefaultSharedPreferencesName(context), getDefaultSharedPreferencesMode()
+                getDefaultSharedPreferencesName(context), Context.MODE_PRIVATE
             )
         }
 
@@ -59,11 +59,5 @@ class SharedPreferenceUtils {
         private fun getDefaultSharedPreferencesName(context: Context): String {
             return context.packageName + "_preferences"
         }
-
-        @JvmStatic
-        private fun getDefaultSharedPreferencesMode(): Int {
-            return Context.MODE_PRIVATE
-        }
     }
 }
-
