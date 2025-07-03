@@ -201,7 +201,7 @@ fun FileInfo(uriData: UriData) {
         )
         FileInfoLine(
             label = stringResource(R.string.file_type),
-            content = uriData.mimeType  ?: "*/*"
+            content = uriData.mimeType ?: "*/*"
         )
         FileInfoLine(
             label = stringResource(R.string.file_size),
@@ -222,10 +222,14 @@ fun FileInfoLine(label: String, content: String) {
 @Composable
 fun FilePreview(uriData: UriData) {
     val mimeType = uriData.mimeType
-    val fallbackFileIcon = if (mimeType?.startsWith("image/") ?: false) Icons.Outlined.Image
-    else if (mimeType?.startsWith("audio/") ?: false) Icons.Outlined.AudioFile
-    else if (mimeType?.startsWith("video/")  ?: false) Icons.Outlined.VideoFile
-    else Icons.Outlined.Description
+    val primaryType = mimeType?.substringBefore('/')
+
+    val fallbackFileIcon = when (primaryType) {
+        "image" -> Icons.Outlined.Image
+        "audio" -> Icons.Outlined.AudioFile
+        "video" -> Icons.Outlined.VideoFile
+        else -> Icons.Outlined.Description
+    }
 
     Box(
         modifier = Modifier
