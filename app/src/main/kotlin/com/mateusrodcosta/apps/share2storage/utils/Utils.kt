@@ -23,11 +23,18 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import android.util.Log
+import android.util.Size
 import com.mateusrodcosta.apps.share2storage.model.UriData
-import java.io.*
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
 object Utils {
     const val CONTENT_ALPHA_DISABLED = 0.38f
@@ -55,22 +62,62 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
 
     cursor.close()
 
+    val bitmap = getUriThumbnail(getPreview, contentResolver, uri)
+    return UriData(displayName, type, size, previewImage = bitmap)
+}
+
+private fun getUriThumbnail(
+    getPreview: Boolean = false, contentResolver: ContentResolver, uri: Uri
+): Bitmap? {
     var bitmap: Bitmap? = null
     if (getPreview) {
+        // We need a max size in any case
+        // I thought 1024x1024 might be too small so went with 2048x2048
+        val maxThumbnailSize = Size(2048, 2048)
+
         try {
-            val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")
-            if (fileDescriptor != null) {
-                val fd = fileDescriptor.fileDescriptor
-                bitmap = BitmapFactory.decodeFileDescriptor(fd)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // The recommended approach for thumbnails using system APIs
+                // While efficient it only supports Android 10+
+                // This approach likely works with other formats aside than image, such as video
+                bitmap = contentResolver.loadThumbnail(uri, maxThumbnailSize, null)
+            } else {
+                // For Android 9, Gemini suggested an approach where I get the image size and
+                // manually scale it down
+                // This works ony for images and adding video support might be a bit involved
+                contentResolver.openFileDescriptor(uri, "r")?.use { fileDescriptor ->
+                    val fd = fileDescriptor.fileDescriptor
+                    val options = BitmapFactory.Options().apply {
+                        inJustDecodeBounds = true
+                    }
+                    BitmapFactory.decodeFileDescriptor(fd, null, options)
+
+                    val photoW = options.outWidth
+                    val photoH = options.outHeight
+
+                    var scaleFactor = 1
+                    if (photoW > maxThumbnailSize.width || photoH > maxThumbnailSize.height) {
+                        val halfPhotoW = photoW / 2
+                        val halfPhotoH = photoH / 2
+
+                        while (halfPhotoW / scaleFactor >= maxThumbnailSize.width && halfPhotoH / scaleFactor >= maxThumbnailSize.height) {
+                            scaleFactor *= 2
+                        }
+                    }
+
+                    options.inJustDecodeBounds = false
+                    options.inSampleSize = scaleFactor
+
+                    bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options)
+                }
             }
-            fileDescriptor?.close()
         } catch (e: Exception) {
-            Log.e("getUriData] bitmap", e.message, e)
+            Log.e("getUriThumbnail", e.message, e)
             bitmap = null
         }
     }
 
-    return UriData(displayName, type, size, previewImage = bitmap)
+    return bitmap
 }
 
 private fun isVirtualFile(context: Context, contentResolver: ContentResolver, uri: Uri): Boolean {
