@@ -21,7 +21,7 @@ import android.graphics.Bitmap
 
 data class UriData(
     val displayName: String,
-    val mimeType: String,
+    val mimeType: String?,
     val size: Long,
     val previewImage: Bitmap?
 )

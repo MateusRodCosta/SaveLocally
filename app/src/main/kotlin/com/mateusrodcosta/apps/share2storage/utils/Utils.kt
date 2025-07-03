@@ -41,7 +41,7 @@ object Utils {
 }
 
 fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean): UriData? {
-    val type = contentResolver.getType(uri) ?: "*/*"
+    val type = contentResolver.getType(uri)
     val displayName: String?
     val size: Long?
 
@@ -62,12 +62,12 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
 
     cursor.close()
 
-    val bitmap = getUriThumbnail(getPreview, contentResolver, uri)
+    val bitmap = getUriThumbnail(getPreview, contentResolver, uri, type)
     return UriData(displayName, type, size, previewImage = bitmap)
 }
 
 private fun getUriThumbnail(
-    getPreview: Boolean = false, contentResolver: ContentResolver, uri: Uri
+    getPreview: Boolean = false, contentResolver: ContentResolver, uri: Uri, type: String?
 ): Bitmap? {
     var bitmap: Bitmap? = null
     if (getPreview) {
@@ -85,6 +85,12 @@ private fun getUriThumbnail(
                 // For Android 9, Gemini suggested an approach where I get the image size and
                 // manually scale it down
                 // This works ony for images and adding video support might be a bit involved
+
+                // Unidentified mime type
+                if (type == null) return null
+                // Only images are supported
+                if(!type.startsWith("image/")) return null
+
                 contentResolver.openFileDescriptor(uri, "r")?.use { fileDescriptor ->
                     val fd = fileDescriptor.fileDescriptor
                     val options = BitmapFactory.Options().apply {
