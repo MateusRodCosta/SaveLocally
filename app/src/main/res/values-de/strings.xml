@@ -1,3 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Lokal speichern</string>
+    <string name="how_to_use">Bedienung</string>
+    <string name="how_to_use_step_1">Teile eine Datei mit dem Share-Icon</string>
+    <string name="how_to_use_step_2">Wähle \"%s\" in den Share-Optionen</string>
+    <string name="how_to_use_step_3">Eine Ansicht mit Informationen zur geteilten Datei öffnet sich. Drücke Speichern</string>
+    <string name="how_to_use_step_4">Die Dateiauswahl öffnet sich. Wähle einen Speicherort und einen Dateinamen</string>
+    <string name="donation_title">Spenden</string>
+    <string name="donation_content">Magst du diese App? Spende doch! Für mehr Informationen, besuche %s</string>
+    <string name="about_title">Über</string>
+    <string name="about_developer">Entwickelt von Mateus Rodrigues Costa</string>
+    <string name="about_icon_credits">App-Icon entworfen von @swyzera</string>
+    <string name="about_github">Quellcode ist verfügbar auf GitHub unter %s, lizensiert unter der AGPLv3+</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_category_file_picker">Dateiauswahl</string>
+    <string name="settings_default_save_location">Standard-Speicherort</string>
+    <string name="settings_default_save_location_last_used">Letzter verwendeter Ordner</string>
+    <string name="settings_default_save_location_select_folder">Wähle einen Ordner…</string>
+    <string name="settings_skip_file_picker">Dateiauswahl überspringen</string>
+    <string name="settings_skip_file_picker_info">Dateiauswahl überspringen und Dateien sofort speichern (nur verfügbar, wenn ein Standard-Speicherort hinterlegt wurde)</string>
+    <string name="settings_category_file_details">Dateiinformationen</string>
+    <string name="settings_skip_file_details_page">Ansicht mit Dateiinformationen überspringen</string>
+    <string name="settings_skip_file_details_page_info">Dateiauswahl öffnen, sobald eine Datei geteilt wird</string>
+    <string name="settings_show_file_preview">Dateivorschau zeigen</string>
+    <string name="settings_show_file_preview_info">Zeige eine Vorschau für kompatible Dateitypen. Aktuell werden nur einige Bilddateitypen unterstützt.</string>
+    <string name="settings_category_intents">Intents</string>
+    <string name="settings_intercept_action_view_intents">ACTION_VIEW Intents abfangen</string>
+    <string name="settings_intercept_action_view_intents_info">Erlaube die Registrierung als Option, wenn Apps versuchen automatisch die Dateiauswahl zu öffnen</string>
+    <string name="no_file_found">Keine Datei gefunden</string>
+    <string name="saving_file">Speichere Datei…</string>
+    <string name="file_details">Dateiinformationen</string>
+    <string name="file_name">Dateiname</string>
+    <string name="file_type">Dateityp</string>
+    <string name="file_size">Dateigröße</string>
+    <string name="toast_saved_file_success">Datei erfolgreich gespeichert!</string>
+    <string name="toast_saved_file_failure">Ein Fehler ist beim Speichern der Datei aufgetreten.</string>
+    <string name="save_button">Speichern</string>
+    <string name="back_arrow">Pfeil Zurück</string>
 </resources>
