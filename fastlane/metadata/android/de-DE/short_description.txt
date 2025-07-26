@@ -1,0 +1,1 @@
+Eine App erlaubt kein Speichern, aber hat eine Teilen-Option? Kein Problem!

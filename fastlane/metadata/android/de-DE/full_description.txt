@@ -1,0 +1,1 @@
+Warst du schon mal in folgender Situation: Du verwendest eine App (zum Beispiel eine Banking-App) und du musst dringend eine Datei exportieren, beispielsweise eine PDF-Version eines Kontoauszugs. Du möchtest diese Datei lokal speichern, aber die App bietet keinerlei Option dies zu tun. Die einzige Option, die dir bleibt,
