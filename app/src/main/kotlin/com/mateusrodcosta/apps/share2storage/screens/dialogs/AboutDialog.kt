@@ -88,9 +88,9 @@ fun AppInfo() {
 
     ListItem(leadingContent = {
         Image(
-            painterResource(R.drawable.ic_launcher_foreground),
-            stringResource(R.string.app_name),
             modifier = Modifier.scale(1.5f),
+            painter = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = stringResource(R.string.app_name),
         )
     }, headlineContent = {
         Text(

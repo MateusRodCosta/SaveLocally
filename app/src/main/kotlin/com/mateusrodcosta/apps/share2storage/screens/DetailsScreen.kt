@@ -18,7 +18,6 @@
 package com.mateusrodcosta.apps.share2storage.screens
 
 import android.text.format.Formatter
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,6 +39,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.VideoFile
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -52,15 +52,19 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImagePainter
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
@@ -230,26 +234,46 @@ fun FilePreview(uriData: UriData) {
         "video" -> Icons.Outlined.VideoFile
         else -> Icons.Outlined.Description
     }
+    val fallbackFileLabel = when (primaryType) {
+        "image" -> "Image"
+        "audio" -> "Audio"
+        "video" -> "Video"
+        else -> "File"
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        if (uriData.previewImage != null) Image(
+        SubcomposeAsyncImage(
             modifier = Modifier.align(Alignment.Center),
-            bitmap = uriData.previewImage.asImageBitmap(),
+            model = uriData.uri,
             contentDescription = stringResource(R.string.app_name),
             contentScale = ContentScale.Fit,
-        )
-        else Icon(
-            modifier = Modifier
-                .size(128.dp)
-                .align(Alignment.Center),
-            imageVector = fallbackFileIcon,
-            contentDescription = stringResource(R.string.app_name),
-            tint = MaterialTheme.colorScheme.tertiary
-        )
+        ) {
+            val state by painter.state.collectAsState()
+
+            when (state) {
+                is AsyncImagePainter.State.Loading -> {
+                    CircularProgressIndicator()
+                }
+                // Display fallback icon if can't create thumbnail
+                is AsyncImagePainter.State.Error -> {
+                    Icon(
+                        modifier = Modifier
+                            .size(128.dp)
+                            .align(Alignment.Center),
+                        imageVector = fallbackFileIcon,
+                        contentDescription = fallbackFileLabel,
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+                else -> {
+                    SubcomposeAsyncImageContent()
+                }
+            }
+        }
     }
 }
 

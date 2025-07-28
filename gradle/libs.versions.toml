@@ -11,6 +11,7 @@ activityCompose = "1.10.1"
 junit = "4.13.2"
 androidxTestRunner = "1.6.2"
 androidxTestRules = "1.6.1"
+coil = "3.3.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -30,6 +31,7 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
+coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 
 [bundles]
 androidx-integration = ["appcompat", "documentfile", "splashscreen"]

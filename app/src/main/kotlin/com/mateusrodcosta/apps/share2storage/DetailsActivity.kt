@@ -77,7 +77,8 @@ class DetailsActivity : ComponentActivity() {
                                     applicationContext, it
                                 )
                             }
-                            val file = dir?.createFile(uriData!!.mimeType  ?: "*/*", uriData!!.displayName)
+                            val file =
+                                dir?.createFile(uriData!!.mimeType ?: "*/*", uriData!!.displayName)
                             file?.uri?.let { handleFileSave(it, fileUri!!) }
                         }
                     } else {
@@ -192,8 +193,7 @@ class DetailsActivity : ComponentActivity() {
 
         fileUri?.let {
             this.fileUri = fileUri
-            val uriData =
-                getUriData(contentResolver, fileUri, getPreview = shouldShowFilePreview) ?: return
+            val uriData = getUriData(contentResolver, fileUri) ?: return
 
             this.uriData = uriData
 

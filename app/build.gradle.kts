@@ -97,6 +97,8 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
+    implementation(libs.coil)
+
     implementation(libs.bundles.compose)
     implementation(libs.bundles.compose.integration)
     debugImplementation(libs.compose.ui.tooling)
