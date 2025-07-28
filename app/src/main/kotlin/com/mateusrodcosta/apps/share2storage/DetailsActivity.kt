@@ -156,24 +156,41 @@ class DetailsActivity : ComponentActivity() {
         }
         Log.d("getPreferences] handleIntent] intent", "action: $action, type: $type, data: $data")
 
-        val content = when (action) {
-            Intent.ACTION_SEND -> if (type == "text/plain") {
-                intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
-            } else null
+        var content: CharSequence? = null
+        var fileUri: Uri? = null
+        var uriList: ArrayList<Uri>? = null
+
+        when (action) {
+            Intent.ACTION_SEND -> {
+                when (type) {
+                    "text/plain" -> {
+                        content = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
+                        Log.d("getPreferences] handleIntent] content", content.toString())
+                    }
+
+                    else -> {
+                        fileUri = IntentCompat.getParcelableExtra(
+                            intent, Intent.EXTRA_STREAM, Uri::class.java
+                        )
+                        Log.d("getPreferences] handleIntent] fileUri", fileUri.toString())
+                    }
+                }
+            }
+
+            Intent.ACTION_SEND_MULTIPLE -> {
+                uriList = IntentCompat.getParcelableArrayListExtra(
+                    intent, Intent.EXTRA_STREAM, Uri::class.java
+                )
+                Log.d("getPreferences] handleIntent] uriList", uriList.toString())
+            }
+
+            Intent.ACTION_VIEW -> {
+                fileUri = data
+                Log.d("getPreferences] handleIntent] fileUri", fileUri.toString())
+            }
 
             else -> null
         }
-        Log.d("getPreferences] handleIntent] content", content.toString())
-
-        val fileUri = when (action) {
-            Intent.ACTION_SEND -> if (content == null) {
-                IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
-            } else null
-
-            Intent.ACTION_VIEW -> data
-            else -> null
-        }
-        Log.d("getPreferences] handleIntent] fileUri", fileUri.toString())
 
         content?.let {
             createFile = registerForActivityResult(
@@ -192,7 +209,7 @@ class DetailsActivity : ComponentActivity() {
         }
 
         fileUri?.let {
-            this.fileUri = fileUri
+            this.fileUri = it
             val uriData = getUriData(contentResolver, fileUri) ?: return
 
             this.uriData = uriData
