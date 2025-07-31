@@ -1,0 +1,7 @@
+¿Esto te ha pasado alguna vez? Estás usando una app (como una app de banca) y necesitas exportar un archivo de la app (como un PDF). Quieres descargar el archivo en algún lugar en tu dispotivo, pero la app solo te deja compartir el archivo. Por eso, tienes que enviártelo a ti mismo y luego guardarlo.
+
+Esto ocurre porque muchas apps solo quieren usar la funcionalidad de compartir del sistema para exportar archivos y no quieren implementar la funcionalidad ellas mismas. ¿Qué se puede hacer?
+
+En esos caso, esta app quizá te puede servir. Solo tienes que elegirla en el menú de compartir y te deja guardar el archivo donde quieras en tu dispositivo. Si quieres, también puede mostar los detalles del archivo antes de guardarlo. También hay una opción de interceptar los botones de "abrir con", así que si una app solo te deja abrir un archivo, todavía puedes guardarlo.
+
+Esta app es un software libre y de código abierto desarrollado con Jetpack Compose. El código fuente está disponsible en <a href="https://github.com/MateusRodCosta/SaveLocally">https://github.com/MateusRodCosta/SaveLocally</a> licenciado con AGPLv3+.
