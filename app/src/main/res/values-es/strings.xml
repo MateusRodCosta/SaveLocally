@@ -1,3 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Guardar localmente</string>
+    <string name="how_to_use">Como se usa</string>
+    <string name="how_to_use_step_1">Comparte el archivo por el botón de compartir</string>
+    <string name="how_to_use_step_2">Elige \"%s\" en las opciones de compartir</string>
+    <string name="how_to_use_step_3">Se abrirá una pantalla con detalles sobre el archivo, oprime \"Guardar\"</string>
+    <string name="donation_title">Donar</string>
+    <string name="how_to_use_step_4">Se abrirá el selector de archivos, elige dónde quieres guardar el archivo y el nombre del archivo</string>
+    <string name="donation_content">¿Te gusta la app? ¡Piensa en donar! Para ver más información, visita %s</string>
+    <string name="about_title">Acerca de</string>
+    <string name="about_developer">Desarrollado por Mateus Rodrigues Costa</string>
+    <string name="about_icon_credits">Icono de la app diseñado por @swyzera</string>
+    <string name="about_github">Código fuente disponsible en Github en %s, con licencia de AGPLv3+</string>
+    <string name="settings_title">Configuración</string>
+    <string name="settings_category_file_picker">Selector de archivos</string>
+    <string name="settings_default_save_location">Directorio de guardar predeterminado</string>
+    <string name="settings_default_save_location_select_folder">Elegir carpeta…</string>
+    <string name="settings_skip_file_picker">Saltar el selector de archivos</string>
+    <string name="settings_category_file_details">Detalles del archivo</string>
+    <string name="settings_default_save_location_last_used">La carpeta más reciente</string>
+    <string name="settings_skip_file_picker_info">Saltar el selector de archivos y inmediatamente guardar los archivos (Solo disponible cuando hay una carpeta predeterminada)</string>
+    <string name="settings_skip_file_details_page">Saltar la página de detalles del archivo</string>
+    <string name="settings_skip_file_details_page_info">Abrir el selector de archivos tan pronto como se recibe el archivo</string>
+    <string name="settings_show_file_preview">Mostrar vista previa del archivo</string>
+    <string name="settings_show_file_preview_info">Mostrar vistas previas para tipos de archivos compatibles. Solo algunos tipos de imágenes están disponibles.</string>
+    <string name="settings_category_intents">Intents</string>
+    <string name="settings_intercept_action_view_intents">Interceptar intents de ACTION_VIEW</string>
+    <string name="settings_intercept_action_view_intents_info">Permitir que esta app sea una opción cuando una app necesita usar otra app para abrir un archivo</string>
+    <string name="saving_file">Guardando el archivo…</string>
+    <string name="no_file_found">No se encuentra ningún archivo</string>
+    <string name="file_details">Detalles del archivo</string>
+    <string name="file_name">Nombre del archivo</string>
+    <string name="file_type">Tipo del archivo</string>
+    <string name="file_size">Tamaño del archivo</string>
+    <string name="toast_saved_file_success">¡Archivo guardado con éxito!</string>
+    <string name="save_button">Guardar</string>
+    <string name="back_arrow">Botón de retroceder</string>
+    <string name="toast_saved_file_failure">Un error ocurrió mientras guardando el archivo.</string>
 </resources>
