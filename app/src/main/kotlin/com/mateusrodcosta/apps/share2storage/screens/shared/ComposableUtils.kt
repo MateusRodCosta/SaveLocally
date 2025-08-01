@@ -17,8 +17,15 @@
 
 package com.mateusrodcosta.apps.share2storage.screens.shared
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AudioFile
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.VideoFile
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.mateusrodcosta.apps.share2storage.model.UriData
 
 fun shouldShowLandscape(
     widthSizeClass: WindowWidthSizeClass,
@@ -28,3 +35,28 @@ fun shouldShowLandscape(
     val showLandscapeTablet = widthSizeClass == WindowWidthSizeClass.Expanded
     return showLandscapePhone || showLandscapeTablet
 }
+
+fun getThumbnailFallbackInfo(uriData: UriData): ThumbnailFallbackInfo {
+    val mimeType = uriData.mimeType
+    val primaryType = mimeType?.substringBefore('/')
+
+    return when (primaryType) {
+        "image" -> ThumbnailFallbackInfo(
+            Icons.Outlined.Image, "Image"
+        )
+
+        "audio" -> ThumbnailFallbackInfo(
+            Icons.Outlined.AudioFile, "Audio"
+        )
+
+        "video" -> ThumbnailFallbackInfo(
+            Icons.Outlined.VideoFile, "Video"
+        )
+
+        else -> ThumbnailFallbackInfo(
+            Icons.Outlined.Description, "File"
+        )
+    }
+}
+
+data class ThumbnailFallbackInfo(val icon: ImageVector, val label: String)

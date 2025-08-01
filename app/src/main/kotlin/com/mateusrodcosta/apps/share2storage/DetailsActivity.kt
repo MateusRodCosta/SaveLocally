@@ -36,6 +36,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSkipped
+import com.mateusrodcosta.apps.share2storage.screens.MultipleDetailsScreen
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
 import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceUtils
@@ -52,6 +53,8 @@ class DetailsActivity : ComponentActivity() {
     private var fileUri: Uri? = null
     private var uriData: UriData? = null
     private var content: CharSequence? = null
+
+    private var uriDataList: List<UriData>? = null
 
     private var defaultSaveLocation: Uri? = null
     private var shouldSkipFilePicker: Boolean = false
@@ -91,17 +94,22 @@ class DetailsActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            if (skipFileDetails) {
-                LaunchedEffect(Unit) {
-                    launchFilePicker()
-                }
-                DetailsScreenSkipped()
+            if (uriDataList != null) {
+                MultipleDetailsScreen(uriDataList, windowSizeClass)
             } else {
-                DetailsScreen(
-                    uriData,
-                    windowSizeClass,
-                    launchFilePicker,
-                )
+
+                if (skipFileDetails) {
+                    LaunchedEffect(Unit) {
+                        launchFilePicker()
+                    }
+                    DetailsScreenSkipped()
+                } else {
+                    DetailsScreen(
+                        uriData,
+                        windowSizeClass,
+                        launchFilePicker,
+                    )
+                }
             }
         }
     }
@@ -225,6 +233,11 @@ class DetailsActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+
+        uriList?.let {
+            val uriDataList = it.mapNotNull { item -> getUriData(contentResolver, item) }
+            this.uriDataList = uriDataList
         }
     }
 

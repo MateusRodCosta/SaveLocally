@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -17,8 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import android.text.format.Formatter
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,22 +26,15 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AudioFile
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material.icons.outlined.VideoFile
 import androidx.compose.material.icons.rounded.Download
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -52,22 +43,16 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.model.UriData
+import com.mateusrodcosta.apps.share2storage.screens.shared.FileInfo
+import com.mateusrodcosta.apps.share2storage.screens.shared.FilePreview
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
@@ -164,16 +149,8 @@ fun FileDetailsPortrait(uriData: UriData) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1.0f)
-        ) {
-            FilePreview(uriData)
-        }
-        Box {
-            FileInfo(uriData)
-        }
+        FilePreview(uriData, modifier = Modifier.weight(1.0f))
+        FileInfo(uriData, modifier = Modifier.verticalScroll(rememberScrollState()))
     }
 }
 
@@ -184,98 +161,13 @@ fun FileDetailsLandscape(uriData: UriData) {
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(modifier = Modifier.weight(1.0f)) {
-            FilePreview(uriData)
-        }
-        Box(modifier = Modifier.weight(1.0f)) {
-            FileInfo(uriData)
-        }
-    }
-}
-
-@Composable
-fun FileInfo(uriData: UriData) {
-    Column(
-        modifier = Modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center
-    ) {
-        FileInfoLine(
-            label = stringResource(R.string.file_name),
-            content = uriData.displayName
+        FilePreview(
+            uriData, modifier = Modifier.weight(1.0f)
         )
-        FileInfoLine(
-            label = stringResource(R.string.file_type),
-            content = uriData.mimeType ?: "*/*"
-        )
-        FileInfoLine(
-            label = stringResource(R.string.file_size),
-            content = Formatter.formatFileSize(LocalContext.current, uriData.size)
-        )
+        FileInfo(uriData, modifier = Modifier.weight(1.0f))
     }
 }
 
-@Composable
-fun FileInfoLine(label: String, content: String) {
-    ListItem(modifier = Modifier.clickable { }, headlineContent = {
-        Text(label)
-    }, supportingContent = {
-        Text(content, softWrap = true)
-    })
-}
-
-@Composable
-fun FilePreview(uriData: UriData) {
-    val mimeType = uriData.mimeType
-    val primaryType = mimeType?.substringBefore('/')
-
-    val fallbackFileIcon = when (primaryType) {
-        "image" -> Icons.Outlined.Image
-        "audio" -> Icons.Outlined.AudioFile
-        "video" -> Icons.Outlined.VideoFile
-        else -> Icons.Outlined.Description
-    }
-    val fallbackFileLabel = when (primaryType) {
-        "image" -> "Image"
-        "audio" -> "Audio"
-        "video" -> "Video"
-        else -> "File"
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        SubcomposeAsyncImage(
-            modifier = Modifier.align(Alignment.Center),
-            model = uriData.uri,
-            contentDescription = stringResource(R.string.app_name),
-            contentScale = ContentScale.Fit,
-        ) {
-            val state by painter.state.collectAsState()
-
-            when (state) {
-                is AsyncImagePainter.State.Loading -> {
-                    CircularProgressIndicator()
-                }
-                // Display fallback icon if can't create thumbnail
-                is AsyncImagePainter.State.Error -> {
-                    Icon(
-                        modifier = Modifier
-                            .size(128.dp)
-                            .align(Alignment.Center),
-                        imageVector = fallbackFileIcon,
-                        contentDescription = fallbackFileLabel,
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
-                }
-                else -> {
-                    SubcomposeAsyncImageContent()
-                }
-            }
-        }
-    }
-}
 
 @Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
 @Composable
