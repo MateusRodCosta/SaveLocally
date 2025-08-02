@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -138,13 +139,18 @@ fun CollapsibleFileDetailsHeader(uriData: UriData, isCollapsed: Boolean, onToggl
     Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(uriData.displayName, modifier = Modifier.weight(1.0f))
             IconButton(onClick = onToggle) {
                 Icon(
                     imageVector = dropdownIcon, contentDescription = null
+                )
+            }
+            Text(uriData.displayName, modifier = Modifier.weight(1.0f))
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.Default.Save, contentDescription = null
                 )
             }
         }
