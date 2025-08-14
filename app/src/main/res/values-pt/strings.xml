@@ -1,3 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Gravar Localmente</string>
+    <string name="how_to_use">Como usar</string>
+    <string name="how_to_use_step_1">Partilhe o ficheiro a partir do botão Partilhar</string>
+    <string name="how_to_use_step_2">Selecione \"%s\" nas opções de compartilhamento</string>
+    <string name="how_to_use_step_3">Um ecrã com pormenores do ficheiro será mostrada, toque em Gravar</string>
+    <string name="how_to_use_step_4">O seletor de ficheiros será exibido, selecione onde e com qual nome gravarar</string>
+    <string name="donation_title">Doação</string>
+    <string name="donation_content">Gostou da app? Considere doar! Para mais pormenores, aceda %s</string>
+    <string name="about_title">Sobre</string>
+    <string name="about_developer">Desenvolvido por Mateus Rodrigues Costa</string>
+    <string name="about_icon_credits">Design do ícone da app por @swyzera</string>
+    <string name="about_github">Código-fonte disponível no Github em %s, licenciado sob AGPLv3+</string>
+    <string name="settings_title">Configurações</string>
+    <string name="settings_category_file_picker">Seletor de Ficheiros</string>
+    <string name="settings_default_save_location">Local de gravamento padrão</string>
+    <string name="settings_default_save_location_last_used">Última pasta usada</string>
+    <string name="settings_default_save_location_select_folder">Selecionar pasta…</string>
+    <string name="settings_skip_file_picker">Pular seletor de ficheiros</string>
+    <string name="settings_skip_file_picker_info">Pular seletor de ficheiros e gravar imediatamente (apenas disponível quando uma pasta padrão for configurada)</string>
+    <string name="settings_category_file_details">Pormenores do ficheiro</string>
+    <string name="settings_skip_file_details_page">Pular página de Pormenores do ficheiro</string>
+    <string name="settings_skip_file_details_page_info">Abrir seletor de ficheiros assim que receber ficheiro</string>
+    <string name="settings_show_file_preview">Mostrar prévia do ficheiro</string>
+    <string name="settings_show_file_preview_info">Mostrar pré-visualização para tipos de ficheiro compatíveis. Atualmente apenas alguns tipos de ficheiros de imagem são suportados.</string>
+    <string name="settings_category_intents">Intenções</string>
+    <string name="settings_intercept_action_view_intents">Intercepta intents do tipo ACTION_VIEW</string>
+    <string name="settings_intercept_action_view_intents_info">Permite registar como uma opção quando apps tentam abrir um visualizador de ficheiros automaticamente</string>
+    <string name="no_file_found">Nenhum ficheiro</string>
+    <string name="saving_file">A gravar ficheiro…</string>
+    <string name="file_details">Pormenores do ficheiro</string>
+    <string name="file_name">Nome do ficheiro</string>
+    <string name="file_type">Tipo do ficheiro</string>
+    <string name="file_size">Tamanho do ficheiro</string>
+    <string name="toast_saved_file_success">Ficheiro gravado com sucesso!</string>
+    <string name="toast_saved_file_failure">Ocorreu um erro ao gravar o ficheiro.</string>
+    <string name="save_button">Gravar</string>
+    <string name="back_arrow">Voltar</string>
 </resources>
