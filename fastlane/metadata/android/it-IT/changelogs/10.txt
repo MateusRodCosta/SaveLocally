@@ -1,0 +1,4 @@
+Aggiornate le librerie di Jetpack Compose e aggiunto il supporto per Material 3.
+
+Miglioramenti alle attività principali e di condivisione, come lo scorrimento e le informazioni.
+Rivisto il modo in cui l'app ottiene i dati dei file condivisi.

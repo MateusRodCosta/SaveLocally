@@ -1,0 +1,4 @@
+• Dipendenze aggiornate
+• Miglioramenti alla struttura dello schermo e alla logica di navigazione
+• Supporto per Android 14
+• Aggiunta del layout orizzontale alla schermata principale

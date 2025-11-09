@@ -1,0 +1,9 @@
+• Dipendenze aggiornate
+• Aggiunta schermata Impostazioni con due impostazioni: "Salta pagina Dettagli file" e "Posizione di salvataggio predefinita"
+• Aggiunta anteprima dei file immagine
+• Aggiunto layout responsive per la schermata Dettagli file
+• Aggiunti crediti icona e link alla pagina delle donazioni
+• Ottimizzato il tema dell'app (colori e TopAppBar)
+• Correzione del rendering delle icone dei tipi di file
+• Aggiunta icona monocromatica
+• Abilitata la visualizzazione edge-to-edge

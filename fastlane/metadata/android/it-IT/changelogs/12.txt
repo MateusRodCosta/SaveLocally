@@ -1,0 +1,1 @@
+- Imposta il supporto linguistico per app su Android 13+

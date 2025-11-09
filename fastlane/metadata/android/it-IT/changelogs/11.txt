@@ -1,0 +1,2 @@
+- La versione minima di Android supportata è ora la 8.0 (Oreo)
+- Dipendenze aggiornate
