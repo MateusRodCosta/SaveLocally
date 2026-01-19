@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">احفظ محليًا</string>
+    <string name="how_to_use">كيفية الاستخدام</string>
+    <string name="how_to_use_step_1">شارك الملف عبر أيقونة المشاركة</string>
+    <string name="how_to_use_step_2">حدّد \"%s\" من خيارات المشاركة</string>
+    <string name="how_to_use_step_3">ستفتح شاشة تحتوي على تفاصيل عن الملف، اضغط على حفظ</string>
+    <string name="how_to_use_step_4">سيفتح منتقي الملفات، حدد مكان الحفظ واسم الملف</string>
+    <string name="donation_title">تبرّع</string>
+    <string name="donation_content">أعجبك التطبيق؟ فكر في التبرع! لمزيد من المعلومات، تفضل بزيارة %s</string>
+    <string name="about_title">حول</string>
 </resources>
