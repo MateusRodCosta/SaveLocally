@@ -9,4 +9,12 @@
     <string name="donation_title">تبرّع</string>
     <string name="donation_content">أعجبك التطبيق؟ فكر في التبرع! لمزيد من المعلومات، تفضل بزيارة %s</string>
     <string name="about_title">حول</string>
+    <string name="about_developer">طوِّر بواسطة Mateus Rodrigues Costa</string>
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_category_file_picker">منتقي الملفات</string>
+    <string name="settings_default_save_location">مكان الحفظ الإفتراضي</string>
+    <string name="settings_default_save_location_last_used">آخر مجلد مستخدم</string>
+    <string name="settings_default_save_location_select_folder">حدّد مجلد…</string>
+    <string name="settings_skip_file_picker">تخطي منتقي الملفات</string>
+    <string name="settings_category_file_details">تفاصيل الملف</string>
 </resources>
