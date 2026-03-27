@@ -1,0 +1,6 @@
+• Dipendenze aggiornate
+• Aggiunta controlli per tentare di correggere un'arresto anomalo nell'anteprima dell'immagine
+• Aggiunta l'opzione per disabilitare le anteprime dei file
+• Aggiunta l'opzione per intercettare anche gli intenti ACTION_VIEW
+• Ristrutturazione di più schermi
+• Molti cambiamenti nascosti e miglioramenti generali
