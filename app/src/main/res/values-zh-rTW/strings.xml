@@ -1,3 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="how_to_use">如何使用</string>
+    <string name="how_to_use_step_1">透過分享圖示分享檔案</string>
+    <string name="how_to_use_step_2">在分享選項中選擇「%s」</string>
+    <string name="how_to_use_step_3">將開啟一個顯示檔案詳細資訊的畫面，按「儲存」</string>
+    <string name="how_to_use_step_4">檔案選擇器將打開，選擇儲存位置和檔案名稱</string>
+    <string name="donation_title">捐助</string>
+    <string name="about_title">關於</string>
+    <string name="about_developer">由 Mateus Rodrigues Costa 開發</string>
+    <string name="about_icon_credits">應用程式圖示由 @swyzera 設計</string>
+    <string name="settings_title">設定</string>
+    <string name="settings_category_file_picker">檔案選擇器</string>
+    <string name="settings_default_save_location">預設儲存位置</string>
+    <string name="settings_default_save_location_last_used">上次使用的資料夾</string>
+    <string name="settings_default_save_location_select_folder">選擇資料夾…</string>
+    <string name="settings_skip_file_picker">略過檔案選擇器</string>
+    <string name="settings_skip_file_picker_info">略過檔案選擇器並立即儲存檔案（僅在設定了預設資料夾時可用）</string>
+    <string name="settings_category_file_details">檔案詳細資訊</string>
+    <string name="settings_skip_file_details_page">略過檔案詳細資訊頁面</string>
+    <string name="settings_show_file_preview">顯示檔案預覽</string>
+    <string name="settings_show_file_preview_info">顯示相容的檔案預覽。目前僅支援部分圖片檔案格式。</string>
+    <string name="settings_category_intents">意圖</string>
 </resources>
