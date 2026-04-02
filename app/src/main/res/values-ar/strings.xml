@@ -17,4 +17,24 @@
     <string name="settings_default_save_location_select_folder">حدّد مجلد…</string>
     <string name="settings_skip_file_picker">تخطي منتقي الملفات</string>
     <string name="settings_category_file_details">تفاصيل الملف</string>
+    <string name="about_icon_credits">أيقونة التطبيق مصمّمة بواسطة @swyzera</string>
+    <string name="about_github">المصدر البرمجي متاح على Github عبر الرابط %s، وهو مرخص بموجب AGPLv3+</string>
+    <string name="settings_skip_file_picker_info">تخطي منتقي الملفات وحفظ الملفات فورًا (متاح فقط عند تعيين مجلد افتراضي)</string>
+    <string name="settings_skip_file_details_page">تخطي صفحة تفاصيل الملف</string>
+    <string name="settings_skip_file_details_page_info">افتح منتقي الملفات بمجرد استلام الملف</string>
+    <string name="settings_show_file_preview">اعرض معاينة الملف</string>
+    <string name="settings_show_file_preview_info">اعرض معاينات للملفات من الأنواع المتوافقة. حاليًا، يتم دعم بعض ملفات الصور فقط.</string>
+    <string name="settings_category_intents">نوايا</string>
+    <string name="settings_intercept_action_view_intents">اعتراض نوايا ACTION_VIEW</string>
+    <string name="settings_intercept_action_view_intents_info">السماح بالتسجيل كخيار عندما تحاول التطبيقات فتح عارض ملفات تلقائيًا</string>
+    <string name="no_file_found">لم يُعثر على ملف</string>
+    <string name="saving_file">يحفظ الملف…</string>
+    <string name="file_details">معلومات الملف</string>
+    <string name="file_name">اسم الملف</string>
+    <string name="file_type">نوع الملف</string>
+    <string name="file_size">حجم الملف</string>
+    <string name="toast_saved_file_success">حُفظ الملف بنجاح!</string>
+    <string name="toast_saved_file_failure">حدث خطأ أثناء حفظ الملف.</string>
+    <string name="save_button">احفظ</string>
+    <string name="back_arrow">سهم الرجوع</string>
 </resources>
