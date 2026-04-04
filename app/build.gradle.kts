@@ -31,15 +31,27 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
-
-            // Disable v2 signing and force enable v3 signing, which will be used on modern Android (9+)
+        getByName("debug") {
+            // Enable v3 signing only, also on debug builds
+            enableV1Signing = false
             enableV2Signing = false
             enableV3Signing = true
+        }
+
+        if (keystorePropertiesFile.exists()) {
+            create("release") {
+                if (keystorePropertiesFile.exists()) {
+                    keyAlias = keystoreProperties["keyAlias"] as String
+                    keyPassword = keystoreProperties["keyPassword"] as String
+                    storeFile = file(keystoreProperties["storeFile"] as String)
+                    storePassword = keystoreProperties["storePassword"] as String
+                }
+
+                // Enable v3 signing only, which will be used on modern Android (9+)
+                enableV1Signing = false
+                enableV2Signing = false
+                enableV3Signing = true
+            }
         }
     }
 
@@ -50,7 +62,12 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+
+            signingConfig = if (keystorePropertiesFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
         getByName("debug") {
             applicationIdSuffix = ".debug"
