@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -17,6 +17,7 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
+import android.graphics.BitmapFactory
 import android.text.format.Formatter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -52,6 +53,7 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -62,12 +64,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
-import com.mateusrodcosta.apps.share2storage.model.UriData
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
-@Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
+@Preview(apiLevel = 35, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreenContent(
@@ -77,7 +79,7 @@ fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData
     )
 }
 
-@Preview(apiLevel = 34, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Preview(apiLevel = 35, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenPreviewPtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreenContent(
@@ -227,14 +229,20 @@ fun FilePreview(uriData: UriData) {
     else if (mimeType.startsWith("video/")) Icons.Outlined.VideoFile
     else Icons.Outlined.Description
 
+    val previewImage = remember(uriData.previewImage) {
+        uriData.previewImage?.let {
+            BitmapFactory.decodeByteArray(it, 0, it.size)?.asImageBitmap()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        if (uriData.previewImage != null) Image(
+        if (previewImage != null) Image(
             modifier = Modifier.align(Alignment.Center),
-            bitmap = uriData.previewImage.asImageBitmap(),
+            bitmap = previewImage,
             contentDescription = stringResource(R.string.app_name),
             contentScale = ContentScale.Fit,
         )
@@ -249,13 +257,13 @@ fun FilePreview(uriData: UriData) {
     }
 }
 
-@Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
+@Preview(apiLevel = 35, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenSkippedPreview() {
     DetailsScreenSkippedContent()
 }
 
-@Preview(apiLevel = 34, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Preview(apiLevel = 35, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenSkippedPreviewPtBr() {
     DetailsScreenSkippedContent()

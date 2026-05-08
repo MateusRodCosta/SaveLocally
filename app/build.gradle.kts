@@ -128,4 +128,6 @@ dependencies {
     androidTestRuntimeOnly(libs.test.runner)
     androidTestImplementation(libs.test.rules)
     androidTestImplementation(libs.compose.ui.test.junit4)
+
+    implementation(project(":domain"))
 }

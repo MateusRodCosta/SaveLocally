@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,7 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import android.util.Log
-import com.mateusrodcosta.apps.share2storage.model.UriData
+import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import java.io.*
 
 object Utils {
@@ -55,22 +55,24 @@ fun getUriData(contentResolver: ContentResolver, uri: Uri, getPreview: Boolean):
 
     cursor.close()
 
-    var bitmap: Bitmap? = null
+    var previewBytes: ByteArray? = null
     if (getPreview) {
         try {
-            val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")
-            if (fileDescriptor != null) {
+            contentResolver.openFileDescriptor(uri, "r")?.use { fileDescriptor ->
                 val fd = fileDescriptor.fileDescriptor
-                bitmap = BitmapFactory.decodeFileDescriptor(fd)
+                val bitmap = BitmapFactory.decodeFileDescriptor(fd)
+                if (bitmap != null) {
+                    val stream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    previewBytes = stream.toByteArray()
+                }
             }
-            fileDescriptor?.close()
         } catch (e: Exception) {
             Log.e("getUriData] bitmap", e.message, e)
-            bitmap = null
         }
     }
 
-    return UriData(displayName, type, size, previewImage = bitmap)
+    return UriData(displayName, type, size, previewImage = previewBytes)
 }
 
 private fun isVirtualFile(context: Context, contentResolver: ContentResolver, uri: Uri): Boolean {

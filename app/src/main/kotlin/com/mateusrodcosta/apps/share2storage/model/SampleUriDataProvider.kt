@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@
 package com.mateusrodcosta.apps.share2storage.model
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 
 class SampleUriDataProvider : PreviewParameterProvider<UriData?> {
     override val values = sequenceOf(
