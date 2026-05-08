@@ -1,6 +1,6 @@
 [versions]
-agp = "9.1.0"
-kotlin = "2.3.20"
+agp = "9.2.1"
+kotlin = "2.3.21"
 appcompat = "1.7.0"
 documentfile = "1.1.0"
 splashscreen = "1.0.1"
