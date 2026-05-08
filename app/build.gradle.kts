@@ -18,12 +18,16 @@ kotlin {
 
 android {
     namespace = "com.mateusrodcosta.apps.share2storage"
-    compileSdk = 35
+    compileSdk {
+        version = release(36) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 32
         versionName = "2.0.0"
 
