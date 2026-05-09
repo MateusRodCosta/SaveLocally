@@ -18,20 +18,17 @@
 package com.mateusrodcosta.apps.share2storage
 
 import android.app.Application
-import com.mateusrodcosta.apps.share2storage.data.di.dataModule
-import com.mateusrodcosta.apps.share2storage.di.appModule
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
+import org.koin.core.annotation.KoinApplication
 import org.koin.core.context.startKoin
 
+@KoinApplication
 class SaveLocallyApp: Application() {
     override fun onCreate() {
         super.onCreate()
 
         startKoin {
-            androidLogger()
             androidContext(this@SaveLocallyApp)
-            modules(dataModule, appModule)
         }
     }
 }

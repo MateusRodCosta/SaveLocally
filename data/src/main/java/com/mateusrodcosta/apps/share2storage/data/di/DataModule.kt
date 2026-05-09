@@ -17,11 +17,11 @@
 
 package com.mateusrodcosta.apps.share2storage.data.di
 
-import com.mateusrodcosta.apps.share2storage.data.repository.PreferencesRepositoryImpl
-import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Configuration
+import org.koin.core.annotation.Module
 
-val dataModule = module {
-    single<PreferencesRepository> { PreferencesRepositoryImpl(androidContext()) }
-}
+@Module
+@ComponentScan("com.mateusrodcosta.apps.share2storage.data")
+@Configuration
+class DataModule

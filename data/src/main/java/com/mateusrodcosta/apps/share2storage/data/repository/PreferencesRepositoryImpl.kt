@@ -33,7 +33,9 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class PreferencesRepositoryImpl(private val context: Context) : PreferencesRepository {
 
     private val packageManager: PackageManager = context.packageManager

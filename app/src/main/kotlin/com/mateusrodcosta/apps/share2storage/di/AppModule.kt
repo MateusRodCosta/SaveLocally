@@ -17,12 +17,12 @@
 
 package com.mateusrodcosta.apps.share2storage.di
 
-import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
-import org.koin.core.module.dsl.viewModel
-import org.koin.dsl.module
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Configuration
+import org.koin.core.annotation.Module
 
-val appModule = module {
-    viewModel {
-        SettingsViewModel(repository = get())
-    }
-}
+
+@Module
+@ComponentScan("com.mateusrodcosta.apps.share2storage")
+@Configuration
+class AppModule
