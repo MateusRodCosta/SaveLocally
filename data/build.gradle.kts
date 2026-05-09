@@ -24,9 +24,14 @@ android {
 }
 
 dependencies {
-    implementation(libs.appcompat)
     implementation(libs.core.ktx)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+
+    implementation(libs.appcompat)
     implementation(libs.material)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

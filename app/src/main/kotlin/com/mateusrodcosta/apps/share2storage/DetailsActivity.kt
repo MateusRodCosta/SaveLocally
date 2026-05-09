@@ -46,6 +46,8 @@ import com.mateusrodcosta.apps.share2storage.utils.saveTextToFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.getValue
 
 class DetailsActivity : ComponentActivity() {
     private var createFile: ActivityResultLauncher<String>? = null
@@ -59,8 +61,7 @@ class DetailsActivity : ComponentActivity() {
     private var shouldShowFilePreview: Boolean = true
     private var shouldFinishAfterSave: Boolean = false
 
-    private val preferencesRepository: PreferencesRepository = PreferencesRepositoryImpl(this)
-    private val settingsViewModel: SettingsViewModel = SettingsViewModel(preferencesRepository)
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {

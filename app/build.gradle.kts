@@ -124,6 +124,10 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     debugRuntimeOnly(libs.compose.ui.test.manifest)
 
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+
     testImplementation(libs.junit)
     androidTestRuntimeOnly(libs.test.runner)
     androidTestImplementation(libs.test.rules)

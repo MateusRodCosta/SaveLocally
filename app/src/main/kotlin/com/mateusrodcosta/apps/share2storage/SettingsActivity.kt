@@ -24,15 +24,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import com.mateusrodcosta.apps.share2storage.data.repository.PreferencesRepositoryImpl
-import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : ComponentActivity() {
 
-    private val preferencesRepository: PreferencesRepository = PreferencesRepositoryImpl(this)
-    private val settingsViewModel: SettingsViewModel = SettingsViewModel(preferencesRepository)
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     private val getSaveLocationDirIntent =
         registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->

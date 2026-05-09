@@ -4,6 +4,7 @@
     tools:targetApi="34">
 
     <application
+        android:name=".SaveLocallyApp"
         android:allowBackup="true"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
