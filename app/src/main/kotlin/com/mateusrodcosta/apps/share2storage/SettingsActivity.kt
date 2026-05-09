@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2025 Mateus Rodrigues Costa
+ *     Copyright (C) 2025 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -24,12 +24,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import com.mateusrodcosta.apps.share2storage.data.repository.PreferencesRepositoryImpl
+import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
 
 class SettingsActivity : ComponentActivity() {
 
-    private val settingsViewModel: SettingsViewModel = SettingsViewModel()
+    private val preferencesRepository: PreferencesRepository = PreferencesRepositoryImpl(this)
+    private val settingsViewModel: SettingsViewModel = SettingsViewModel(preferencesRepository)
 
     private val getSaveLocationDirIntent =
         registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
@@ -55,9 +58,7 @@ class SettingsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        settingsViewModel.initializeWithContext(applicationContext)
         settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
-        settingsViewModel.initPreferences()
 
         setContent {
             SettingsScreen(settingsViewModel)

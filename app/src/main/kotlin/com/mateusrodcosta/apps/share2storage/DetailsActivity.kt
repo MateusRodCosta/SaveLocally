@@ -33,13 +33,13 @@ import androidx.core.content.IntentCompat
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
+import com.mateusrodcosta.apps.share2storage.data.repository.PreferencesRepositoryImpl
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
+import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSkipped
+import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
 import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
-import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceKeys
-import com.mateusrodcosta.apps.share2storage.utils.SharedPreferenceUtils
-import com.mateusrodcosta.apps.share2storage.utils.SharedPreferencesDefaultValues
 import com.mateusrodcosta.apps.share2storage.utils.getUriData
 import com.mateusrodcosta.apps.share2storage.utils.saveFileToFile
 import com.mateusrodcosta.apps.share2storage.utils.saveTextToFile
@@ -58,6 +58,9 @@ class DetailsActivity : ComponentActivity() {
     private var skipFileDetails: Boolean = false
     private var shouldShowFilePreview: Boolean = true
     private var shouldFinishAfterSave: Boolean = false
+
+    private val preferencesRepository: PreferencesRepository = PreferencesRepositoryImpl(this)
+    private val settingsViewModel: SettingsViewModel = SettingsViewModel(preferencesRepository)
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,42 +109,23 @@ class DetailsActivity : ComponentActivity() {
     }
 
     private fun getPreferences() {
-        val sharedPreferences = SharedPreferenceUtils.getDefaultSharedPreferences(this)
 
-        val defaultSaveLocation =
-            sharedPreferences.getString(SharedPreferenceKeys.DEFAULT_SAVE_LOCATION_KEY, null).let {
-                Log.d("DetailsActivity] getPreferences] defaultSaveLocationRaw", it.toString())
-                try {
-                    it?.toUri()
-                } catch (_: Exception) {
-                    null
-                }
+        defaultSaveLocation = settingsViewModel.defaultSaveLocation.value.let {
+            try {
+                it?.toUri()
+            } catch (_: Exception) {
+                null
             }
-        Log.d(
-            "DetailsActivity] getPreferences] defaultSaveLocation", defaultSaveLocation.toString()
-        )
-        this.defaultSaveLocation = defaultSaveLocation
+        }
 
-        val skipFilePicker = sharedPreferences.getBoolean(
-            SharedPreferenceKeys.SKIP_FILE_PICKER_KEY,
-            SharedPreferencesDefaultValues.SKIP_FILE_PICKER_DEFAULT
-        )
-        Log.d("DetailsActivity] getPreferences] skipFilePicker", skipFilePicker.toString())
+        val skipFilePicker = settingsViewModel.skipFilePicker.value
+
         // Only skip file picker if both a default folder is set and "Skip File Picker is selected"
         this.shouldSkipFilePicker = defaultSaveLocation != null && skipFilePicker
 
-        val skipFileDetails = sharedPreferences.getBoolean(
-            SharedPreferenceKeys.SKIP_FILE_DETAILS_KEY,
-            SharedPreferencesDefaultValues.SKIP_FILE_DETAILS_DEFAULT
-        )
-        Log.d("DetailsActivity] getPreferences] skipFileDetails", skipFileDetails.toString())
-        this.skipFileDetails = skipFileDetails
+        skipFileDetails = settingsViewModel.skipFileDetails.value
 
-        val showFilePreview = sharedPreferences.getBoolean(
-            SharedPreferenceKeys.SHOW_FILE_PREVIEW_KEY,
-            SharedPreferencesDefaultValues.SHOW_FILE_PREVIEW_DEFAULT
-        )
-        Log.d("DetailsActivity] getPreferences] showFilePreview", showFilePreview.toString())
+        val showFilePreview = settingsViewModel.showFilePreview.value
 
         this.shouldShowFilePreview = !skipFileDetails && showFilePreview
         this.shouldFinishAfterSave = skipFileDetails || shouldSkipFilePicker

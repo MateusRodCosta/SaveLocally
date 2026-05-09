@@ -11,10 +11,14 @@ activityCompose = "1.13.0"
 junit = "4.13.2"
 androidxTestRunner = "1.7.0"
 androidxTestRules = "1.7.0"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+material = "1.13.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
@@ -30,6 +34,9 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 androidx-integration = ["appcompat", "documentfile", "splashscreen"]
@@ -38,6 +45,7 @@ compose = ["compose.material3", "compose.material3.window.size.classes", "compos
 compose-integration = ["activity.compose"]
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -113,7 +113,7 @@ kotlin {
 dependencies {
     implementation(libs.bundles.androidx.integration)
     implementation(libs.bundles.androidx.ktx)
-    runtimeOnly(libs.coroutines)
+    runtimeOnly(libs.coroutines.android)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
@@ -130,4 +130,5 @@ dependencies {
     androidTestImplementation(libs.compose.ui.test.junit4)
 
     implementation(project(":domain"))
+    implementation(project(":data"))
 }

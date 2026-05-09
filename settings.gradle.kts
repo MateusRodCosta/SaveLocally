@@ -20,3 +20,4 @@ plugins {}
 rootProject.name = "Save Locally"
 include(":app")
 include(":domain")
+include(":data")
