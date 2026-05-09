@@ -23,6 +23,6 @@ import org.koin.core.annotation.Module
 
 
 @Module
-@ComponentScan("com.mateusrodcosta.apps.share2storage")
+@ComponentScan
 @Configuration
 class AppModule

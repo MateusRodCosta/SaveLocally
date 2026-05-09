@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.koin.compiler)
 }
 
 java {
@@ -16,4 +17,7 @@ kotlin {
 
 dependencies {
     implementation(libs.coroutines.core)
+
+    implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
 }

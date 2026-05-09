@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
+ *     Copyright (C) 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -15,10 +15,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils
+package com.mateusrodcosta.apps.share2storage.domain.repository
 
-object Utils {
-    const val CONTENT_ALPHA_DISABLED = 0.38f
+import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
+
+interface FileRepository {
+    suspend fun saveFile(sourceUriString: String, targetUriString: String): Result<Unit>
+    suspend fun saveText(text: String, targetUriString: String): Result<Unit>
+    suspend fun getFileMetadata(uriString: String): Result<UriData>
 }
-
-
