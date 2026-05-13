@@ -18,7 +18,9 @@
 package com.mateusrodcosta.apps.share2storage.domain.repository
 
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
+import org.koin.core.annotation.Singleton
 
+@Singleton
 interface FileRepository {
     suspend fun saveFile(sourceUriString: String, targetUriString: String): Result<Unit>
     suspend fun saveText(text: String, targetUriString: String): Result<Unit>

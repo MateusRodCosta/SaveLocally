@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -17,6 +17,7 @@
 
 package com.mateusrodcosta.apps.share2storage
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,9 +35,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val windowSizeClass = calculateWindowSizeClass(this)
-
-            MainScreen(windowSizeClass)
+            MainScreen(
+                windowSizeClass = calculateWindowSizeClass(this),
+                openSettings = {
+                    val i = Intent(this, SettingsActivity::class.java)
+                    startActivity(i)
+                },
+            )
         }
     }
 }

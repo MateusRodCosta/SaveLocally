@@ -17,12 +17,13 @@
 
 package com.mateusrodcosta.apps.share2storage.di
 
+import com.mateusrodcosta.apps.share2storage.data.di.DataModule
+import com.mateusrodcosta.apps.share2storage.domain.di.DomainModule
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Configuration
 import org.koin.core.annotation.Module
 
-
-@Module
-@ComponentScan
+@Module(includes = [DomainModule::class, DataModule::class])
+@ComponentScan("com.mateusrodcosta.apps.share2storage")
 @Configuration
 class AppModule

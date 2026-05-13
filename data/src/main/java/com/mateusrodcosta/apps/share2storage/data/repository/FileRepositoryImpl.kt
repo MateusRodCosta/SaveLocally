@@ -31,13 +31,13 @@ import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.repository.FileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
 
-@Singleton
+@Single
 class FileRepositoryImpl(private val context: Context) : FileRepository {
 
     private val contentResolver: ContentResolver = context.contentResolver

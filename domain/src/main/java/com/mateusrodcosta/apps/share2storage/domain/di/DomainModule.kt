@@ -18,8 +18,10 @@
 package com.mateusrodcosta.apps.share2storage.domain.di
 
 import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Configuration
 import org.koin.core.annotation.Module
 
 @Module
-@ComponentScan
+@ComponentScan("com.mateusrodcosta.apps.share2storage.domain")
+@Configuration
 class DomainModule

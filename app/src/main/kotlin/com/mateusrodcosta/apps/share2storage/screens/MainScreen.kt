@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2025 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -17,8 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import android.content.Intent
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -59,14 +57,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.SettingsActivity
 import com.mateusrodcosta.apps.share2storage.screens.dialogs.AboutDialog
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
 import com.mateusrodcosta.apps.share2storage.screens.shared.ListItemWithURL
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
-@Preview(apiLevel = 34, showSystemUi = true, showBackground = true)
+@Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun MainScreenPreview() {
     MainScreenContent(
@@ -75,7 +72,7 @@ fun MainScreenPreview() {
     )
 }
 
-@Preview(apiLevel = 34, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun MainScreenPreviewPtBr() {
     MainScreenContent(
@@ -85,10 +82,11 @@ fun MainScreenPreviewPtBr() {
 }
 
 @Composable
-fun MainScreen(windowSizeClass: WindowSizeClass) {
+fun MainScreen(windowSizeClass: WindowSizeClass, openSettings: () -> Unit) {
     MainScreenContent(
         widthSizeClass = windowSizeClass.widthSizeClass,
         heightSizeClass = windowSizeClass.heightSizeClass,
+        openSettings = openSettings,
     )
 }
 
@@ -97,8 +95,8 @@ fun MainScreen(windowSizeClass: WindowSizeClass) {
 fun MainScreenContent(
     widthSizeClass: WindowWidthSizeClass,
     heightSizeClass: WindowHeightSizeClass,
+    openSettings: () -> Unit = {}
 ) {
-    val activity = LocalActivity.current
     val openAboutDialog = remember { mutableStateOf(false) }
 
     if (openAboutDialog.value) {
@@ -115,10 +113,7 @@ fun MainScreenContent(
                     IconButton(onClick = { openAboutDialog.value = true }) {
                         Icon(Icons.Rounded.Info, stringResource(R.string.about_title))
                     }
-                    IconButton(onClick = {
-                        val i = Intent(activity, SettingsActivity::class.java)
-                        activity?.startActivity(i)
-                    }) {
+                    IconButton(onClick = openSettings) {
                         Icon(Icons.Rounded.Settings, stringResource(R.string.settings_title))
                     }
                 },

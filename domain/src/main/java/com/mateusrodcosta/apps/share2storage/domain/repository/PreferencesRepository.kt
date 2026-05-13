@@ -18,7 +18,9 @@
 package com.mateusrodcosta.apps.share2storage.domain.repository
 
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Singleton
 
+@Singleton
 interface PreferencesRepository {
 
     companion object {
