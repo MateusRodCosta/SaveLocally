@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep annotation definitions
+-keep class org.koin.core.annotation.** { *; }
+
+# Keep classes annotated with Koin annotations
+-keep @org.koin.core.annotation.* class * { *; }
