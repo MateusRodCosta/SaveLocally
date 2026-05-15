@@ -218,10 +218,13 @@ fun FileInfoLine(label: String, content: String) {
 @Composable
 fun FilePreview(uriData: UriData, showFilePreview: Boolean = true) {
     val mimeType = uriData.mimeType
-    val fallbackFileIcon = if (mimeType.startsWith("image/")) Icons.Outlined.Image
-    else if (mimeType.startsWith("audio/")) Icons.Outlined.AudioFile
-    else if (mimeType.startsWith("video/")) Icons.Outlined.VideoFile
-    else Icons.Outlined.Description
+    val primaryType = mimeType.substringBefore('/')
+    val fallbackFileIcon = when (primaryType) {
+        "image" -> Icons.Outlined.Image
+        "audio" -> Icons.Outlined.AudioFile
+        "video" -> Icons.Outlined.VideoFile
+        else -> Icons.Outlined.Description
+    }
 
     Box(
         modifier = Modifier
