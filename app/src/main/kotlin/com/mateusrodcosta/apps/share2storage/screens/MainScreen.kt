@@ -65,25 +65,18 @@ import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreenContent()
+    MainScreen()
 }
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun MainScreenPreviewPtBr() {
-    MainScreenContent()
-}
-
-@Composable
-fun MainScreen(openSettings: () -> Unit) {
-    MainScreenContent(
-        openSettings = openSettings,
-    )
+    MainScreen()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreenContent(
+fun MainScreen(
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass,
     openSettings: () -> Unit = {}
 ) {

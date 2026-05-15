@@ -52,6 +52,8 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -73,38 +75,35 @@ import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 @Preview(apiLevel = 35, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-    DetailsScreenContent(uriData = uriData)
+    DetailsScreen(uriData = uriData)
 }
 
 @Preview(apiLevel = 35, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenPreviewPtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-    DetailsScreenContent(uriData = uriData)
-}
-
-@Composable
-fun DetailsScreen(
-    detailsViewModel: DetailsViewModel,
-    launchFilePicker: () -> Unit?,
-) {
-    val uriData by detailsViewModel.uriData.collectAsState()
-    val showFilePreview by detailsViewModel.showFilePreview.collectAsState()
-
-    DetailsScreenContent(
-        uriData = uriData,
-        showFilePreview = showFilePreview,
-        launchFilePicker = launchFilePicker
-    )
+    DetailsScreen(uriData = uriData)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreenContent(
-    uriData: UriData?,
+fun DetailsScreen(
+    detailsViewModel: DetailsViewModel? = null,
+    uriData: UriData? = null,
     showFilePreview: Boolean = true,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass,
     launchFilePicker: () -> Unit? = {},
 ) {
+    val collectedUriData by if (detailsViewModel != null) {
+        detailsViewModel.uriData.collectAsState()
+    } else {
+        remember { mutableStateOf(uriData) }
+    }
+    val collectedShowFilePreview by if (detailsViewModel != null) {
+        detailsViewModel.showFilePreview.collectAsState()
+    } else {
+        remember { mutableStateOf(showFilePreview) }
+    }
+
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 
     AppTheme {
@@ -113,7 +112,7 @@ fun DetailsScreenContent(
                 title = { Text(stringResource(R.string.file_details)) },
             )
         }, floatingActionButton = {
-            if (uriData != null) {
+            if (collectedUriData != null) {
                 FloatingActionButton(
                     modifier = Modifier.windowInsetsPadding(
                         WindowInsets.systemBars.only(
@@ -138,9 +137,9 @@ fun DetailsScreenContent(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                if (uriData != null) {
-                    if (useLandscapeLayout) FileDetailsLandscape(uriData, showFilePreview)
-                    else FileDetailsPortrait(uriData, showFilePreview)
+                if (collectedUriData != null) {
+                    if (useLandscapeLayout) FileDetailsLandscape(collectedUriData!!, collectedShowFilePreview)
+                    else FileDetailsPortrait(collectedUriData!!, collectedShowFilePreview)
                 } else Text(
                     stringResource(R.string.no_file_found),
                     style = MaterialTheme.typography.headlineMedium
@@ -275,23 +274,18 @@ fun FilePreview(uriData: UriData, showFilePreview: Boolean = true) {
 @Preview(apiLevel = 35, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenSkippedPreview() {
-    DetailsScreenSkippedContent()
+    DetailsScreenSkipped()
 }
 
 @Preview(apiLevel = 35, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenSkippedPreviewPtBr() {
-    DetailsScreenSkippedContent()
-}
-
-@Composable
-fun DetailsScreenSkipped() {
-    DetailsScreenSkippedContent()
+    DetailsScreenSkipped()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreenSkippedContent() {
+fun DetailsScreenSkipped() {
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(

@@ -59,76 +59,55 @@ import kotlinx.coroutines.flow.StateFlow
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    val mockDefaultSaveLocation = MutableStateFlow(null)
-    val mockSkipFilePicker =
-        MutableStateFlow(PreferencesRepository.SKIP_FILE_PICKER_DEFAULT)
-    val mockSkipFileDetails =
-        MutableStateFlow(PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT)
-    val mockShowFilePreview =
-        MutableStateFlow(PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT)
-    val mockInterceptActionViewIntents =
-        MutableStateFlow(PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT)
-
-    SettingsScreenContent(
-        spDefaultSaveLocation = mockDefaultSaveLocation,
-        spSkipFilePicker = mockSkipFilePicker,
-        spSkipFileDetails = mockSkipFileDetails,
-        spShowFilePreview = mockShowFilePreview,
-        spInterceptActionViewIntents = mockInterceptActionViewIntents,
-    )
+    SettingsScreen()
 }
 
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun SettingsScreenPreviewPtBr() {
-    val mockDefaultSaveLocation = MutableStateFlow(null)
-    val mockSkipFilePicker =
-        MutableStateFlow(PreferencesRepository.SKIP_FILE_PICKER_DEFAULT)
-    val mockSkipFileDetails =
-        MutableStateFlow(PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT)
-    val mockShowFilePreview =
-        MutableStateFlow(PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT)
-    val mockInterceptActionViewIntents =
-        MutableStateFlow(PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT)
-
-    SettingsScreenContent(
-        spDefaultSaveLocation = mockDefaultSaveLocation,
-        spSkipFilePicker = mockSkipFilePicker,
-        spSkipFileDetails = mockSkipFileDetails,
-        spShowFilePreview = mockShowFilePreview,
-        spInterceptActionViewIntents = mockInterceptActionViewIntents,
-    )
+    SettingsScreen()
 }
 
 @Composable
-fun SettingsScreen(settingsViewModel: SettingsViewModel) {
+fun SettingsScreen(settingsViewModel: SettingsViewModel? = null) {
+    val mockDefaultSaveLocation = remember { MutableStateFlow<String?>(null) }
+    val mockSkipFilePicker =
+        remember { MutableStateFlow(PreferencesRepository.SKIP_FILE_PICKER_DEFAULT) }
+    val mockSkipFileDetails =
+        remember { MutableStateFlow(PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT) }
+    val mockShowFilePreview =
+        remember { MutableStateFlow(PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT) }
+    val mockInterceptActionViewIntents =
+        remember { MutableStateFlow(PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT) }
+
     SettingsScreenContent(
-        spDefaultSaveLocation = settingsViewModel.defaultSaveLocation,
-        spSkipFilePicker = settingsViewModel.skipFilePicker,
-        spSkipFileDetails = settingsViewModel.skipFileDetails,
-        spShowFilePreview = settingsViewModel.showFilePreview,
-        spInterceptActionViewIntents = settingsViewModel.interceptActionViewIntents,
-        launchFilePicker = { settingsViewModel.getSaveLocationDirIntent().launch(null) },
-        clearDefaultSaveLocation = { settingsViewModel.clearDefaultSaveLocation() },
+        spDefaultSaveLocation = settingsViewModel?.defaultSaveLocation ?: mockDefaultSaveLocation,
+        spSkipFilePicker = settingsViewModel?.skipFilePicker ?: mockSkipFilePicker,
+        spSkipFileDetails = settingsViewModel?.skipFileDetails ?: mockSkipFileDetails,
+        spShowFilePreview = settingsViewModel?.showFilePreview ?: mockShowFilePreview,
+        spInterceptActionViewIntents = settingsViewModel?.interceptActionViewIntents
+            ?: mockInterceptActionViewIntents,
+        launchFilePicker = { settingsViewModel?.getSaveLocationDirIntent()?.launch(null) },
+        clearDefaultSaveLocation = { settingsViewModel?.clearDefaultSaveLocation() },
         updateSkipFilePicker = { value: Boolean ->
-            settingsViewModel.updateSkipFilePicker(value)
+            settingsViewModel?.updateSkipFilePicker(value)
         },
         updateSkipFileDetails = { value: Boolean ->
-            settingsViewModel.updateSkipFileDetails(value)
+            settingsViewModel?.updateSkipFileDetails(value)
         },
         updateInterceptActionViewIntents = { value: Boolean ->
-            settingsViewModel.updateInterceptActionViewIntents(value)
+            settingsViewModel?.updateInterceptActionViewIntents(value)
         },
         updateShowFilePreview = { value ->
-            settingsViewModel.updateShowFilePreview(value)
+            settingsViewModel?.updateShowFilePreview(value)
         },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreenContent(
+private fun SettingsScreenContent(
     spDefaultSaveLocation: StateFlow<String?>,
     spSkipFilePicker: StateFlow<Boolean>,
     spSkipFileDetails: StateFlow<Boolean>,
