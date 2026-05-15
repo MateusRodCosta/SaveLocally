@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.dependency.analysis)
     alias(libs.plugins.android.library)
     alias(libs.plugins.koin.compiler)
 }
@@ -25,19 +26,16 @@ android {
 }
 
 dependencies {
-    implementation(libs.core.ktx)
+    implementation(libs.androidx.core.ktx)
+    api(libs.coroutines.core)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.annotations)
-    implementation(libs.koin.android)
-
-    implementation(libs.appcompat)
-    implementation(libs.material)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
 
-    implementation(project(":domain"))
+    api(project(":domain"))
 }

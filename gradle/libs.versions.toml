@@ -1,57 +1,60 @@
 [versions]
+dependencyAnalysis = "3.10.0"
 agp = "9.2.1"
 kotlin = "2.3.21"
+koinPlugin = "0.6.2"
+coroutines = "1.11.0"
+core = "1.18.0"
+coreKtx = "1.18.0"
+activity = "1.13.0"
 appcompat = "1.7.1"
 documentfile = "1.1.0"
 splashscreen = "1.2.0"
-ktx = "1.18.0"
-coroutines = "1.11.0"
 composeBom = "2026.05.00"
 activityCompose = "1.13.0"
+koinBom = "4.2.1"
 junit = "4.13.2"
 androidxTestRunner = "1.7.0"
 androidxTestRules = "1.7.0"
-junitVersion = "1.3.0"
+androidxJunit = "1.3.0"
 espressoCore = "3.7.0"
-material = "1.13.0"
-koinBom = "4.2.1"
-koinPlugin = "0.6.2"
 
 [libraries]
-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material3-window-size-classes = { group = "androidx.compose.material3", name = "material3-window-size-class" }
-compose-ui-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+compose-ui= { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinBom" }
-koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinBom" }
-koin-android = { module = "io.insert-koin:koin-android" }
-koin-compose = { module = "io.insert-koin:koin-compose" }
-koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koinBom" }
+koin-core = { group = "io.insert-koin", name = "koin-core" }
+koin-core-viewmodel = { group = "io.insert-koin", name = "koin-core-viewmodel" }
+koin-annotations = { group = "io.insert-koin", name = "koin-annotations" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
-androidx-integration = ["appcompat", "documentfile", "splashscreen"]
-androidx-ktx = ["core.ktx"]
-compose = ["compose.material3", "compose.material3.window.size.classes", "compose.ui.tooling.preview", "compose.ui.material.icons.extended"]
-compose-integration = ["activity.compose"]
 
 [plugins]
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }

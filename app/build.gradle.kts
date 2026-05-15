@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
+    alias(libs.plugins.dependency.analysis)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.koin.compiler)
@@ -112,29 +113,41 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.bundles.androidx.integration)
-    implementation(libs.bundles.androidx.ktx)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.core.ktx)
+
+    implementation(libs.coroutines.core)
     runtimeOnly(libs.coroutines.android)
+
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.documentfile)
+    implementation(libs.androidx.splashscreen)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
-
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.compose.integration)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
-    debugRuntimeOnly(libs.compose.ui.test.manifest)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material3.window.size.classes)
+    implementation(libs.compose.material.icons.core)
+    implementation(libs.compose.material.icons.extended)
+    implementation(libs.activity.compose)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+    implementation(libs.koin.core.viewmodel)
     implementation(libs.koin.annotations)
     implementation(libs.koin.android)
-    implementation(libs.koin.compose)
 
     testImplementation(libs.junit)
     androidTestRuntimeOnly(libs.test.runner)
     androidTestImplementation(libs.test.rules)
     androidTestImplementation(libs.compose.ui.test.junit4)
+    debugRuntimeOnly(libs.compose.ui.test.manifest)
 
     implementation(project(":domain"))
     implementation(project(":data"))
