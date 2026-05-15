@@ -36,7 +36,7 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinBom" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinBom" }
 koin-android = { module = "io.insert-koin:koin-android" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
+koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
