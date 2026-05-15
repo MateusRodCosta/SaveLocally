@@ -23,9 +23,11 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import android.util.Log
+import android.util.Size
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.repository.FileRepository
@@ -94,32 +96,38 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
                 val previewBytes = getPreviewBytes(uri)
 
-                UriData(displayName, type, size, previewImage = previewBytes)
+                UriData(uriString, displayName, type, size, previewImage = previewBytes)
             }
         }
 
     private fun getPreviewBytes(uri: Uri): ByteArray? {
         return try {
-            contentResolver.openFileDescriptor(uri, "r")?.use { fileDescriptor ->
-                val fd = fileDescriptor.fileDescriptor
-                
-                // Memory safe decoding: get dimensions first
-                val options = BitmapFactory.Options().apply {
-                    inJustDecodeBounds = true
-                }
-                BitmapFactory.decodeFileDescriptor(fd, null, options)
-                
-                // Target a max size for preview (e.g., 1024px)
-                options.inSampleSize = calculateInSampleSize(options, 1024, 1024)
-                options.inJustDecodeBounds = false
-                
-                val bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options)
-                if (bitmap != null) {
-                    ByteArrayOutputStream().use { stream ->
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        stream.toByteArray()
+            val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // On Android 10+, use loadThumbnail for better compatibility (PDFs, Videos, etc)
+                contentResolver.loadThumbnail(uri, Size(1024, 1024), null)
+            } else {
+                contentResolver.openFileDescriptor(uri, "r")?.use { fileDescriptor ->
+                    val fd = fileDescriptor.fileDescriptor
+
+                    // Memory safe decoding: get dimensions first
+                    val options = BitmapFactory.Options().apply {
+                        inJustDecodeBounds = true
                     }
-                } else null
+                    BitmapFactory.decodeFileDescriptor(fd, null, options)
+
+                    // Target a max size for preview (e.g., 1024px)
+                    options.inSampleSize = calculateInSampleSize(options, 1024, 1024)
+                    options.inJustDecodeBounds = false
+
+                    BitmapFactory.decodeFileDescriptor(fd, null, options)
+                }
+            }
+
+            bitmap?.let { b ->
+                ByteArrayOutputStream().use { stream ->
+                    b.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    stream.toByteArray()
+                }
             }
         } catch (e: Exception) {
             Log.e("FileRepositoryImpl", "Error generating preview bitmap", e)
@@ -127,7 +135,11 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
         }
     }
 
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    private fun calculateInSampleSize(
+        options: BitmapFactory.Options,
+        reqWidth: Int,
+        reqHeight: Int
+    ): Int {
         val (height: Int, width: Int) = options.outHeight to options.outWidth
         var inSampleSize = 1
 
@@ -143,11 +155,11 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
     private fun isVirtualFile(uri: Uri): Boolean {
         if (!DocumentsContract.isDocumentUri(context, uri)) return false
-        
+
         val cursor: Cursor = contentResolver.query(
             uri, arrayOf(DocumentsContract.Document.COLUMN_FLAGS), null, null, null
         ) ?: return false
-        
+
         val flags = cursor.use {
             if (it.moveToFirst()) it.getInt(0) else 0
         }
@@ -160,7 +172,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
     ): InputStream? {
         val openableMimeTypes = contentResolver.getStreamTypes(uri, "*/*")
         if (openableMimeTypes.isNullOrEmpty()) throw FileNotFoundException()
-        
+
         return contentResolver.openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
             ?.createInputStream()
     }

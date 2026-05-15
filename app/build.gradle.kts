@@ -143,6 +143,9 @@ dependencies {
     implementation(libs.koin.annotations)
     implementation(libs.koin.android)
 
+    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.core)
+
     testImplementation(libs.junit)
     androidTestRuntimeOnly(libs.test.runner)
     androidTestImplementation(libs.test.rules)

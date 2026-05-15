@@ -18,6 +18,7 @@
 package com.mateusrodcosta.apps.share2storage.domain.entity
 
 data class UriData(
+    val uri: String,
     val displayName: String,
     val mimeType: String,
     val size: Long,
@@ -29,6 +30,7 @@ data class UriData(
 
         other as UriData
 
+        if (uri != other.uri) return false
         if (size != other.size) return false
         if (displayName != other.displayName) return false
         if (mimeType != other.mimeType) return false
@@ -38,7 +40,8 @@ data class UriData(
     }
 
     override fun hashCode(): Int {
-        var result = size.hashCode()
+        var result = uri.hashCode()
+        result = 31 * result + size.hashCode()
         result = 31 * result + displayName.hashCode()
         result = 31 * result + mimeType.hashCode()
         result = 31 * result + (previewImage?.contentHashCode() ?: 0)

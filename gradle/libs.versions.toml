@@ -13,6 +13,7 @@ splashscreen = "1.2.0"
 composeBom = "2026.05.00"
 activityCompose = "1.13.0"
 koinBom = "4.2.1"
+coil = "3.4.0"
 junit = "4.13.2"
 androidxTestRunner = "1.7.0"
 androidxTestRules = "1.7.0"
@@ -45,6 +46,8 @@ koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-core-viewmodel = { group = "io.insert-koin", name = "koin-core-viewmodel" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-compose-core = { group = "io.coil-kt.coil3", name = "coil-compose-core", version.ref = "coil" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }

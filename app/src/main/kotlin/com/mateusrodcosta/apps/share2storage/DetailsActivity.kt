@@ -72,9 +72,17 @@ class DetailsActivity : ComponentActivity() {
                     data != null -> {
                         if (skipPicker && defaultLocation != null) {
                             lifecycleScope.launch {
-                                val dir = DocumentFile.fromTreeUri(applicationContext, defaultLocation!!.toUri())
+                                val dir = DocumentFile.fromTreeUri(
+                                    applicationContext,
+                                    defaultLocation!!.toUri()
+                                )
                                 val file = dir?.createFile(data.mimeType, data.displayName)
-                                file?.uri?.let { viewModel.saveFile(sourceFileUri.toString(), it.toString()) }
+                                file?.uri?.let {
+                                    viewModel.saveFile(
+                                        sourceFileUri.toString(),
+                                        it.toString()
+                                    )
+                                }
                             }
                         } else {
                             createFileLauncher?.launch(data.displayName)
@@ -85,9 +93,10 @@ class DetailsActivity : ComponentActivity() {
 
             LaunchedEffect(saveResult) {
                 saveResult?.let { result ->
-                    val message = if (result.isSuccess) R.string.toast_saved_file_success else R.string.toast_saved_file_failure
+                    val message =
+                        if (result.isSuccess) R.string.toast_saved_file_success else R.string.toast_saved_file_failure
                     Toast.makeText(baseContext, message, Toast.LENGTH_LONG).show()
-                    
+
                     if (skipDetails || (skipPicker && defaultLocation != null)) {
                         finish()
                     }
@@ -104,7 +113,7 @@ class DetailsActivity : ComponentActivity() {
                 DetailsScreenSkipped()
             } else {
                 DetailsScreen(
-                    uriData = uriData,
+                    detailsViewModel = viewModel,
                     windowSizeClass = windowSizeClass,
                     launchFilePicker = { launchFilePicker() }
                 )
@@ -122,11 +131,16 @@ class DetailsActivity : ComponentActivity() {
             registerFilePicker("text/plain")
         } else {
             sourceFileUri = when (action) {
-                Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+                Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(
+                    intent,
+                    Intent.EXTRA_STREAM,
+                    Uri::class.java
+                )
+
                 Intent.ACTION_VIEW -> intent.data
                 else -> null
             }
-            
+
             sourceFileUri?.let { uri ->
                 viewModel.loadMetadata(uri.toString())
                 registerFilePicker(type ?: "*/*")

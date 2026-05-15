@@ -23,12 +23,14 @@ import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 class SampleUriDataProvider : PreviewParameterProvider<UriData?> {
     override val values = sequenceOf(
         UriData(
+            uri = "content://media/external/file/1",
             displayName = "21. Setting Sail, Coming Home (End Theme).flac",
             mimeType = "audio/flac",
             size = 35280673,
             previewImage = null
         ),
         UriData(
+            uri = "content://media/external/file/2",
             displayName = "03. Lonely Rolling Star (Missing You).flac",
             mimeType = "audio/flac",
             size = 41123343,

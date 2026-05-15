@@ -17,9 +17,7 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import android.graphics.BitmapFactory
 import android.text.format.Formatter
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +39,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.VideoFile
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -53,16 +52,19 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImagePainter
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
@@ -91,12 +93,16 @@ fun DetailsScreenPreviewPtBr(@PreviewParameter(SampleUriDataProvider::class) uri
 
 @Composable
 fun DetailsScreen(
-    uriData: UriData?,
+    detailsViewModel: DetailsViewModel,
     windowSizeClass: WindowSizeClass,
     launchFilePicker: () -> Unit?,
 ) {
+    val uriData by detailsViewModel.uriData.collectAsState()
+    val showFilePreview by detailsViewModel.showFilePreview.collectAsState()
+
     DetailsScreenContent(
         uriData = uriData,
+        showFilePreview = showFilePreview,
         widthSizeClass = windowSizeClass.widthSizeClass,
         heightSizeClass = windowSizeClass.heightSizeClass,
         launchFilePicker = launchFilePicker
@@ -107,6 +113,7 @@ fun DetailsScreen(
 @Composable
 fun DetailsScreenContent(
     uriData: UriData?,
+    showFilePreview: Boolean = true,
     widthSizeClass: WindowWidthSizeClass,
     heightSizeClass: WindowHeightSizeClass,
     launchFilePicker: () -> Unit? = {},
@@ -144,8 +151,8 @@ fun DetailsScreenContent(
             ) {
                 val showLandscape = shouldShowLandscape(widthSizeClass, heightSizeClass)
                 if (uriData != null) {
-                    if (showLandscape) FileDetailsLandscape(uriData)
-                    else FileDetailsPortrait(uriData)
+                    if (showLandscape) FileDetailsLandscape(uriData, showFilePreview)
+                    else FileDetailsPortrait(uriData, showFilePreview)
                 } else Text(
                     stringResource(R.string.no_file_found),
                     style = MaterialTheme.typography.headlineMedium
@@ -156,7 +163,7 @@ fun DetailsScreenContent(
 }
 
 @Composable
-fun FileDetailsPortrait(uriData: UriData) {
+fun FileDetailsPortrait(uriData: UriData, showFilePreview: Boolean) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -167,7 +174,7 @@ fun FileDetailsPortrait(uriData: UriData) {
                 .fillMaxSize()
                 .weight(1.0f)
         ) {
-            FilePreview(uriData)
+            FilePreview(uriData, showFilePreview)
         }
         Box {
             FileInfo(uriData)
@@ -176,14 +183,14 @@ fun FileDetailsPortrait(uriData: UriData) {
 }
 
 @Composable
-fun FileDetailsLandscape(uriData: UriData) {
+fun FileDetailsLandscape(uriData: UriData, showFilePreview: Boolean) {
     Row(
         modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = Modifier.weight(1.0f)) {
-            FilePreview(uriData)
+            FilePreview(uriData, showFilePreview)
         }
         Box(modifier = Modifier.weight(1.0f)) {
             FileInfo(uriData)
@@ -222,38 +229,58 @@ fun FileInfoLine(label: String, content: String) {
 }
 
 @Composable
-fun FilePreview(uriData: UriData) {
+fun FilePreview(uriData: UriData, showFilePreview: Boolean = true) {
     val mimeType = uriData.mimeType
     val fallbackFileIcon = if (mimeType.startsWith("image/")) Icons.Outlined.Image
     else if (mimeType.startsWith("audio/")) Icons.Outlined.AudioFile
     else if (mimeType.startsWith("video/")) Icons.Outlined.VideoFile
     else Icons.Outlined.Description
 
-    val previewImage = remember(uriData.previewImage) {
-        uriData.previewImage?.let {
-            BitmapFactory.decodeByteArray(it, 0, it.size)?.asImageBitmap()
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        if (previewImage != null) Image(
-            modifier = Modifier.align(Alignment.Center),
-            bitmap = previewImage,
-            contentDescription = stringResource(R.string.app_name),
-            contentScale = ContentScale.Fit,
-        )
-        else Icon(
-            modifier = Modifier
-                .size(128.dp)
-                .align(Alignment.Center),
-            imageVector = fallbackFileIcon,
-            contentDescription = stringResource(R.string.app_name),
-            tint = MaterialTheme.colorScheme.tertiary
-        )
+        if (showFilePreview) {
+            SubcomposeAsyncImage(
+                modifier = Modifier.align(Alignment.Center),
+                model = uriData.uri,
+                contentDescription = stringResource(R.string.app_name),
+                contentScale = ContentScale.Fit,
+            ) {
+                val state by painter.state.collectAsState()
+
+                when (state) {
+                    is AsyncImagePainter.State.Loading -> {
+                        CircularProgressIndicator()
+                    }
+                    // Display fallback icon if can't create thumbnail
+                    is AsyncImagePainter.State.Error -> {
+                        Icon(
+                            modifier = Modifier
+                                .size(128.dp)
+                                .align(Alignment.Center),
+                            imageVector = fallbackFileIcon,
+                            contentDescription = stringResource(R.string.app_name),
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+
+                    else -> {
+                        SubcomposeAsyncImageContent()
+                    }
+                }
+            }
+        } else {
+            Icon(
+                modifier = Modifier
+                    .size(128.dp)
+                    .align(Alignment.Center),
+                imageVector = fallbackFileIcon,
+                contentDescription = stringResource(R.string.app_name),
+                tint = MaterialTheme.colorScheme.tertiary
+            )
+        }
     }
 }
 
