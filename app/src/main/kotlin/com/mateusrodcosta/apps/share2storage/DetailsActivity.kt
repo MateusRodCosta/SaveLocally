@@ -25,8 +25,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -50,7 +48,6 @@ class DetailsActivity : ComponentActivity() {
     private var sharedContent: CharSequence? = null
     private var sourceFileUri: Uri? = null
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -58,7 +55,6 @@ class DetailsActivity : ComponentActivity() {
         handleIntent(intent)
 
         setContent {
-            val windowSizeClass = calculateWindowSizeClass(this)
             val uriData by viewModel.uriData.collectAsState()
             val saveResult by viewModel.saveResult.collectAsState()
             val skipDetails by viewModel.skipFileDetails.collectAsState()
@@ -114,7 +110,6 @@ class DetailsActivity : ComponentActivity() {
             } else {
                 DetailsScreen(
                     detailsViewModel = viewModel,
-                    windowSizeClass = windowSizeClass,
                     launchFilePicker = { launchFilePicker() }
                 )
             }

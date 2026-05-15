@@ -41,9 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowSizeClass
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.dialogs.AboutDialog
 import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
@@ -66,26 +65,18 @@ import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreenContent(
-        widthSizeClass = WindowWidthSizeClass.Compact,
-        heightSizeClass = WindowHeightSizeClass.Medium,
-    )
+    MainScreenContent()
 }
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun MainScreenPreviewPtBr() {
-    MainScreenContent(
-        widthSizeClass = WindowWidthSizeClass.Compact,
-        heightSizeClass = WindowHeightSizeClass.Medium,
-    )
+    MainScreenContent()
 }
 
 @Composable
-fun MainScreen(windowSizeClass: WindowSizeClass, openSettings: () -> Unit) {
+fun MainScreen(openSettings: () -> Unit) {
     MainScreenContent(
-        widthSizeClass = windowSizeClass.widthSizeClass,
-        heightSizeClass = windowSizeClass.heightSizeClass,
         openSettings = openSettings,
     )
 }
@@ -93,10 +84,11 @@ fun MainScreen(windowSizeClass: WindowSizeClass, openSettings: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenContent(
-    widthSizeClass: WindowWidthSizeClass,
-    heightSizeClass: WindowHeightSizeClass,
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass,
     openSettings: () -> Unit = {}
 ) {
+    val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
+
     val openAboutDialog = remember { mutableStateOf(false) }
 
     if (openAboutDialog.value) {
@@ -120,8 +112,7 @@ fun MainScreenContent(
             )
         }) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
-                val showLandscape = shouldShowLandscape(widthSizeClass, heightSizeClass)
-                if (showLandscape) HowToUseLandscape()
+                if (useLandscapeLayout) HowToUseLandscape()
                 else HowToUsePortrait()
             }
         }

@@ -22,13 +22,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.mateusrodcosta.apps.share2storage.screens.MainScreen
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -36,7 +33,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MainScreen(
-                windowSizeClass = calculateWindowSizeClass(this),
                 openSettings = {
                     val i = Intent(this, SettingsActivity::class.java)
                     startActivity(i)

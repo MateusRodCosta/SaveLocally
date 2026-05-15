@@ -48,9 +48,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -62,6 +60,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowSizeClass
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
@@ -74,27 +73,18 @@ import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 @Preview(apiLevel = 35, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-    DetailsScreenContent(
-        uriData = uriData,
-        widthSizeClass = WindowWidthSizeClass.Compact,
-        heightSizeClass = WindowHeightSizeClass.Medium,
-    )
+    DetailsScreenContent(uriData = uriData)
 }
 
 @Preview(apiLevel = 35, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenPreviewPtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-    DetailsScreenContent(
-        uriData = uriData,
-        widthSizeClass = WindowWidthSizeClass.Compact,
-        heightSizeClass = WindowHeightSizeClass.Medium,
-    )
+    DetailsScreenContent(uriData = uriData)
 }
 
 @Composable
 fun DetailsScreen(
     detailsViewModel: DetailsViewModel,
-    windowSizeClass: WindowSizeClass,
     launchFilePicker: () -> Unit?,
 ) {
     val uriData by detailsViewModel.uriData.collectAsState()
@@ -103,8 +93,6 @@ fun DetailsScreen(
     DetailsScreenContent(
         uriData = uriData,
         showFilePreview = showFilePreview,
-        widthSizeClass = windowSizeClass.widthSizeClass,
-        heightSizeClass = windowSizeClass.heightSizeClass,
         launchFilePicker = launchFilePicker
     )
 }
@@ -114,10 +102,11 @@ fun DetailsScreen(
 fun DetailsScreenContent(
     uriData: UriData?,
     showFilePreview: Boolean = true,
-    widthSizeClass: WindowWidthSizeClass,
-    heightSizeClass: WindowHeightSizeClass,
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass,
     launchFilePicker: () -> Unit? = {},
 ) {
+    val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
+
     AppTheme {
         Scaffold(topBar = {
             TopAppBar(
@@ -149,9 +138,8 @@ fun DetailsScreenContent(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                val showLandscape = shouldShowLandscape(widthSizeClass, heightSizeClass)
                 if (uriData != null) {
-                    if (showLandscape) FileDetailsLandscape(uriData, showFilePreview)
+                    if (useLandscapeLayout) FileDetailsLandscape(uriData, showFilePreview)
                     else FileDetailsPortrait(uriData, showFilePreview)
                 } else Text(
                     stringResource(R.string.no_file_found),
