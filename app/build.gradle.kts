@@ -29,6 +29,7 @@ android {
     defaultConfig {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 28
+        //noinspection OldTargetApi
         targetSdk = 36
         versionCode = 32
         versionName = "2.0.0"
