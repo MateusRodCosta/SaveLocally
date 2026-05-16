@@ -14,8 +14,6 @@
     <string name="how_to_use_step_3">Відкриється вікно з інформацією про файл, натисніть «Зберегти»</string>
     <string name="how_to_use_step_2">Виберіть «%s» у параметрах «Поділитися»</string>
     <string name="how_to_use_step_4">Відкриється вікно вибору файлу, виберіть місце збереження та назву файлу</string>
-    <string name="donation_title">Пожертва</string>
-    <string name="donation_content">Подобається застосунок? Подумайте про пожертву! Для отримання додаткової інформації відвідайте %s</string>
     <string name="about_developer">Розроблено Mateus Rodrigues Costa</string>
     <string name="settings_intercept_action_view_intents">Перехопити наміри ACTION_VIEW</string>
     <string name="settings_intercept_action_view_intents_info">Дозволити реєстрацію як параметр, коли застосунок намагаються автоматично відкрити переглядач файлів</string>

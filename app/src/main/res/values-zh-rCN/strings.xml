@@ -6,7 +6,6 @@
     <string name="how_to_use_step_3">文件详情页面打开后，请点击「保存」按钮</string>
     <string name="app_name">本地保存</string>
     <string name="how_to_use_step_4">系统将打开文件选择器，请选择保存路径并输入文件名</string>
-    <string name="donation_content">喜欢这个应用吗？考虑捐赠！更多信息请访问 %s</string>
     <string name="about_title">关于</string>
     <string name="about_developer">开发者：Mateus Rodrigues Costa</string>
     <string name="about_icon_credits">应用图标设计 @swyzera</string>
@@ -34,7 +33,6 @@
     <string name="save_button">保存</string>
     <string name="back_arrow">返回箭头</string>
     <string name="how_to_use">如何使用</string>
-    <string name="donation_title">捐赠</string>
     <string name="settings_skip_file_picker_info">跳过文件选择器并立即保存文件（仅在设置默认文件夹时可用）</string>
     <string name="file_size">文件大小</string>
 </resources>

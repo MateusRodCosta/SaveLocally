@@ -9,8 +9,6 @@
     <string name="how_to_use">Mode d\'emploi</string>
     <string name="how_to_use_step_1">Partagez le fichier avec l\'icône de partage</string>
     <string name="how_to_use_step_3">Un écran s\'ouvre avec les détails du fichier ; pressez \"Sauvegarder\"</string>
-    <string name="donation_title">Faire un don</string>
-    <string name="donation_content">Vous aimez cette application ? N\'hésitez pas à faire un don ! Pour plus d\'informations, visitez %s</string>
     <string name="about_title">À propos</string>
     <string name="about_icon_credits">Dessin de l\'icône de l\'application par @swyzera</string>
     <string name="settings_category_file_details">Détails du fichier</string>

@@ -3,5 +3,4 @@
     <string name="github_profile_url" translatable="false">https://github.com/MateusRodCosta</string>
     <string name="swy_website_url" translatable="false">https://swyswann.com.br/</string>
     <string name="source_code_url" translatable="false">https://github.com/MateusRodCosta/SaveLocally</string>
-    <string name="donation_url">https://mateusrodcosta.dev/donate/</string>
 </resources>

@@ -2,7 +2,6 @@
 <resources>
     <string name="settings_intercept_action_view_intents">Intercetta gli intenti ACTION_VIEW</string>
     <string name="toast_saved_file_success">File salvato con successo!</string>
-    <string name="donation_title">Donazione</string>
     <string name="how_to_use_step_1">Condividi il file tramite l\'icona Condividi</string>
     <string name="how_to_use_step_3">Si aprirà una schermata con i dettagli del file, premere Salva</string>
     <string name="how_to_use_step_4">Si aprirà il selettore file, seleziona dove salvare e il nome del file</string>
@@ -36,5 +35,4 @@
     <string name="settings_skip_file_details_page">Salta la pagina dei dettagli del file</string>
     <string name="file_type">Tipo di file</string>
     <string name="settings_intercept_action_view_intents_info">Consenti la registrazione come opzione quando le app tentano di aprire automaticamente un visualizzatore di file</string>
-    <string name="donation_content">Ti piace l\'app? Considera di fare una donazione! Per maggiori informazioni, visita %s</string>
 </resources>

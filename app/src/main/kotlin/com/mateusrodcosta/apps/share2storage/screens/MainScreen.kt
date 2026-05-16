@@ -175,13 +175,6 @@ fun HowToUseContent(isLandscape: Boolean = false) {
         HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
         HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
         Spacer(modifier = Modifier.height(16.dp))
-        AppListHeader(title = stringResource(R.string.donation_title))
-        ListItemWithURL(
-            stringResource(R.string.donation_content),
-            linkPlacement = "%s",
-            url = stringResource(R.string.donation_url),
-            replaceWithUrl = true
-        )
     }
 }
 

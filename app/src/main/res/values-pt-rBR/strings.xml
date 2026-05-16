@@ -9,9 +9,6 @@
     <string name="how_to_use_step_3">Uma tela com detalhes do arquivo será mostrada, toque em "Salvar"</string>
     <string name="how_to_use_step_4">O seletor de arquivos será exibido, selecione onde e com qual nome salvar</string>
 
-    <string name="donation_title">Doação</string>
-    <string name="donation_content">Gostou do app? Considere doar! Para mais detalhes, acesse %s</string>
-
     <string name="about_title">Sobre</string>
     <string name="about_developer">Desenvolvido por Mateus Rodrigues Costa</string>
     <string name="about_icon_credits">Design do ícone do app por @swyzera</string>

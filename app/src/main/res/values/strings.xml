@@ -9,9 +9,6 @@
     <string name="how_to_use_step_3">A screen with details about the file will open, press Save</string>
     <string name="how_to_use_step_4">The file picker will open, select where to save and the filename</string>
 
-    <string name="donation_title">Donate</string>
-    <string name="donation_content">Like the app? Consider donating! For more information, visit %s</string>
-
     <string name="about_title">About</string>
     <string name="about_developer">Developed by Mateus Rodrigues Costa</string>
     <string name="about_icon_credits">App icon designed by @swyzera</string>

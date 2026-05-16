@@ -5,9 +5,7 @@
     <string name="how_to_use_step_1">Comparte el archivo por el botón de compartir</string>
     <string name="how_to_use_step_2">Elige \"%s\" en las opciones de compartir</string>
     <string name="how_to_use_step_3">Se abrirá una pantalla con detalles sobre el archivo, oprime \"Guardar\"</string>
-    <string name="donation_title">Donar</string>
     <string name="how_to_use_step_4">Se abrirá el selector de archivos, elige dónde quieres guardar el archivo y el nombre del archivo</string>
-    <string name="donation_content">¿Te gusta la app? ¡Piensa en donar! Para ver más información, visita %s</string>
     <string name="about_title">Acerca de</string>
     <string name="about_developer">Desarrollado por Mateus Rodrigues Costa</string>
     <string name="about_icon_credits">Icono de la app diseñado por @swyzera</string>

@@ -2,8 +2,6 @@
 <resources>
     <string name="how_to_use_step_1">Поделитесь файлом через значок «Поделиться»</string>
     <string name="how_to_use_step_3">Откроется окном с информацией о файле, нажмите «Сохранить»</string>
-    <string name="donation_title">Пожертвовать</string>
-    <string name="donation_content">Вам нравится приложение? Подумайте о пожертвовании! Для получения дополнительной информации посетите %s</string>
     <string name="about_title">О приложении</string>
     <string name="about_developer">Разработано Mateus Rodrigues Costa</string>
     <string name="about_icon_credits">Значок приложения разработал @swyzera</string>
