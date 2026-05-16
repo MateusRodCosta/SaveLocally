@@ -57,8 +57,6 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.dialogs.AboutDialog
-import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
-import com.mateusrodcosta.apps.share2storage.screens.shared.ListItemWithURL
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 

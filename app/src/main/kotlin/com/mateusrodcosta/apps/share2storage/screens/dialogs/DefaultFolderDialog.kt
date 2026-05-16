@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2024 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -31,13 +31,13 @@ import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
 
-@Preview(apiLevel = 34)
+@Preview(apiLevel = 36)
 @Composable
 fun DefaultFolderDialogContentPreview() {
     DefaultFolderDialogContent()
 }
 
-@Preview(apiLevel = 34, locale = "pt-rBR")
+@Preview(apiLevel = 36, locale = "pt-rBR")
 @Composable
 fun DefaultFolderDialogContentPreviewPtBr() {
     DefaultFolderDialogContent()

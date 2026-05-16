@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -17,7 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import android.net.Uri
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

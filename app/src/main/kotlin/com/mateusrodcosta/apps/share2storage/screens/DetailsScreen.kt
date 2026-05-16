@@ -74,13 +74,13 @@ import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
-@Preview(apiLevel = 35, showSystemUi = true, showBackground = true)
+@Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreen(uriData = uriData)
 }
 
-@Preview(apiLevel = 35, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenPreviewPtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreen(uriData = uriData)
@@ -276,13 +276,13 @@ fun FilePreview(uriData: UriData, showFilePreview: Boolean = true) {
     }
 }
 
-@Preview(apiLevel = 35, showSystemUi = true, showBackground = true)
+@Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenSkippedPreview() {
     DetailsScreenSkipped()
 }
 
-@Preview(apiLevel = 35, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenSkippedPreviewPtBr() {
     DetailsScreenSkipped()
