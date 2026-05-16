@@ -62,12 +62,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.window.core.layout.WindowSizeClass
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
+import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
@@ -234,7 +236,7 @@ fun FilePreview(uriData: UriData, showFilePreview: Boolean = true) {
         if (showFilePreview) {
             SubcomposeAsyncImage(
                 modifier = Modifier.align(Alignment.Center),
-                model = uriData.uri,
+                model = MediaThumbnail(uriData.uri.toUri()),
                 contentDescription = stringResource(R.string.app_name),
                 contentScale = ContentScale.Fit,
             ) {

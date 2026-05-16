@@ -18,14 +18,17 @@
 package com.mateusrodcosta.apps.share2storage
 
 import android.app.Application
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
 import com.mateusrodcosta.apps.share2storage.di.AppModule
+import com.mateusrodcosta.apps.share2storage.utils.ThumbnailFetcher
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.annotation.KoinApplication
 import org.koin.plugin.module.dsl.startKoin
 
 @KoinApplication(modules = [AppModule::class])
-class SaveLocallyApp: Application() {
+class SaveLocallyApp: Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
 
@@ -33,5 +36,13 @@ class SaveLocallyApp: Application() {
             androidLogger()
             androidContext(this@SaveLocallyApp)
         }
+    }
+
+    override fun newImageLoader(context: coil3.PlatformContext): ImageLoader {
+        return ImageLoader.Builder(context)
+            .components {
+                add(ThumbnailFetcher.Factory(context))
+            }
+            .build()
     }
 }

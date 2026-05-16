@@ -20,21 +20,15 @@ package com.mateusrodcosta.apps.share2storage.data.repository
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
-import android.util.Log
-import android.util.Size
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.repository.FileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
-import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
@@ -94,64 +88,9 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                     name to s
                 }
 
-                val previewBytes = getPreviewBytes(uri)
-
-                UriData(uriString, displayName, type, size, previewImage = previewBytes)
+                UriData(uriString, displayName, type, size)
             }
         }
-
-    private fun getPreviewBytes(uri: Uri): ByteArray? {
-        return try {
-            val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // On Android 10+, use loadThumbnail for better compatibility (PDFs, Videos, etc)
-                contentResolver.loadThumbnail(uri, Size(1024, 1024), null)
-            } else {
-                contentResolver.openFileDescriptor(uri, "r")?.use { fileDescriptor ->
-                    val fd = fileDescriptor.fileDescriptor
-
-                    // Memory safe decoding: get dimensions first
-                    val options = BitmapFactory.Options().apply {
-                        inJustDecodeBounds = true
-                    }
-                    BitmapFactory.decodeFileDescriptor(fd, null, options)
-
-                    // Target a max size for preview (e.g., 1024px)
-                    options.inSampleSize = calculateInSampleSize(options, 1024, 1024)
-                    options.inJustDecodeBounds = false
-
-                    BitmapFactory.decodeFileDescriptor(fd, null, options)
-                }
-            }
-
-            bitmap?.let { b ->
-                ByteArrayOutputStream().use { stream ->
-                    b.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                    stream.toByteArray()
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("FileRepositoryImpl", "Error generating preview bitmap", e)
-            null
-        }
-    }
-
-    private fun calculateInSampleSize(
-        options: BitmapFactory.Options,
-        reqWidth: Int,
-        reqHeight: Int
-    ): Int {
-        val (height: Int, width: Int) = options.outHeight to options.outWidth
-        var inSampleSize = 1
-
-        if (height > reqHeight || width > reqWidth) {
-            val halfHeight: Int = height / 2
-            val halfWidth: Int = width / 2
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-        return inSampleSize
-    }
 
     private fun isVirtualFile(uri: Uri): Boolean {
         if (!DocumentsContract.isDocumentUri(context, uri)) return false

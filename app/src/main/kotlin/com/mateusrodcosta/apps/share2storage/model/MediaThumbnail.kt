@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
+ *     Copyright (C) 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -15,11 +15,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.domain.entity
+package com.mateusrodcosta.apps.share2storage.model
 
-data class UriData(
-    val uri: String,
-    val displayName: String,
-    val mimeType: String,
-    val size: Long
+import android.net.Uri
+import android.util.Size
+
+data class MediaThumbnail(
+    val uri: Uri,
+    val size: Size = Size(1024, 1024)
 )
