@@ -1,0 +1,8 @@
+Avez-vous déjà rencontré ce scénario : vous utilisez une appli (comme une appli de banque) et vous avez besoin d'exporter un document en urgence (par exemple un relevé bancaire en PDF). Vous voulez télécharger le fichier localement sur votre appareil, mais l'appli n'offre pas de moyen facile de le faire, la meilleure option est seulement de partager le fichier, ce qui veut dire que vous vous l'envoyez finalement à vous-même (ou quelqu'un d'autre) par mail ou messagerie instantanée, pour pouvoir ensuite télécharger ce fichier.
+
+Celà arrive parce que beaucoup d'applis choisissent d'utiliser la fonction Partage du système à la place d'implémenter la logique requise pour la sauvegarde d'un fichier. Alors, qu'est-ce qu'on peut faire ?
+
+Dans cette situation, Save Locally devient utile, vous choisissez cette appli sur le tableau de partage qui apparaît et elle vous permet de sauvegarder le fichier n'importe où localement sur votre appareil, et vous montre aussi les détails du fichier avant la sauvegarde (vous pouvez sauter cette étape si besoin).
+Une option pour intercepter les commandes "Ouvrir avec" est aussi disponible, vous permettant de sauvegarder les fichiers même si l'appli source vous force à visualiser le fichier avec une appli par défaut pour ce type de fichier.
+
+Save Locally est une appli FLOSS ("Free and Libre Open Source Software" logiciel gratuit et libre) développée avec Jetpack Compose. Le code source est disponible à l'adresse <a href="https://github.com/MateusRodCosta/SaveLocally">https://github.com/MateusRodCosta/SaveLocally</a> sous licence AGPLv3+.
