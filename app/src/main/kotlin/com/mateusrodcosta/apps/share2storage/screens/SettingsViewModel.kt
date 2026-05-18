@@ -37,22 +37,18 @@ class SettingsViewModel(private val repository: PreferencesRepository) : ViewMod
         viewModelScope,
         SharingStarted.WhileSubscribed(5000), null
     )
-    val skipFileDetails: StateFlow<Boolean> = repository.skipFileDetails.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000),
-        PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT
+    val skipFileDetails: StateFlow<Boolean?> = repository.skipFileDetails.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
-    val showFilePreview: StateFlow<Boolean> = repository.showFilePreview.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000),
-        PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT
+    val showFilePreview: StateFlow<Boolean?> = repository.showFilePreview.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
-    val interceptActionViewIntents: StateFlow<Boolean> =
+    val interceptActionViewIntents: StateFlow<Boolean?> =
         repository.interceptActionViewIntents.stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000),
-            PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT
+            viewModelScope, SharingStarted.WhileSubscribed(5000), null
         )
-    val skipFilePicker: StateFlow<Boolean> = repository.skipFilePicker.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000),
-        PreferencesRepository.SKIP_FILE_PICKER_DEFAULT
+    val skipFilePicker: StateFlow<Boolean?> = repository.skipFilePicker.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
 
     fun assignSaveLocationDirIntent(intent: ActivityResultLauncher<Uri?>) {

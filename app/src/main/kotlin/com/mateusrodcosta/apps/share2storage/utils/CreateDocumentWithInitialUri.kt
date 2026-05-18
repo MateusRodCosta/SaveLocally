@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -23,20 +23,32 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.DocumentsContract.EXTRA_INITIAL_URI
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.activity.result.contract.ActivityResultContract
 
-class CreateDocumentWithInitialUri(
-    mimeType: String, private val initialUri: Uri?
-) : CreateDocument(mimeType) {
+class CreateDocumentWithInitialUri :
+    ActivityResultContract<CreateDocumentWithInitialUri.Input, Uri?>() {
 
-    override fun createIntent(context: Context, input: String): Intent {
-        return super.createIntent(context, input).also { i ->
-            Log.d("CreateDocumentWithInitialUri] initialUri", initialUri.toString())
-            initialUri?.let {
-                val documentUri = DocumentsContract.buildDocumentUriUsingTree(initialUri, DocumentsContract.getTreeDocumentId(initialUri))
-                Log.d("CreateDocumentWithInitialUri] documentUri", documentUri.toString())
-                i.putExtra(EXTRA_INITIAL_URI, documentUri)
+    data class Input(val fileName: String, val mimeType: String, val initialUri: Uri?)
+
+    override fun createIntent(context: Context, input: Input): Intent {
+        return Intent(Intent.ACTION_CREATE_DOCUMENT)
+            .addCategory(Intent.CATEGORY_OPENABLE)
+            .setType(input.mimeType)
+            .putExtra(Intent.EXTRA_TITLE, input.fileName)
+            .also { i ->
+                Log.d("CreateDocumentWithInitialUri] initialUri", input.initialUri.toString())
+                input.initialUri?.let {
+                    val documentUri = DocumentsContract.buildDocumentUriUsingTree(
+                        input.initialUri,
+                        DocumentsContract.getTreeDocumentId(input.initialUri)
+                    )
+                    Log.d("CreateDocumentWithInitialUri] documentUri", documentUri.toString())
+                    i.putExtra(EXTRA_INITIAL_URI, documentUri)
+                }
             }
-        }
+    }
+
+    override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+        return intent.takeIf { resultCode == android.app.Activity.RESULT_OK }?.data
     }
 }

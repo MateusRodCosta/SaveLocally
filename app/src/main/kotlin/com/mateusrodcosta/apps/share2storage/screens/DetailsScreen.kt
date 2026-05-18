@@ -140,8 +140,8 @@ fun DetailsScreen(
                     .padding(paddingValues)
             ) {
                 if (collectedUriData != null) {
-                    if (useLandscapeLayout) FileDetailsLandscape(collectedUriData!!, collectedShowFilePreview)
-                    else FileDetailsPortrait(collectedUriData!!, collectedShowFilePreview)
+                    if (useLandscapeLayout) FileDetailsLandscape(collectedUriData!!, collectedShowFilePreview == true)
+                    else FileDetailsPortrait(collectedUriData!!, collectedShowFilePreview == true)
                 } else Text(
                     stringResource(R.string.no_file_found),
                     style = MaterialTheme.typography.headlineMedium

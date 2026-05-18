@@ -43,7 +43,20 @@ class DetailsActivity : ComponentActivity() {
 
     private val viewModel: DetailsViewModel by viewModel()
 
-    private var createFileLauncher: ActivityResultLauncher<String>? = null
+    private val createFileLauncher: ActivityResultLauncher<CreateDocumentWithInitialUri.Input> =
+        registerForActivityResult(CreateDocumentWithInitialUri()) { uri ->
+            uri?.let { targetUri ->
+                if (sharedContent != null) {
+                    viewModel.saveText(sharedContent.toString(), targetUri.toString())
+                } else {
+                    sourceFileUri?.let { sourceUri ->
+                        viewModel.saveFile(sourceUri.toString(), targetUri.toString())
+                    }
+                }
+            } ?: run {
+                if (viewModel.skipFileDetails.value == true) finish()
+            }
+        }
 
     private var sharedContent: CharSequence? = null
     private var sourceFileUri: Uri? = null
@@ -63,14 +76,22 @@ class DetailsActivity : ComponentActivity() {
 
             val launchFilePicker = {
                 val data = uriData
+                val initialUri = defaultLocation?.toUri()
                 when {
-                    sharedContent != null -> createFileLauncher?.launch("text.txt")
+                    sharedContent != null -> createFileLauncher.launch(
+                        CreateDocumentWithInitialUri.Input(
+                            "text.txt",
+                            "text/plain",
+                            initialUri
+                        )
+                    )
+
                     data != null -> {
-                        if (skipPicker && defaultLocation != null) {
+                        if (skipPicker == true && initialUri != null) {
                             lifecycleScope.launch {
                                 val dir = DocumentFile.fromTreeUri(
                                     applicationContext,
-                                    defaultLocation!!.toUri()
+                                    initialUri
                                 )
                                 val file = dir?.createFile(data.mimeType, data.displayName)
                                 file?.uri?.let {
@@ -81,7 +102,13 @@ class DetailsActivity : ComponentActivity() {
                                 }
                             }
                         } else {
-                            createFileLauncher?.launch(data.displayName)
+                            createFileLauncher.launch(
+                                CreateDocumentWithInitialUri.Input(
+                                    data.displayName,
+                                    data.mimeType,
+                                    initialUri
+                                )
+                            )
                         }
                     }
                 }
@@ -93,25 +120,28 @@ class DetailsActivity : ComponentActivity() {
                         if (result.isSuccess) R.string.toast_saved_file_success else R.string.toast_saved_file_failure
                     Toast.makeText(baseContext, message, Toast.LENGTH_LONG).show()
 
-                    if (skipDetails || (skipPicker && defaultLocation != null)) {
+                    if (skipDetails == true || (skipPicker == true && defaultLocation != null)) {
                         finish()
                     }
                     viewModel.resetSaveResult()
                 }
             }
 
-            if (skipDetails) {
-                LaunchedEffect(uriData, sharedContent) {
-                    if (uriData != null || sharedContent != null) {
-                        launchFilePicker()
+            // Wait for skipDetails to be loaded from preferences
+            if (skipDetails != null) {
+                if (skipDetails == true) {
+                    LaunchedEffect(uriData, sharedContent, skipPicker, defaultLocation) {
+                        if ((uriData != null || sharedContent != null) && skipPicker != null) {
+                            launchFilePicker()
+                        }
                     }
+                    DetailsScreenSkipped()
+                } else {
+                    DetailsScreen(
+                        detailsViewModel = viewModel,
+                        launchFilePicker = { launchFilePicker() }
+                    )
                 }
-                DetailsScreenSkipped()
-            } else {
-                DetailsScreen(
-                    detailsViewModel = viewModel,
-                    launchFilePicker = { launchFilePicker() }
-                )
             }
         }
     }
@@ -121,9 +151,12 @@ class DetailsActivity : ComponentActivity() {
         val action = intent.action
         val type = intent.type
 
-        if (action == Intent.ACTION_SEND && type == "text/plain") {
-            sharedContent = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
-            registerFilePicker("text/plain")
+        val extraText = if (action == Intent.ACTION_SEND && type == "text/plain") {
+            intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
+        } else null
+
+        if (extraText != null) {
+            sharedContent = extraText
         } else {
             sourceFileUri = when (action) {
                 Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(
@@ -138,26 +171,6 @@ class DetailsActivity : ComponentActivity() {
 
             sourceFileUri?.let { uri ->
                 viewModel.loadMetadata(uri.toString())
-                registerFilePicker(type ?: "*/*")
-            }
-        }
-    }
-
-    private fun registerFilePicker(mimeType: String) {
-        val defaultLocation = viewModel.defaultSaveLocation.value?.toUri()
-        createFileLauncher = registerForActivityResult(
-            CreateDocumentWithInitialUri(mimeType, defaultLocation)
-        ) { uri ->
-            uri?.let { targetUri ->
-                if (sharedContent != null) {
-                    viewModel.saveText(sharedContent.toString(), targetUri.toString())
-                } else {
-                    sourceFileUri?.let { sourceUri ->
-                        viewModel.saveFile(sourceUri.toString(), targetUri.toString())
-                    }
-                }
-            } ?: run {
-                if (viewModel.skipFileDetails.value) finish()
             }
         }
     }

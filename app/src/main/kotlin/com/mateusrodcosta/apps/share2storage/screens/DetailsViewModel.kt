@@ -41,14 +41,14 @@ class DetailsViewModel(
     val defaultSaveLocation: StateFlow<String?> = preferencesRepository.defaultSaveLocation
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val skipFilePicker: StateFlow<Boolean> = preferencesRepository.skipFilePicker
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PreferencesRepository.SKIP_FILE_PICKER_DEFAULT)
+    val skipFilePicker: StateFlow<Boolean?> = preferencesRepository.skipFilePicker
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val skipFileDetails: StateFlow<Boolean> = preferencesRepository.skipFileDetails
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT)
+    val skipFileDetails: StateFlow<Boolean?> = preferencesRepository.skipFileDetails
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val showFilePreview: StateFlow<Boolean> = preferencesRepository.showFilePreview
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT)
+    val showFilePreview: StateFlow<Boolean?> = preferencesRepository.showFilePreview
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val _uriData = MutableStateFlow<UriData?>(null)
     val uriData: StateFlow<UriData?> = _uriData.asStateFlow()

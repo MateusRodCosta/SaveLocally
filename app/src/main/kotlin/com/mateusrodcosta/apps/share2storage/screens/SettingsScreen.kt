@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.screens.dialogs.DefaultFolderDialog
@@ -72,13 +73,13 @@ fun SettingsScreenPreviewPtBr() {
 fun SettingsScreen(settingsViewModel: SettingsViewModel? = null) {
     val mockDefaultSaveLocation = remember { MutableStateFlow<String?>(null) }
     val mockSkipFilePicker =
-        remember { MutableStateFlow(PreferencesRepository.SKIP_FILE_PICKER_DEFAULT) }
+        remember { MutableStateFlow<Boolean?>(PreferencesRepository.SKIP_FILE_PICKER_DEFAULT) }
     val mockSkipFileDetails =
-        remember { MutableStateFlow(PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT) }
+        remember { MutableStateFlow<Boolean?>(PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT) }
     val mockShowFilePreview =
-        remember { MutableStateFlow(PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT) }
+        remember { MutableStateFlow<Boolean?>(PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT) }
     val mockInterceptActionViewIntents =
-        remember { MutableStateFlow(PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT) }
+        remember { MutableStateFlow<Boolean?>(PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT) }
 
     SettingsScreenContent(
         spDefaultSaveLocation = settingsViewModel?.defaultSaveLocation ?: mockDefaultSaveLocation,
@@ -108,10 +109,10 @@ fun SettingsScreen(settingsViewModel: SettingsViewModel? = null) {
 @Composable
 private fun SettingsScreenContent(
     spDefaultSaveLocation: StateFlow<String?>,
-    spSkipFilePicker: StateFlow<Boolean>,
-    spSkipFileDetails: StateFlow<Boolean>,
-    spShowFilePreview: StateFlow<Boolean>,
-    spInterceptActionViewIntents: StateFlow<Boolean>,
+    spSkipFilePicker: StateFlow<Boolean?>,
+    spSkipFileDetails: StateFlow<Boolean?>,
+    spShowFilePreview: StateFlow<Boolean?>,
+    spInterceptActionViewIntents: StateFlow<Boolean?>,
     launchFilePicker: () -> Unit = {},
     clearDefaultSaveLocation: () -> Unit = {},
     updateSkipFilePicker: (Boolean) -> Unit = {},
@@ -200,7 +201,7 @@ fun DefaultSaveLocationSetting(
         },
         supportingContent = {
             Text(
-                defaultSaveLocation
+                defaultSaveLocation?.toUri()?.path
                     ?: stringResource(R.string.settings_default_save_location_last_used)
             )
         },
@@ -211,14 +212,14 @@ fun DefaultSaveLocationSetting(
 fun SkipFilePickerSetting(
     spDefaultSaveLocation: StateFlow<String?>,
     updateSkipFilePicker: (Boolean) -> Unit,
-    spSkipFilePicker: StateFlow<Boolean>,
+    spSkipFilePicker: StateFlow<Boolean?>,
 ) {
     val skipFilePicker by spSkipFilePicker.collectAsState()
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
 
     ListItem(modifier = if (defaultSaveLocation != null) Modifier.clickable {
         updateSkipFilePicker(
-            !skipFilePicker
+            !(skipFilePicker ?: PreferencesRepository.SKIP_FILE_PICKER_DEFAULT)
         )
     } else Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED), headlineContent = {
         Text(stringResource(R.string.settings_skip_file_picker))
@@ -227,7 +228,7 @@ fun SkipFilePickerSetting(
     }, trailingContent = {
         Switch(
             enabled = defaultSaveLocation != null,
-            checked = skipFilePicker,
+            checked = skipFilePicker ?: PreferencesRepository.SKIP_FILE_PICKER_DEFAULT,
             onCheckedChange = { value ->
                 updateSkipFilePicker(value)
             },
@@ -238,12 +239,14 @@ fun SkipFilePickerSetting(
 @Composable
 fun SkipFileDetailsSetting(
     updateSkipFileDetails: (Boolean) -> Unit,
-    spSkipFileDetails: StateFlow<Boolean>,
+    spSkipFileDetails: StateFlow<Boolean?>,
 ) {
     val skipFileDetails by spSkipFileDetails.collectAsState()
 
     ListItem(
-        modifier = Modifier.clickable { updateSkipFileDetails(!skipFileDetails) },
+        modifier = Modifier.clickable {
+            updateSkipFileDetails(!(skipFileDetails ?: PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT))
+        },
         headlineContent = {
             Text(stringResource(R.string.settings_skip_file_details_page))
         },
@@ -251,45 +254,52 @@ fun SkipFileDetailsSetting(
             Text(stringResource(R.string.settings_skip_file_details_page_info))
         },
         trailingContent = {
-            Switch(checked = skipFileDetails, onCheckedChange = { value ->
-                updateSkipFileDetails(value)
-            })
+            Switch(
+                checked = skipFileDetails ?: PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT,
+                onCheckedChange = { value ->
+                    updateSkipFileDetails(value)
+                })
         })
 }
 
 @Composable
 fun ShowFilePreviewSetting(
-    spSkipFileDetails: StateFlow<Boolean>,
+    spSkipFileDetails: StateFlow<Boolean?>,
     updateShowFilePreview: (Boolean) -> Unit,
-    spShowFilePreview: StateFlow<Boolean>,
+    spShowFilePreview: StateFlow<Boolean?>,
 ) {
     val skipFileDetails by spSkipFileDetails.collectAsState()
     val showFilePreview by spShowFilePreview.collectAsState()
 
-    ListItem(modifier = if (skipFileDetails) Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED) else Modifier.clickable {
+    ListItem(modifier = if (skipFileDetails == true) Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED) else Modifier.clickable {
         updateShowFilePreview(
-            !showFilePreview
+            !(showFilePreview ?: PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT)
         )
     }, headlineContent = {
         Text(stringResource(R.string.settings_show_file_preview))
     }, supportingContent = {
         Text(stringResource(R.string.settings_show_file_preview_info))
     }, trailingContent = {
-        Switch(enabled = !skipFileDetails, checked = showFilePreview, onCheckedChange = { value ->
-            updateShowFilePreview(value)
-        })
+        Switch(
+            enabled = skipFileDetails != true,
+            checked = showFilePreview ?: PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT,
+            onCheckedChange = { value ->
+                updateShowFilePreview(value)
+            })
     })
 }
 
 @Composable
 fun InterceptActionViewIntentsSetting(
     updateInterceptActionViewIntents: (Boolean) -> Unit,
-    spInterceptActionViewIntents: StateFlow<Boolean>,
+    spInterceptActionViewIntents: StateFlow<Boolean?>,
 ) {
     val interceptActionViewIntents by spInterceptActionViewIntents.collectAsState()
 
     ListItem(
-        modifier = Modifier.clickable { updateInterceptActionViewIntents(!interceptActionViewIntents) },
+        modifier = Modifier.clickable {
+            updateInterceptActionViewIntents(!(interceptActionViewIntents ?: PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT))
+        },
         headlineContent = {
             Text(stringResource(R.string.settings_intercept_action_view_intents))
         },
@@ -297,8 +307,10 @@ fun InterceptActionViewIntentsSetting(
             Text(stringResource(R.string.settings_intercept_action_view_intents_info))
         },
         trailingContent = {
-            Switch(checked = interceptActionViewIntents, onCheckedChange = { value ->
-                updateInterceptActionViewIntents(value)
-            })
+            Switch(
+                checked = interceptActionViewIntents ?: PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT,
+                onCheckedChange = { value ->
+                    updateInterceptActionViewIntents(value)
+                })
         })
 }
