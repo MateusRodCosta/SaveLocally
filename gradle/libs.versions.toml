@@ -1,5 +1,5 @@
 [versions]
-dependencyAnalysis = "3.10.0"
+dependencyAnalysis = "3.12.1"
 agp = "9.2.1"
 kotlin = "2.3.21"
 koinPlugin = "0.6.2"
