@@ -1,0 +1,10 @@
+It's been 1 year and nearly 700 users—thank you for your support!
+
+For release 2.1.0:
+• Migrated to Clean Arch
+• Huge under-the-hood changes and improvements
+• Optimized preview logic
+• Introduced FiraGO font for branding
+• Updated dependencies
+• Full Android 16 support
+• Updated translations

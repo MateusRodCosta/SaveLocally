@@ -8,7 +8,7 @@
    version="1.1"
    id="svg1"
    xml:space="preserve"
-   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
    sodipodi:docname="feature-original-pt_br.svg"
    inkscape:export-filename="../../fastlane/metadata/android/pt-BR/images/featureGraphic.png"
    inkscape:export-xdpi="96"
@@ -27,7 +27,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.71713664"
-     inkscape:cx="467.13552"
+     inkscape:cx="467.83274"
      inkscape:cy="210.55959"
      inkscape:window-width="1920"
      inkscape:window-height="1011"
@@ -234,17 +234,17 @@
              id="Camada_2">
 </g></g><text
            xml:space="preserve"
-           style="font-size:22.5778px;font-family:FiraGO;-inkscape-font-specification:FiraGO;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:FiraGO;-inkscape-font-specification:FiraGO;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583"
            x="125.965"
            y="75.315239"
            id="text9"><tspan
              sodipodi:role="line"
-             style="font-size:22.5778px;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583;-inkscape-font-specification:FiraGO;font-family:FiraGO;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:FiraGO;-inkscape-font-specification:FiraGO;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583"
              x="125.965"
              y="75.315239"
              id="tspan2">Salvar</tspan><tspan
              sodipodi:role="line"
-             style="font-size:22.5778px;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583;-inkscape-font-specification:FiraGO;font-family:FiraGO;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:FiraGO;-inkscape-font-specification:FiraGO;fill:#3c3c3b;fill-opacity:1;stroke-width:0.264583"
              x="125.965"
              y="103.53749"
              id="tspan3">Localmente</tspan></text></g></g></g><style

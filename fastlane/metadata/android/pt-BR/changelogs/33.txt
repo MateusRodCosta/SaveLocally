@@ -1,0 +1,10 @@
+Já faz 1 ano e quase 700 usuários—obrigado pelo apoio!
+
+Na versão 2.1.0:
+• Migração para Clean Arch
+• Grande mudanças e melhorias por baixo dos panos
+• Lógica de prévia otimizada
+• Adicionada fonte FiraGO para branding
+• Dependências atualizadas
+• Suporte total ao Android 16
+• Traduções atualizadas
