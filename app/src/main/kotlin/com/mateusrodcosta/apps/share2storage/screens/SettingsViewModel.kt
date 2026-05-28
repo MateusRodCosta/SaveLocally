@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
@@ -50,6 +51,15 @@ class SettingsViewModel(private val repository: PreferencesRepository) : ViewMod
     val skipFilePicker: StateFlow<Boolean?> = repository.skipFilePicker.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
+
+    val isReady: StateFlow<Boolean> = combine(
+        repository.defaultSaveLocation,
+        repository.skipFileDetails,
+        repository.showFilePreview,
+        repository.interceptActionViewIntents,
+        repository.skipFilePicker
+    ) { _, _, _, _, _ -> true }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     fun assignSaveLocationDirIntent(intent: ActivityResultLauncher<Uri?>) {
         getSaveLocationDirIntent = intent

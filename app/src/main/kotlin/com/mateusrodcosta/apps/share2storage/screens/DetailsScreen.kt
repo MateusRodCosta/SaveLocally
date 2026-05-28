@@ -72,7 +72,7 @@ import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
 import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
-import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
@@ -108,7 +108,7 @@ fun DetailsScreen(
 
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 
-    AppTheme {
+    SaveLocallyTheme {
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.file_details)) },
@@ -291,7 +291,7 @@ fun DetailsScreenSkippedPreviewPtBr() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreenSkipped() {
-    AppTheme {
+    SaveLocallyTheme {
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.file_details)) },

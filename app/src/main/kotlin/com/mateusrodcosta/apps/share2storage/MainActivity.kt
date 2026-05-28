@@ -17,24 +17,32 @@
 
 package com.mateusrodcosta.apps.share2storage
 
+import android.animation.ObjectAnimator
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.mateusrodcosta.apps.share2storage.screens.MainScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
-import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -61,14 +69,51 @@ class MainActivity : ComponentActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
 
+        splashScreen.setKeepOnScreenCondition {
+            settingsViewModel.isReady.value == false
+        }
+
+        splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
+            val fadeOut = ObjectAnimator.ofFloat(
+                splashScreenViewProvider.view,
+                View.ALPHA,
+                1f,
+                0f
+            )
+
+            fadeOut.duration = 400L
+            fadeOut.interpolator = AnticipateInterpolator()
+
+            fadeOut.doOnEnd {
+                splashScreenViewProvider.remove()
+            }
+
+            fadeOut.start()
+        }
+
         setContent {
-            AppTheme {
+            val isDarkTheme = isSystemInDarkTheme()
+
+            val barStyle = if (isDarkTheme) {
+                SystemBarStyle.dark(Color.TRANSPARENT)
+            } else {
+                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+            }
+
+            LaunchedEffect(isDarkTheme) {
+                enableEdgeToEdge(
+                    statusBarStyle = barStyle,
+                    navigationBarStyle = barStyle
+                )
+            }
+
+            SaveLocallyTheme(darkTheme = isDarkTheme) {
                 val isFromAppInfo =
                     intent.action == Intent.ACTION_APPLICATION_PREFERENCES
                 var showSettings by rememberSaveable { mutableStateOf(isFromAppInfo) }

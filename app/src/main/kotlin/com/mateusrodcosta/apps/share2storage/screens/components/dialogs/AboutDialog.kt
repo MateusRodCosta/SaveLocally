@@ -34,7 +34,7 @@ import androidx.compose.ui.window.Dialog
 import com.mateusrodcosta.apps.share2storage.BuildConfig
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.components.ListItemWithURL
-import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
+import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
 
 @Preview(apiLevel = 36)
 @Composable
@@ -57,7 +57,7 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
 
 @Composable
 fun AboutDialogContent() {
-    AppTheme {
+    SaveLocallyTheme {
         Card {
             Column {
                 AppInfo()
