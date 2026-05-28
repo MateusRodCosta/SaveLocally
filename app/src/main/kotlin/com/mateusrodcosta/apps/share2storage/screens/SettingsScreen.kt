@@ -27,10 +27,18 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.FastForward
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Link
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -43,6 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -84,6 +93,11 @@ fun SettingsScreen(
     val mockInterceptActionViewIntents =
         remember { MutableStateFlow<Boolean?>(PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT) }
 
+    val listItemColors = ListItemDefaults.colors(
+        containerColor = Color.Transparent,
+        leadingIconColor = MaterialTheme.colorScheme.primary
+    )
+
     SettingsScreenContent(
         spDefaultSaveLocation = settingsViewModel?.defaultSaveLocation ?: mockDefaultSaveLocation,
         spSkipFilePicker = settingsViewModel?.skipFilePicker ?: mockSkipFilePicker,
@@ -106,6 +120,7 @@ fun SettingsScreen(
         updateShowFilePreview = { value ->
             settingsViewModel?.updateShowFilePreview(value)
         },
+        listItemColors = listItemColors,
     )
 }
 
@@ -124,6 +139,7 @@ private fun SettingsScreenContent(
     updateSkipFileDetails: (Boolean) -> Unit = {},
     updateInterceptActionViewIntents: (Boolean) -> Unit = {},
     updateShowFilePreview: (Boolean) -> Unit = {},
+    listItemColors: ListItemColors = ListItemDefaults.colors(),
 ) {
     Scaffold(topBar = {
         TopAppBar(title = { Text(stringResource(R.string.settings_title)) }, navigationIcon = {
@@ -148,28 +164,33 @@ private fun SettingsScreenContent(
                         launchFilePicker = launchFilePicker,
                         clearDefaultSaveLocation = clearDefaultSaveLocation,
                         spDefaultSaveLocation = spDefaultSaveLocation,
+                        listItemColors = listItemColors,
                     )
                     SkipFilePickerSetting(
                         spDefaultSaveLocation = spDefaultSaveLocation,
                         updateSkipFilePicker = updateSkipFilePicker,
                         spSkipFilePicker = spSkipFilePicker,
+                        listItemColors = listItemColors,
                     )
                     BasicDivider()
                     SectionHeader(stringResource(R.string.settings_category_file_details))
                     SkipFileDetailsSetting(
                         updateSkipFileDetails = updateSkipFileDetails,
                         spSkipFileDetails = spSkipFileDetails,
+                        listItemColors = listItemColors,
                     )
                     ShowFilePreviewSetting(
                         updateShowFilePreview = updateShowFilePreview,
                         spShowFilePreview = spShowFilePreview,
                         spSkipFileDetails = spSkipFileDetails,
+                        listItemColors = listItemColors,
                     )
                     BasicDivider()
                     SectionHeader(stringResource(R.string.settings_category_intents))
                     InterceptActionViewIntentsSetting(
                         updateInterceptActionViewIntents = updateInterceptActionViewIntents,
                         spInterceptActionViewIntents = spInterceptActionViewIntents,
+                        listItemColors = listItemColors,
                     )
                 }
             }
@@ -182,6 +203,7 @@ fun DefaultSaveLocationSetting(
     launchFilePicker: () -> Unit,
     clearDefaultSaveLocation: () -> Unit,
     spDefaultSaveLocation: StateFlow<String?>,
+    listItemColors: ListItemColors,
 ) {
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
     val openDefaultFolderDialog = remember { mutableStateOf(false) }
@@ -207,6 +229,10 @@ fun DefaultSaveLocationSetting(
                     ?: stringResource(R.string.settings_default_save_location_last_used)
             )
         },
+        leadingContent = {
+            Icon(Icons.Default.Folder, null)
+        },
+        colors = listItemColors,
     )
 }
 
@@ -215,6 +241,7 @@ fun SkipFilePickerSetting(
     spDefaultSaveLocation: StateFlow<String?>,
     updateSkipFilePicker: (Boolean) -> Unit,
     spSkipFilePicker: StateFlow<Boolean?>,
+    listItemColors: ListItemColors,
 ) {
     val skipFilePicker by spSkipFilePicker.collectAsState()
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
@@ -229,19 +256,22 @@ fun SkipFilePickerSetting(
         Text(stringResource(R.string.settings_skip_file_picker))
     }, supportingContent = {
         Text(stringResource(R.string.settings_skip_file_picker_info))
+    }, leadingContent = {
+        Icon(Icons.Default.FastForward, null)
     }, trailingContent = {
         Switch(
             enabled = defaultSaveLocation != null,
             checked = checked,
             onCheckedChange = null,
         )
-    })
+    }, colors = listItemColors)
 }
 
 @Composable
 fun SkipFileDetailsSetting(
     updateSkipFileDetails: (Boolean) -> Unit,
     spSkipFileDetails: StateFlow<Boolean?>,
+    listItemColors: ListItemColors,
 ) {
     val skipFileDetails by spSkipFileDetails.collectAsState()
 
@@ -259,12 +289,16 @@ fun SkipFileDetailsSetting(
         supportingContent = {
             Text(stringResource(R.string.settings_skip_file_details_page_info))
         },
+        leadingContent = {
+            Icon(Icons.Default.Description, null)
+        },
         trailingContent = {
             Switch(
                 checked = checked,
                 onCheckedChange = null
             )
-        })
+        },
+        colors = listItemColors)
 }
 
 @Composable
@@ -272,6 +306,7 @@ fun ShowFilePreviewSetting(
     spSkipFileDetails: StateFlow<Boolean?>,
     updateShowFilePreview: (Boolean) -> Unit,
     spShowFilePreview: StateFlow<Boolean?>,
+    listItemColors: ListItemColors,
 ) {
     val skipFileDetails by spSkipFileDetails.collectAsState()
     val showFilePreview by spShowFilePreview.collectAsState()
@@ -286,19 +321,22 @@ fun ShowFilePreviewSetting(
         Text(stringResource(R.string.settings_show_file_preview))
     }, supportingContent = {
         Text(stringResource(R.string.settings_show_file_preview_info))
+    }, leadingContent = {
+        Icon(Icons.Default.Image, null)
     }, trailingContent = {
         Switch(
             enabled = skipFileDetails != true,
             checked = checked,
             onCheckedChange = null
         )
-    })
+    }, colors = listItemColors)
 }
 
 @Composable
 fun InterceptActionViewIntentsSetting(
     updateInterceptActionViewIntents: (Boolean) -> Unit,
     spInterceptActionViewIntents: StateFlow<Boolean?>,
+    listItemColors: ListItemColors,
 ) {
     val interceptActionViewIntents by spInterceptActionViewIntents.collectAsState()
 
@@ -316,10 +354,14 @@ fun InterceptActionViewIntentsSetting(
         supportingContent = {
             Text(stringResource(R.string.settings_intercept_action_view_intents_info))
         },
+        leadingContent = {
+            Icon(Icons.Default.Link, null)
+        },
         trailingContent = {
             Switch(
                 checked = checked,
                 onCheckedChange = null
             )
-        })
+        },
+        colors = listItemColors)
 }
