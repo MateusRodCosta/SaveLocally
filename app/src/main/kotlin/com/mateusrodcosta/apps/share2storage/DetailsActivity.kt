@@ -35,7 +35,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSkipped
 import com.mateusrodcosta.apps.share2storage.screens.DetailsViewModel
-import com.mateusrodcosta.apps.share2storage.utils.CreateDocumentWithInitialUri
+import com.mateusrodcosta.apps.share2storage.utils.result.CreateDocumentWithInitialUri
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

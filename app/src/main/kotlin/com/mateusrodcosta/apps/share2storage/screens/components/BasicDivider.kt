@@ -15,10 +15,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils
+package com.mateusrodcosta.apps.share2storage.screens.components
 
-object Utils {
-    const val CONTENT_ALPHA_DISABLED = 0.38f
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun BasicDivider(modifier: Modifier = Modifier) {
+    HorizontalDivider(modifier = modifier.padding(horizontal = 16.dp), thickness = Dp.Hairline)
 }
-
-

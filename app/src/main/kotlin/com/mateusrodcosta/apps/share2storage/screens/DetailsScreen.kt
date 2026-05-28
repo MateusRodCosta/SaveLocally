@@ -71,7 +71,7 @@ import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
-import com.mateusrodcosta.apps.share2storage.screens.shared.shouldShowLandscape
+import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)

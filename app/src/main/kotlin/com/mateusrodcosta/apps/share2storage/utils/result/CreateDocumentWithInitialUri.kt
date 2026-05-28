@@ -15,13 +15,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils
+package com.mateusrodcosta.apps.share2storage.utils.result
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.DocumentsContract
-import android.provider.DocumentsContract.EXTRA_INITIAL_URI
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContract
 
@@ -43,12 +43,12 @@ class CreateDocumentWithInitialUri :
                         DocumentsContract.getTreeDocumentId(input.initialUri)
                     )
                     Log.d("CreateDocumentWithInitialUri] documentUri", documentUri.toString())
-                    i.putExtra(EXTRA_INITIAL_URI, documentUri)
+                    i.putExtra(DocumentsContract.EXTRA_INITIAL_URI, documentUri)
                 }
             }
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
-        return intent.takeIf { resultCode == android.app.Activity.RESULT_OK }?.data
+        return intent.takeIf { resultCode == Activity.RESULT_OK }?.data
     }
 }

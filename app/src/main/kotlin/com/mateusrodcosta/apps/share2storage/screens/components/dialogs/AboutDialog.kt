@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens.dialogs
+package com.mateusrodcosta.apps.share2storage.screens.components.dialogs
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -33,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import com.mateusrodcosta.apps.share2storage.BuildConfig
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.screens.shared.ListItemWithURL
+import com.mateusrodcosta.apps.share2storage.screens.components.ListItemWithURL
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
 @Preview(apiLevel = 36)

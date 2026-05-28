@@ -21,7 +21,7 @@ import android.app.Application
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import com.mateusrodcosta.apps.share2storage.di.AppModule
-import com.mateusrodcosta.apps.share2storage.utils.ThumbnailFetcher
+import com.mateusrodcosta.apps.share2storage.utils.media.ThumbnailFetcher
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.annotation.KoinApplication

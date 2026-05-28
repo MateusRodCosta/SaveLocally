@@ -47,12 +47,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.screens.components.BasicDivider
+import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
-import com.mateusrodcosta.apps.share2storage.screens.dialogs.DefaultFolderDialog
-import com.mateusrodcosta.apps.share2storage.screens.shared.AppBasicDivider
-import com.mateusrodcosta.apps.share2storage.screens.shared.AppListHeader
+import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.DefaultFolderDialog
 import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
-import com.mateusrodcosta.apps.share2storage.utils.Utils
+import com.mateusrodcosta.apps.share2storage.utils.common.Utils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -140,7 +140,7 @@ private fun SettingsScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Column {
-                        AppListHeader(title = stringResource(R.string.settings_category_file_picker))
+                        SectionHeader(stringResource(R.string.settings_category_file_picker))
                         DefaultSaveLocationSetting(
                             launchFilePicker = launchFilePicker,
                             clearDefaultSaveLocation = clearDefaultSaveLocation,
@@ -151,8 +151,8 @@ private fun SettingsScreenContent(
                             updateSkipFilePicker = updateSkipFilePicker,
                             spSkipFilePicker = spSkipFilePicker,
                         )
-                        AppBasicDivider()
-                        AppListHeader(stringResource(R.string.settings_category_file_details))
+                        BasicDivider()
+                        SectionHeader(stringResource(R.string.settings_category_file_details))
                         SkipFileDetailsSetting(
                             updateSkipFileDetails = updateSkipFileDetails,
                             spSkipFileDetails = spSkipFileDetails,
@@ -162,8 +162,8 @@ private fun SettingsScreenContent(
                             spShowFilePreview = spShowFilePreview,
                             spSkipFileDetails = spSkipFileDetails,
                         )
-                        AppBasicDivider()
-                        AppListHeader(title = stringResource(R.string.settings_category_intents))
+                        BasicDivider()
+                        SectionHeader(stringResource(R.string.settings_category_intents))
                         InterceptActionViewIntentsSetting(
                             updateInterceptActionViewIntents = updateInterceptActionViewIntents,
                             spInterceptActionViewIntents = spInterceptActionViewIntents,

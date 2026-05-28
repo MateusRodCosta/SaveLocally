@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils
+package com.mateusrodcosta.apps.share2storage.utils.media
 
 import android.graphics.BitmapFactory
 
