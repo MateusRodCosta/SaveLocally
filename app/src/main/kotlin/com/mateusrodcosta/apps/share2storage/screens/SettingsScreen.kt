@@ -17,7 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +50,6 @@ import com.mateusrodcosta.apps.share2storage.screens.components.BasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.DefaultFolderDialog
-import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 import com.mateusrodcosta.apps.share2storage.utils.common.Utils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -70,7 +68,10 @@ fun SettingsScreenPreviewPtBr() {
 }
 
 @Composable
-fun SettingsScreen(settingsViewModel: SettingsViewModel? = null) {
+fun SettingsScreen(
+    settingsViewModel: SettingsViewModel? = null,
+    onBackClick: () -> Unit = {}
+) {
     val mockDefaultSaveLocation = remember { MutableStateFlow<String?>(null) }
     val mockSkipFilePicker =
         remember { MutableStateFlow<Boolean?>(PreferencesRepository.SKIP_FILE_PICKER_DEFAULT) }
@@ -88,6 +89,7 @@ fun SettingsScreen(settingsViewModel: SettingsViewModel? = null) {
         spShowFilePreview = settingsViewModel?.showFilePreview ?: mockShowFilePreview,
         spInterceptActionViewIntents = settingsViewModel?.interceptActionViewIntents
             ?: mockInterceptActionViewIntents,
+        onBackClick = onBackClick,
         launchFilePicker = { settingsViewModel?.getSaveLocationDirIntent()?.launch(null) },
         clearDefaultSaveLocation = { settingsViewModel?.clearDefaultSaveLocation() },
         updateSkipFilePicker = { value: Boolean ->
@@ -113,6 +115,7 @@ private fun SettingsScreenContent(
     spSkipFileDetails: StateFlow<Boolean?>,
     spShowFilePreview: StateFlow<Boolean?>,
     spInterceptActionViewIntents: StateFlow<Boolean?>,
+    onBackClick: () -> Unit = {},
     launchFilePicker: () -> Unit = {},
     clearDefaultSaveLocation: () -> Unit = {},
     updateSkipFilePicker: (Boolean) -> Unit = {},
@@ -120,55 +123,52 @@ private fun SettingsScreenContent(
     updateInterceptActionViewIntents: (Boolean) -> Unit = {},
     updateShowFilePreview: (Boolean) -> Unit = {},
 ) {
-    val activity = LocalActivity.current
-    AppTheme {
-        Scaffold(topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.settings_title)) }, navigationIcon = {
-                IconButton(onClick = { activity?.finish() }) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        stringResource(R.string.back_arrow),
+    Scaffold(topBar = {
+        TopAppBar(title = { Text(stringResource(R.string.settings_title)) }, navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    stringResource(R.string.back_arrow),
+                )
+            }
+        })
+    }) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Column {
+                    SectionHeader(stringResource(R.string.settings_category_file_picker))
+                    DefaultSaveLocationSetting(
+                        launchFilePicker = launchFilePicker,
+                        clearDefaultSaveLocation = clearDefaultSaveLocation,
+                        spDefaultSaveLocation = spDefaultSaveLocation,
                     )
-                }
-            })
-        }) { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Column {
-                        SectionHeader(stringResource(R.string.settings_category_file_picker))
-                        DefaultSaveLocationSetting(
-                            launchFilePicker = launchFilePicker,
-                            clearDefaultSaveLocation = clearDefaultSaveLocation,
-                            spDefaultSaveLocation = spDefaultSaveLocation,
-                        )
-                        SkipFilePickerSetting(
-                            spDefaultSaveLocation = spDefaultSaveLocation,
-                            updateSkipFilePicker = updateSkipFilePicker,
-                            spSkipFilePicker = spSkipFilePicker,
-                        )
-                        BasicDivider()
-                        SectionHeader(stringResource(R.string.settings_category_file_details))
-                        SkipFileDetailsSetting(
-                            updateSkipFileDetails = updateSkipFileDetails,
-                            spSkipFileDetails = spSkipFileDetails,
-                        )
-                        ShowFilePreviewSetting(
-                            updateShowFilePreview = updateShowFilePreview,
-                            spShowFilePreview = spShowFilePreview,
-                            spSkipFileDetails = spSkipFileDetails,
-                        )
-                        BasicDivider()
-                        SectionHeader(stringResource(R.string.settings_category_intents))
-                        InterceptActionViewIntentsSetting(
-                            updateInterceptActionViewIntents = updateInterceptActionViewIntents,
-                            spInterceptActionViewIntents = spInterceptActionViewIntents,
-                        )
-                    }
+                    SkipFilePickerSetting(
+                        spDefaultSaveLocation = spDefaultSaveLocation,
+                        updateSkipFilePicker = updateSkipFilePicker,
+                        spSkipFilePicker = spSkipFilePicker,
+                    )
+                    BasicDivider()
+                    SectionHeader(stringResource(R.string.settings_category_file_details))
+                    SkipFileDetailsSetting(
+                        updateSkipFileDetails = updateSkipFileDetails,
+                        spSkipFileDetails = spSkipFileDetails,
+                    )
+                    ShowFilePreviewSetting(
+                        updateShowFilePreview = updateShowFilePreview,
+                        spShowFilePreview = spShowFilePreview,
+                        spSkipFileDetails = spSkipFileDetails,
+                    )
+                    BasicDivider()
+                    SectionHeader(stringResource(R.string.settings_category_intents))
+                    InterceptActionViewIntentsSetting(
+                        updateInterceptActionViewIntents = updateInterceptActionViewIntents,
+                        spInterceptActionViewIntents = spInterceptActionViewIntents,
+                    )
                 }
             }
         }

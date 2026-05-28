@@ -58,7 +58,6 @@ import androidx.window.core.layout.WindowSizeClass
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.AboutDialog
 import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
-import com.mateusrodcosta.apps.share2storage.ui.theme.AppTheme
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
@@ -81,31 +80,28 @@ fun MainScreen(
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 
     val openAboutDialog = remember { mutableStateOf(false) }
-
     if (openAboutDialog.value) {
         AboutDialog(onDismissRequest = {
             openAboutDialog.value = false
         })
     }
 
-    AppTheme {
-        Scaffold(topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
-                actions = {
-                    IconButton(onClick = { openAboutDialog.value = true }) {
-                        Icon(Icons.Rounded.Info, stringResource(R.string.about_title))
-                    }
-                    IconButton(onClick = openSettings) {
-                        Icon(Icons.Rounded.Settings, stringResource(R.string.settings_title))
-                    }
-                },
-            )
-        }) { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
-                if (useLandscapeLayout) HowToUseLandscape()
-                else HowToUsePortrait()
-            }
+    Scaffold(topBar = {
+        TopAppBar(
+            title = { Text(stringResource(R.string.app_name)) },
+            actions = {
+                IconButton(onClick = { openAboutDialog.value = true }) {
+                    Icon(Icons.Rounded.Info, stringResource(R.string.about_title))
+                }
+                IconButton(onClick = openSettings) {
+                    Icon(Icons.Rounded.Settings, stringResource(R.string.settings_title))
+                }
+            },
+        )
+    }) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
+            if (useLandscapeLayout) HowToUseLandscape()
+            else HowToUsePortrait()
         }
     }
 }
