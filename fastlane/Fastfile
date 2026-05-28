@@ -27,9 +27,21 @@ platform :android do
     upload_to_play_store sync_image_upload:"true"
   end
 
+  desc "Deploy a new version to the Google Play (Validation)"
+  lane :deployValidate do
+    gradle(task: "clean bundleRelease")
+    upload_to_play_store sync_image_upload:"true",validate_only:"true"
+  end
+
   desc "Deploy Google Play internal"
   lane :deployInternal do
     gradle(task: "clean bundleRelease")
     upload_to_play_store track:"internal",sync_image_upload:"true"
+  end
+
+  desc "Deploy Google Play internal (Validation)"
+  lane :deployInternalValidate do
+    gradle(task: "clean bundleRelease")
+    upload_to_play_store track:"internal",sync_image_upload:"true",validate_only:"true"
   end
 end

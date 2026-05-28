@@ -31,6 +31,14 @@ Runs all the tests
 
 Deploy a new version to the Google Play
 
+### android deployValidate
+
+```sh
+[bundle exec] fastlane android deployValidate
+```
+
+Deploy a new version to the Google Play (Validation)
+
 ### android deployInternal
 
 ```sh
@@ -38,6 +46,14 @@ Deploy a new version to the Google Play
 ```
 
 Deploy Google Play internal
+
+### android deployInternalValidate
+
+```sh
+[bundle exec] fastlane android deployInternalValidate
+```
+
+Deploy Google Play internal (Validation)
 
 ----
 
