@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -43,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
@@ -217,21 +219,21 @@ fun SkipFilePickerSetting(
     val skipFilePicker by spSkipFilePicker.collectAsState()
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
 
-    ListItem(modifier = if (defaultSaveLocation != null) Modifier.clickable {
-        updateSkipFilePicker(
-            !(skipFilePicker ?: PreferencesRepository.SKIP_FILE_PICKER_DEFAULT)
-        )
-    } else Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED), headlineContent = {
+    val checked = skipFilePicker ?: PreferencesRepository.SKIP_FILE_PICKER_DEFAULT
+
+    ListItem(modifier = if (defaultSaveLocation != null) Modifier.toggleable(
+        value = checked,
+        onValueChange = { updateSkipFilePicker(it) },
+        role = Role.Switch
+    ) else Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED), headlineContent = {
         Text(stringResource(R.string.settings_skip_file_picker))
     }, supportingContent = {
         Text(stringResource(R.string.settings_skip_file_picker_info))
     }, trailingContent = {
         Switch(
             enabled = defaultSaveLocation != null,
-            checked = skipFilePicker ?: PreferencesRepository.SKIP_FILE_PICKER_DEFAULT,
-            onCheckedChange = { value ->
-                updateSkipFilePicker(value)
-            },
+            checked = checked,
+            onCheckedChange = null,
         )
     })
 }
@@ -243,10 +245,14 @@ fun SkipFileDetailsSetting(
 ) {
     val skipFileDetails by spSkipFileDetails.collectAsState()
 
+    val checked = skipFileDetails ?: PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT
+
     ListItem(
-        modifier = Modifier.clickable {
-            updateSkipFileDetails(!(skipFileDetails ?: PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT))
-        },
+        modifier = Modifier.toggleable(
+            value = checked,
+            onValueChange = { updateSkipFileDetails(it) },
+            role = Role.Switch
+        ),
         headlineContent = {
             Text(stringResource(R.string.settings_skip_file_details_page))
         },
@@ -255,10 +261,9 @@ fun SkipFileDetailsSetting(
         },
         trailingContent = {
             Switch(
-                checked = skipFileDetails ?: PreferencesRepository.SKIP_FILE_DETAILS_DEFAULT,
-                onCheckedChange = { value ->
-                    updateSkipFileDetails(value)
-                })
+                checked = checked,
+                onCheckedChange = null
+            )
         })
 }
 
@@ -271,21 +276,22 @@ fun ShowFilePreviewSetting(
     val skipFileDetails by spSkipFileDetails.collectAsState()
     val showFilePreview by spShowFilePreview.collectAsState()
 
-    ListItem(modifier = if (skipFileDetails == true) Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED) else Modifier.clickable {
-        updateShowFilePreview(
-            !(showFilePreview ?: PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT)
-        )
-    }, headlineContent = {
+    val checked = showFilePreview ?: PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT
+
+    ListItem(modifier = if (skipFileDetails == true) Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED) else Modifier.toggleable(
+        value = checked,
+        onValueChange = { updateShowFilePreview(it) },
+        role = Role.Switch
+    ), headlineContent = {
         Text(stringResource(R.string.settings_show_file_preview))
     }, supportingContent = {
         Text(stringResource(R.string.settings_show_file_preview_info))
     }, trailingContent = {
         Switch(
             enabled = skipFileDetails != true,
-            checked = showFilePreview ?: PreferencesRepository.SHOW_FILE_PREVIEW_DEFAULT,
-            onCheckedChange = { value ->
-                updateShowFilePreview(value)
-            })
+            checked = checked,
+            onCheckedChange = null
+        )
     })
 }
 
@@ -296,10 +302,14 @@ fun InterceptActionViewIntentsSetting(
 ) {
     val interceptActionViewIntents by spInterceptActionViewIntents.collectAsState()
 
+    val checked = interceptActionViewIntents ?: PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT
+
     ListItem(
-        modifier = Modifier.clickable {
-            updateInterceptActionViewIntents(!(interceptActionViewIntents ?: PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT))
-        },
+        modifier = Modifier.toggleable(
+            value = checked,
+            onValueChange = { updateInterceptActionViewIntents(it) },
+            role = Role.Switch
+        ),
         headlineContent = {
             Text(stringResource(R.string.settings_intercept_action_view_intents))
         },
@@ -308,9 +318,8 @@ fun InterceptActionViewIntentsSetting(
         },
         trailingContent = {
             Switch(
-                checked = interceptActionViewIntents ?: PreferencesRepository.INTERCEPT_ACTION_VIEW_INTENTS_DEFAULT,
-                onCheckedChange = { value ->
-                    updateInterceptActionViewIntents(value)
-                })
+                checked = checked,
+                onCheckedChange = null
+            )
         })
 }
