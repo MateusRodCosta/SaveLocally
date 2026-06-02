@@ -10,6 +10,7 @@ activity = "1.13.0"
 appcompat = "1.7.1"
 documentfile = "1.1.0"
 splashscreen = "1.2.0"
+windowCore = "1.5.1"
 composeBom = "2026.05.01"
 activityCompose = "1.13.0"
 koinBom = "4.2.1"
@@ -29,11 +30,11 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+androidx-window-core = { module = "androidx.window:window-core", version.ref = "windowCore" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive" }
-compose-material3-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout" }
 compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-ui= { group = "androidx.compose.ui", name = "ui" }
@@ -47,6 +48,8 @@ koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-core-viewmodel = { group = "io.insert-koin", name = "koin-core-viewmodel" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
+coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
+coil-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-compose-core = { group = "io.coil-kt.coil3", name = "coil-compose-core", version.ref = "coil" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -124,6 +124,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.documentfile)
     implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.window.core)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
@@ -134,7 +135,6 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.material3)
     implementation(libs.compose.material3.adaptive)
-    implementation(libs.compose.material3.adaptive.layout)
     implementation(libs.compose.material.icons.core)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.activity.compose)
@@ -145,6 +145,8 @@ dependencies {
     implementation(libs.koin.annotations)
     implementation(libs.koin.android)
 
+    implementation(libs.coil)
+    implementation(libs.coil.core)
     implementation(libs.coil.compose)
     implementation(libs.coil.compose.core)
 

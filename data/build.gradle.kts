@@ -29,9 +29,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     api(libs.coroutines.core)
 
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.annotations)
+    api(platform(libs.koin.bom))
+    api(libs.koin.core)
+    api(libs.koin.annotations)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
