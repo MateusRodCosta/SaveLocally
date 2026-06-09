@@ -3,6 +3,7 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.dependency.analysis)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.koin.compiler)
@@ -118,6 +119,8 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.core.ktx)
 
+    implementation(libs.kotlinx.serialization.json)
+
     implementation(libs.coroutines.core)
     runtimeOnly(libs.coroutines.android)
 
@@ -126,6 +129,8 @@ dependencies {
     implementation(libs.androidx.documentfile)
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.window.core)
+
+    implementation(libs.androidx.navigation.compose)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)

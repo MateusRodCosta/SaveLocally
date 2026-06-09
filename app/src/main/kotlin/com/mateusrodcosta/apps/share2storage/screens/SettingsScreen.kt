@@ -58,8 +58,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
+import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
 import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.DefaultFolderDialog
 import com.mateusrodcosta.apps.share2storage.utils.common.Utils
 import kotlinx.coroutines.flow.MutableStateFlow

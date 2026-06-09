@@ -15,9 +15,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.navigation
 
-enum class SettingsDestination {
-    MainList,
-    About,
+import kotlinx.serialization.Serializable
+
+sealed interface Routes {
+    @Serializable
+    data object Main : Routes
+
+    @Serializable
+    data object Settings : Routes
+
+    @Serializable
+    data object About : Routes
 }

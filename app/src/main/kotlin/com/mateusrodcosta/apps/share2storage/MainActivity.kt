@@ -26,26 +26,24 @@ import android.view.View
 import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import com.mateusrodcosta.apps.share2storage.screens.MainScreen
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.mateusrodcosta.apps.share2storage.navigation.Routes
 import com.mateusrodcosta.apps.share2storage.screens.AboutScreen
-import com.mateusrodcosta.apps.share2storage.screens.SettingsDestination
+import com.mateusrodcosta.apps.share2storage.screens.MainScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
 import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
@@ -123,55 +121,43 @@ class MainActivity : ComponentActivity() {
                 }
 
                 SaveLocallyTheme(darkTheme = isDarkTheme) {
-                    val isFromAppInfo =
-                        intent.action == Intent.ACTION_APPLICATION_PREFERENCES
-                    var showSettings by rememberSaveable { mutableStateOf(isFromAppInfo) }
+                    val navController = rememberNavController()
+                    val isFromAppInfo = intent.action == Intent.ACTION_APPLICATION_PREFERENCES
+                    
+                    val startDestination = if (isFromAppInfo) Routes.Settings else Routes.Main
 
                     Box(modifier = Modifier.fillMaxSize()) {
-                        if (showSettings) {
-                            var currentSettingsScreen by rememberSaveable {
-                                mutableStateOf(
-                                    SettingsDestination.MainList
+                        NavHost(
+                            navController = navController,
+                            startDestination = startDestination
+                        ) {
+                            composable<Routes.Main> {
+                                MainScreen(
+                                    openSettings = {
+                                        navController.navigate(Routes.Settings)
+                                    }
                                 )
                             }
 
-                            BackHandler(enabled = currentSettingsScreen == SettingsDestination.MainList) {
-                                if (isFromAppInfo) finish() else showSettings = false
-                            }
-
-                            BackHandler(enabled = currentSettingsScreen == SettingsDestination.About) {
-                                currentSettingsScreen = SettingsDestination.MainList
-                            }
-
-                            Crossfade(
-                                targetState = currentSettingsScreen,
-                                label = "SettingsNav"
-                            ) { screen ->
-                                when (screen) {
-                                    SettingsDestination.MainList -> {
-                                        SettingsScreen(
-                                            settingsViewModel = settingsViewModel,
-                                            onNavigateToAbout = {
-                                                currentSettingsScreen = SettingsDestination.About
-                                            },
-                                            onBackClick = {
-                                                if (isFromAppInfo) finish() else showSettings =
-                                                    false
-                                            }
-                                        )
+                            composable<Routes.Settings> {
+                                SettingsScreen(
+                                    settingsViewModel = settingsViewModel,
+                                    onNavigateToAbout = {
+                                        navController.navigate(Routes.About)
+                                    },
+                                    onBackClick = {
+                                        if (isFromAppInfo) finish() else navController.popBackStack()
                                     }
-
-                                    SettingsDestination.About -> {
-                                        AboutScreen(
-                                            onBackClick = {
-                                                currentSettingsScreen = SettingsDestination.MainList
-                                            }
-                                        )
-                                    }
-                                }
+                                )
                             }
-                        } else {
-                            MainScreen { showSettings = true }
+
+                            composable<Routes.About> {
+                                AboutScreen(
+                                    onBackClick = {
+                                        navController.popBackStack()
+                                    }
+                                )
+                            }
                         }
                     }
                 }
