@@ -5,7 +5,6 @@ kotlin = "2.3.21"
 koinPlugin = "1.0.0"
 coroutines = "1.11.0"
 core = "1.18.0"
-coreKtx = "1.18.0"
 activity = "1.13.0"
 appcompat = "1.7.1"
 documentfile = "1.1.0"
@@ -27,7 +26,7 @@ aboutLibraries = "14.2.1"
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
