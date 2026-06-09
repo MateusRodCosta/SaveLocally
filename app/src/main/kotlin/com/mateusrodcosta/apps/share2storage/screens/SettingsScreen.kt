@@ -58,7 +58,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.screens.components.BasicDivider
 import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.DefaultFolderDialog
@@ -176,7 +175,6 @@ private fun SettingsScreenContent(
                         spSkipFilePicker = spSkipFilePicker,
                         listItemColors = listItemColors,
                     )
-                    BasicDivider()
                     SectionHeader(stringResource(R.string.settings_category_file_details))
                     SkipFileDetailsSetting(
                         updateSkipFileDetails = updateSkipFileDetails,
@@ -189,14 +187,12 @@ private fun SettingsScreenContent(
                         spSkipFileDetails = spSkipFileDetails,
                         listItemColors = listItemColors,
                     )
-                    BasicDivider()
                     SectionHeader(stringResource(R.string.settings_category_intents))
                     InterceptActionViewIntentsSetting(
                         updateInterceptActionViewIntents = updateInterceptActionViewIntents,
                         spInterceptActionViewIntents = spInterceptActionViewIntents,
                         listItemColors = listItemColors,
                     )
-                    BasicDivider()
                     SectionHeader(stringResource(R.string.settings_category_about))
                     ListItem(
                         headlineContent = {
