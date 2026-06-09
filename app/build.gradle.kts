@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.aboutLibraries.android)
 }
 
 val keystorePropertiesFile = rootProject.file("key.properties")
@@ -149,6 +150,11 @@ dependencies {
     implementation(libs.coil.core)
     implementation(libs.coil.compose)
     implementation(libs.coil.compose.core)
+
+    implementation(libs.lazycolumnscrollbar)
+    implementation(libs.aboutlibraries.core)
+    implementation(libs.aboutlibraries.compose.core)
+    implementation(libs.aboutlibraries.compose.m3)
 
     testImplementation(libs.junit)
     androidTestRuntimeOnly(libs.test.runner)

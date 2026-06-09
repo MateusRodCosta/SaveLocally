@@ -13,6 +13,7 @@
     <string name="about_developer">Developed by Mateus Rodrigues Costa</string>
     <string name="about_icon_credits">App icon designed by @swyzera</string>
     <string name="about_github">Source code available on Github at %s, licensed under AGPLv3+</string>
+    <string name="about_category_licenses">Licenses</string>
 
     <string name="settings_title">Settings</string>
 
@@ -32,6 +33,9 @@
     <string name="settings_category_intents">Intents</string>
     <string name="settings_intercept_action_view_intents">Intercept ACTION_VIEW intents</string>
     <string name="settings_intercept_action_view_intents_info">Allow registering as an option when apps try to automatically open a file viewer</string>
+
+    <string name="settings_category_about">About</string>
+    <string name="settings_about">About</string>
 
     <string name="no_file_found">No file found</string>
     <string name="saving_file">Saving file…</string>

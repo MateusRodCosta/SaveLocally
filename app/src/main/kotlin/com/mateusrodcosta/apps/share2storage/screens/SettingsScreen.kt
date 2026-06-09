@@ -27,6 +27,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.Folder
@@ -81,6 +82,7 @@ fun SettingsScreenPreviewPtBr() {
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel? = null,
+    onNavigateToAbout: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
     val mockDefaultSaveLocation = remember { MutableStateFlow<String?>(null) }
@@ -105,6 +107,7 @@ fun SettingsScreen(
         spShowFilePreview = settingsViewModel?.showFilePreview ?: mockShowFilePreview,
         spInterceptActionViewIntents = settingsViewModel?.interceptActionViewIntents
             ?: mockInterceptActionViewIntents,
+        onNavigateToAbout = onNavigateToAbout,
         onBackClick = onBackClick,
         launchFilePicker = { settingsViewModel?.getSaveLocationDirIntent()?.launch(null) },
         clearDefaultSaveLocation = { settingsViewModel?.clearDefaultSaveLocation() },
@@ -132,6 +135,7 @@ private fun SettingsScreenContent(
     spSkipFileDetails: StateFlow<Boolean?>,
     spShowFilePreview: StateFlow<Boolean?>,
     spInterceptActionViewIntents: StateFlow<Boolean?>,
+    onNavigateToAbout: () -> Unit = {},
     onBackClick: () -> Unit = {},
     launchFilePicker: () -> Unit = {},
     clearDefaultSaveLocation: () -> Unit = {},
@@ -191,6 +195,21 @@ private fun SettingsScreenContent(
                         updateInterceptActionViewIntents = updateInterceptActionViewIntents,
                         spInterceptActionViewIntents = spInterceptActionViewIntents,
                         listItemColors = listItemColors,
+                    )
+                    BasicDivider()
+                    SectionHeader(stringResource(R.string.settings_category_about))
+                    ListItem(
+                        headlineContent = {
+                            Text(stringResource(R.string.settings_about))
+                        },
+                        leadingContent = {
+                            Icon(
+                                Icons.AutoMirrored.Filled.HelpOutline,
+                                contentDescription = stringResource(R.string.settings_about)
+                            )
+                        },
+                        colors = listItemColors,
+                        modifier = Modifier.clickable(onClick = onNavigateToAbout)
                     )
                 }
             }

@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,8 +42,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -56,7 +53,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.AboutDialog
 import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
@@ -79,20 +75,10 @@ fun MainScreen(
 ) {
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 
-    val openAboutDialog = remember { mutableStateOf(false) }
-    if (openAboutDialog.value) {
-        AboutDialog(onDismissRequest = {
-            openAboutDialog.value = false
-        })
-    }
-
     Scaffold(topBar = {
         TopAppBar(
             title = { Text(stringResource(R.string.app_name)) },
             actions = {
-                IconButton(onClick = { openAboutDialog.value = true }) {
-                    Icon(Icons.Rounded.Info, stringResource(R.string.about_title))
-                }
                 IconButton(onClick = openSettings) {
                     Icon(Icons.Rounded.Settings, stringResource(R.string.settings_title))
                 }

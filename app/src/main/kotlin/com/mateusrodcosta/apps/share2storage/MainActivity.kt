@@ -31,6 +31,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import com.mateusrodcosta.apps.share2storage.screens.MainScreen
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,7 +44,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.mateusrodcosta.apps.share2storage.screens.MainScreen
+import com.mateusrodcosta.apps.share2storage.screens.AboutScreen
+import com.mateusrodcosta.apps.share2storage.screens.SettingsDestination
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
 import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
@@ -54,7 +60,7 @@ class MainActivity : ComponentActivity() {
             when (uri) {
                 null -> Log.d(
                     "MainActivity] getSaveLocationDirIntent] uri",
-                    "cancelled directory selection"
+                    "cancelled directory selection",
                 )
 
                 else -> {
@@ -76,7 +82,7 @@ class MainActivity : ComponentActivity() {
         settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
 
         splashScreen.setKeepOnScreenCondition {
-            settingsViewModel.isReady.value == false
+            !settingsViewModel.isReady.value
         }
 
         splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
@@ -98,42 +104,75 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val isDarkTheme = isSystemInDarkTheme()
+            val isReady by settingsViewModel.isReady.collectAsState()
 
-            val barStyle = if (isDarkTheme) {
-                SystemBarStyle.dark(Color.TRANSPARENT)
-            } else {
-                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
-            }
+            if (isReady) {
+                val isDarkTheme = isSystemInDarkTheme()
 
-            LaunchedEffect(isDarkTheme) {
-                enableEdgeToEdge(
-                    statusBarStyle = barStyle,
-                    navigationBarStyle = barStyle
-                )
-            }
-
-            SaveLocallyTheme(darkTheme = isDarkTheme) {
-                val isFromAppInfo =
-                    intent.action == Intent.ACTION_APPLICATION_PREFERENCES
-                var showSettings by rememberSaveable { mutableStateOf(isFromAppInfo) }
-
-                BackHandler(enabled = showSettings) {
-                    if (isFromAppInfo) finish() else showSettings = false
+                val barStyle = if (isDarkTheme) {
+                    SystemBarStyle.dark(Color.TRANSPARENT)
+                } else {
+                    SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
                 }
 
-                Crossfade(targetState = showSettings, label = "MainContentNav") { targetShowSettings ->
-                    if (targetShowSettings) {
-                        SettingsScreen(
-                            settingsViewModel = settingsViewModel,
-                            onBackClick = {
+                LaunchedEffect(isDarkTheme) {
+                    enableEdgeToEdge(
+                        statusBarStyle = barStyle,
+                        navigationBarStyle = barStyle
+                    )
+                }
+
+                SaveLocallyTheme(darkTheme = isDarkTheme) {
+                    val isFromAppInfo =
+                        intent.action == Intent.ACTION_APPLICATION_PREFERENCES
+                    var showSettings by rememberSaveable { mutableStateOf(isFromAppInfo) }
+
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        if (showSettings) {
+                            var currentSettingsScreen by rememberSaveable {
+                                mutableStateOf(
+                                    SettingsDestination.MainList
+                                )
+                            }
+
+                            BackHandler(enabled = currentSettingsScreen == SettingsDestination.MainList) {
                                 if (isFromAppInfo) finish() else showSettings = false
                             }
-                        )
-                    } else {
-                        MainScreen(
-                            openSettings = { showSettings = true },
-                        )
+
+                            BackHandler(enabled = currentSettingsScreen == SettingsDestination.About) {
+                                currentSettingsScreen = SettingsDestination.MainList
+                            }
+
+                            Crossfade(
+                                targetState = currentSettingsScreen,
+                                label = "SettingsNav"
+                            ) { screen ->
+                                when (screen) {
+                                    SettingsDestination.MainList -> {
+                                        SettingsScreen(
+                                            settingsViewModel = settingsViewModel,
+                                            onNavigateToAbout = {
+                                                currentSettingsScreen = SettingsDestination.About
+                                            },
+                                            onBackClick = {
+                                                if (isFromAppInfo) finish() else showSettings =
+                                                    false
+                                            }
+                                        )
+                                    }
+
+                                    SettingsDestination.About -> {
+                                        AboutScreen(
+                                            onBackClick = {
+                                                currentSettingsScreen = SettingsDestination.MainList
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            MainScreen { showSettings = true }
+                        }
                     }
                 }
             }
