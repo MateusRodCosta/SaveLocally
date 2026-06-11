@@ -17,8 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,12 +44,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -60,6 +56,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mateusrodcosta.apps.share2storage.BuildConfig
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
@@ -95,27 +92,9 @@ fun AboutScreenPreviewLandscapePtBr() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreenHeader(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
-    val versionName = remember {
-        try {
-            val packageManager = context.packageManager
-            val packageName = context.packageName
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                packageManager.getPackageInfo(
-                    packageName,
-                    PackageManager.PackageInfoFlags.of(0L)
-                ).versionName
-            } else {
-                @Suppress("DEPRECATION")
-                packageManager.getPackageInfo(packageName, 0).versionName
-            }
-        } catch (e: Exception) {
-            "Unknown"
-        }
-    }
+    val versionName = BuildConfig.VERSION_NAME
 
     Column(
         modifier = modifier
