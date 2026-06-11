@@ -52,8 +52,8 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
                 contentResolver.openOutputStream(targetUri)?.use { outputStream ->
                     inputStream?.use { it.copyTo(outputStream) }
-                        ?: throw IOException("Could not open source input stream")
-                } ?: throw IOException("Could not open target output stream")
+                        ?: throw IOException("Could not open source input stream for URI: $sourceUri")
+                } ?: throw IOException("Could not open target output stream for URI: $targetUri")
                 Unit
             }
         }
@@ -64,7 +64,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                 val targetUri = targetUriString.toUri()
                 contentResolver.openOutputStream(targetUri)?.use { outputStream ->
                     text.byteInputStream().copyTo(outputStream)
-                } ?: throw IOException("Could not open target output stream")
+                } ?: throw IOException("Could not open target output stream for URI: $targetUri")
                 Unit
             }
         }
@@ -77,13 +77,13 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
                 val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE)
                 val cursor = contentResolver.query(uri, projection, null, null, null)
-                    ?: throw IOException("Could not query metadata for URI")
+                    ?: throw IOException("Could not query metadata for URI: $uri")
 
                 val (displayName, size) = cursor.use {
-                    if (!it.moveToFirst()) throw IOException("Empty cursor for metadata")
+                    if (!it.moveToFirst()) throw IOException("Empty cursor for metadata of URI: $uri")
                     val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                     val sizeIndex = it.getColumnIndex(OpenableColumns.SIZE)
-                    val name = if (nameIndex != -1) it.getString(nameIndex) else "unknown"
+                    val name = if (nameIndex != -1) it.getString(nameIndex) ?: "unknown" else "unknown"
                     val s = if (sizeIndex != -1) it.getLong(sizeIndex) else 0L
                     name to s
                 }
@@ -110,7 +110,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
         uri: Uri,
     ): InputStream? {
         val openableMimeTypes = contentResolver.getStreamTypes(uri, "*/*")
-        if (openableMimeTypes.isNullOrEmpty()) throw FileNotFoundException()
+        if (openableMimeTypes.isNullOrEmpty()) throw FileNotFoundException("No stream types found for virtual file: $uri")
 
         return contentResolver.openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
             ?.createInputStream()
