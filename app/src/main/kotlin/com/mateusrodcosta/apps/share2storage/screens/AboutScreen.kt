@@ -57,6 +57,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
@@ -64,6 +65,18 @@ import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import my.nanihadesuka.compose.LazyColumnScrollbar
 import my.nanihadesuka.compose.ScrollbarSettings
+
+@Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
+@Composable
+fun AboutScreenPreview() {
+    AboutScreen()
+}
+
+@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun AboutScreenPreviewPtBr() {
+    AboutScreen()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -177,7 +190,9 @@ fun AboutScreenHeader(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(onBackClick: () -> Unit) {
+fun AboutScreen(
+    onBackClick: () -> Unit = {}
+) {
     val libraries by produceLibraries()
     val listState = rememberLazyListState()
 
