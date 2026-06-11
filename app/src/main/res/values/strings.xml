@@ -3,7 +3,6 @@
     <string name="app_name">Save Locally</string>
 
     <string name="how_to_use">How to Use</string>
-
     <string name="how_to_use_step_1">Share the file via the Share icon</string>
     <string name="how_to_use_step_2">Select \"%s\" on the share options</string>
     <string name="how_to_use_step_3">A screen with details about the file will open, press Save</string>

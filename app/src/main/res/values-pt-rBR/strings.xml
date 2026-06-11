@@ -3,7 +3,6 @@
     <string name="app_name">Salvar Localmente</string>
 
     <string name="how_to_use">Como usar</string>
-
     <string name="how_to_use_step_1">Compartilhe o arquivo a partir do botão "Compartilhar"</string>
     <string name="how_to_use_step_2">Selecione \"%s\" nas opções de compartilhamento</string>
     <string name="how_to_use_step_3">Uma tela com detalhes do arquivo será mostrada, toque em "Salvar"</string>
@@ -13,6 +12,7 @@
     <string name="about_developer">Desenvolvido por %s</string>
     <string name="about_icon_credits">Design do ícone do app por %s</string>
     <string name="about_github">Código-fonte disponível no Github em %s, licenciado sob AGPLv3+</string>
+    <string name="about_category_licenses">Licenças</string>
 
     <string name="settings_title">Configurações</string>
 
@@ -32,6 +32,9 @@
     <string name="settings_category_intents">Intents</string>
     <string name="settings_intercept_action_view_intents">Intercepta intents do tipo ACTION_VIEW</string>
     <string name="settings_intercept_action_view_intents_info">Permite registrar como uma opção quando aplicativos tentam automaticamente abrir um visualizador de arquivos</string>
+
+    <string name="settings_category_about">Sobre</string>
+    <string name="settings_about">Sobre</string>
 
     <string name="no_file_found">Nenhum arquivo</string>
     <string name="saving_file">Salvando arquivo…</string>
