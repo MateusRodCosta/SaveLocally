@@ -3,8 +3,8 @@
     <string name="how_to_use_step_1">Поделитесь файлом через значок «Поделиться»</string>
     <string name="how_to_use_step_3">Откроется окном с информацией о файле, нажмите «Сохранить»</string>
     <string name="about_title">О приложении</string>
-    <string name="about_developer">Разработано Mateus Rodrigues Costa</string>
-    <string name="about_icon_credits">Значок приложения разработал @swyzera</string>
+    <string name="about_developer">Разработано %s</string>
+    <string name="about_icon_credits">Значок приложения разработал %s</string>
     <string name="about_github">Исходный код доступен на Github %s, лицензируется под условиями AGPLv3+</string>
     <string name="settings_title">Настройки</string>
     <string name="settings_category_file_picker">Выбор файла</string>

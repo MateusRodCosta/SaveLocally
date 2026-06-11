@@ -61,6 +61,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
@@ -156,39 +157,37 @@ fun AboutScreenHeader(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val githubProfile = stringResource(R.string.github_profile_url)
         Text(
-            text = stringResource(R.string.about_developer),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable{ uriHandler.openUri(githubProfile) }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        val swyWebsite = stringResource(R.string.swy_website_url)
-        Text(
-            text = stringResource(R.string.about_icon_credits),
+            text = stringResource(R.string.about_developer, AppConstants.APP_DEVELOPER),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.small)
-                .clickable { uriHandler.openUri(swyWebsite) }
+                .clickable{ uriHandler.openUri(AppConstants.GITHUB_PROFILE) }
                 .padding(8.dp)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        val githubInfo = stringResource(R.string.about_github)
-        val sourceCodeRepo = stringResource(R.string.source_code_url)
-
         Text(
-            text = githubInfo.replace("%s",sourceCodeRepo),
+            text = stringResource(R.string.about_icon_credits, AppConstants.APP_ICONS_DESIGNER),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.small)
+                .clickable { uriHandler.openUri(AppConstants.SWY_WEBSITE) }
+                .padding(8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        val sourceCodeRepo = AppConstants.GITHUB_REPO
+        Text(
+            text = stringResource(R.string.about_github,sourceCodeRepo),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,

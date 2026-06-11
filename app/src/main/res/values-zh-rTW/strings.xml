@@ -6,8 +6,8 @@
     <string name="how_to_use_step_3">將開啟一個顯示檔案詳細資訊的畫面，按「儲存」</string>
     <string name="how_to_use_step_4">檔案選擇器將打開，選擇儲存位置和檔案名稱</string>
     <string name="about_title">關於</string>
-    <string name="about_developer">由 Mateus Rodrigues Costa 開發</string>
-    <string name="about_icon_credits">應用程式圖示由 @swyzera 設計</string>
+    <string name="about_developer">由 %s 開發</string>
+    <string name="about_icon_credits">應用程式圖示由 %s 設計</string>
     <string name="settings_title">設定</string>
     <string name="settings_category_file_picker">檔案選擇器</string>
     <string name="settings_default_save_location">預設儲存位置</string>

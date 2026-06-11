@@ -7,7 +7,7 @@
     <string name="how_to_use_step_3">ستفتح شاشة تحتوي على تفاصيل عن الملف، اضغط على حفظ</string>
     <string name="how_to_use_step_4">سيفتح منتقي الملفات، حدد مكان الحفظ واسم الملف</string>
     <string name="about_title">حول</string>
-    <string name="about_developer">طوِّر بواسطة Mateus Rodrigues Costa</string>
+    <string name="about_developer">طوِّر بواسطة %s</string>
     <string name="settings_title">الإعدادات</string>
     <string name="settings_category_file_picker">منتقي الملفات</string>
     <string name="settings_default_save_location">مكان الحفظ الإفتراضي</string>
@@ -15,7 +15,7 @@
     <string name="settings_default_save_location_select_folder">حدّد مجلد…</string>
     <string name="settings_skip_file_picker">تخطي منتقي الملفات</string>
     <string name="settings_category_file_details">تفاصيل الملف</string>
-    <string name="about_icon_credits">أيقونة التطبيق مصمّمة بواسطة @swyzera</string>
+    <string name="about_icon_credits">أيقونة التطبيق مصمّمة بواسطة %s</string>
     <string name="about_github">المصدر البرمجي متاح على Github عبر الرابط %s، وهو مرخص بموجب AGPLv3+</string>
     <string name="settings_skip_file_picker_info">تخطي منتقي الملفات وحفظ الملفات فورًا (متاح فقط عند تعيين مجلد افتراضي)</string>
     <string name="settings_skip_file_details_page">تخطي صفحة تفاصيل الملف</string>

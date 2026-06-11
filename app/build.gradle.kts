@@ -167,6 +167,7 @@ dependencies {
     androidTestImplementation(libs.compose.ui.test.junit4)
     debugRuntimeOnly(libs.compose.ui.test.manifest)
 
+    implementation(project(":core"))
     implementation(project(":domain"))
     implementation(project(":data"))
 }

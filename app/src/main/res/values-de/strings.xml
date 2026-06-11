@@ -7,8 +7,8 @@
     <string name="how_to_use_step_3">Eine Ansicht mit Informationen zur geteilten Datei öffnet sich. Drücke Speichern</string>
     <string name="how_to_use_step_4">Die Dateiauswahl öffnet sich. Wähle einen Speicherort und einen Dateinamen</string>
     <string name="about_title">Über</string>
-    <string name="about_developer">Entwickelt von Mateus Rodrigues Costa</string>
-    <string name="about_icon_credits">App-Icon entworfen von @swyzera</string>
+    <string name="about_developer">Entwickelt von %s</string>
+    <string name="about_icon_credits">App-Icon entworfen von %s</string>
     <string name="about_github">Quellcode ist verfügbar auf GitHub unter %s, lizensiert unter der AGPLv3+</string>
     <string name="settings_title">Einstellungen</string>
     <string name="settings_category_file_picker">Dateiauswahl</string>

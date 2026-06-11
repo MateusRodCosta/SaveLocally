@@ -7,8 +7,8 @@
     <string name="how_to_use_step_3">Se abrirá una pantalla con detalles sobre el archivo, oprime \"Guardar\"</string>
     <string name="how_to_use_step_4">Se abrirá el selector de archivos, elige dónde quieres guardar el archivo y el nombre del archivo</string>
     <string name="about_title">Acerca de</string>
-    <string name="about_developer">Desarrollado por Mateus Rodrigues Costa</string>
-    <string name="about_icon_credits">Icono de la app diseñado por @swyzera</string>
+    <string name="about_developer">Desarrollado por %s</string>
+    <string name="about_icon_credits">Icono de la app diseñado por %s</string>
     <string name="about_github">Código fuente disponsible en Github en %s, con licencia de AGPLv3+</string>
     <string name="settings_title">Configuración</string>
     <string name="settings_category_file_picker">Selector de archivos</string>

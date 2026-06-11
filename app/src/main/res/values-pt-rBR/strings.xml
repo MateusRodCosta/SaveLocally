@@ -10,8 +10,8 @@
     <string name="how_to_use_step_4">O seletor de arquivos será exibido, selecione onde e com qual nome salvar</string>
 
     <string name="about_title">Sobre</string>
-    <string name="about_developer">Desenvolvido por Mateus Rodrigues Costa</string>
-    <string name="about_icon_credits">Design do ícone do app por @swyzera</string>
+    <string name="about_developer">Desenvolvido por %s</string>
+    <string name="about_icon_credits">Design do ícone do app por %s</string>
     <string name="about_github">Código-fonte disponível no Github em %s, licenciado sob AGPLv3+</string>
 
     <string name="settings_title">Configurações</string>

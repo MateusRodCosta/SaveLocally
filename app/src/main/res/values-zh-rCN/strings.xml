@@ -7,8 +7,8 @@
     <string name="app_name">本地保存</string>
     <string name="how_to_use_step_4">系统将打开文件选择器，请选择保存路径并输入文件名</string>
     <string name="about_title">关于</string>
-    <string name="about_developer">开发者：Mateus Rodrigues Costa</string>
-    <string name="about_icon_credits">应用图标设计 @swyzera</string>
+    <string name="about_developer">开发者：%s</string>
+    <string name="about_icon_credits">应用图标设计 %s</string>
     <string name="about_github">源代码可在Github %s上获得，在AGPLv3+下授权</string>
     <string name="settings_title">设置</string>
     <string name="settings_category_file_picker">文件选择器</string>

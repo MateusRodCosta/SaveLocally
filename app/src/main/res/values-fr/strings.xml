@@ -10,7 +10,7 @@
     <string name="how_to_use_step_1">Partagez le fichier avec l\'icône de partage</string>
     <string name="how_to_use_step_3">Un écran s\'ouvre avec les détails du fichier ; pressez \"Sauvegarder\"</string>
     <string name="about_title">À propos</string>
-    <string name="about_icon_credits">Dessin de l\'icône de l\'application par @swyzera</string>
+    <string name="about_icon_credits">Dessin de l\'icône de l\'application par %s</string>
     <string name="settings_category_file_details">Détails du fichier</string>
     <string name="settings_skip_file_details_page">Sauter la page de détails du fichier</string>
     <string name="settings_skip_file_details_page_info">Ouvrir le navigateur de fichiers dès qu\'un fichier est reçu</string>
@@ -26,7 +26,7 @@
     <string name="settings_title">Paramètres</string>
     <string name="how_to_use_step_4">Le navigateur de fichiers s\'ouvre ; sélectionnez l\'emplacement souhaité et le nom du fichier</string>
     <string name="settings_default_save_location_last_used">Dernier répertoire utilisé</string>
-    <string name="about_developer">Développé par Mateus Rodrigues Costa</string>
+    <string name="about_developer">Développé par %s</string>
     <string name="settings_default_save_location">Emplacement de sauvegarde par défaut</string>
     <string name="settings_skip_file_picker_info">Saute le navigateur de fichiers et enregistrer le fichier immédiatement (uniquement possible si un répertoire par défaut a été configuré)</string>
     <string name="no_file_found">Aucun fichier trouvé</string>
