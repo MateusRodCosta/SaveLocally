@@ -58,6 +58,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -81,6 +82,19 @@ fun SettingsScreenPreview() {
 fun SettingsScreenPreviewPtBr() {
     SettingsScreen()
 }
+
+@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true)
+@Composable
+fun SettingsScreenPreviewLandscape() {
+    SettingsScreen()
+}
+
+@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun SettingsScreenPreviewLandscapePtBr() {
+    SettingsScreen()
+}
+
 
 @Composable
 fun SettingsScreen(

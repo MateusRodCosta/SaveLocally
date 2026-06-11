@@ -57,6 +57,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.R
@@ -75,6 +76,18 @@ fun AboutScreenPreview() {
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun AboutScreenPreviewPtBr() {
+    AboutScreen()
+}
+
+@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true)
+@Composable
+fun AboutScreenPreviewLandscape() {
+    AboutScreen()
+}
+
+@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun AboutScreenPreviewLandscapePtBr() {
     AboutScreen()
 }
 

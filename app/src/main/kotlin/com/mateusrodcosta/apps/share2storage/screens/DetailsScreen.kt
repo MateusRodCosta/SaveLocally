@@ -59,6 +59,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -83,6 +84,18 @@ fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenPreviewPtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
+    DetailsScreen(uriData = uriData)
+}
+
+@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true)
+@Composable
+fun DetailsScreenPreviewLandscape(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
+    DetailsScreen(uriData = uriData)
+}
+
+@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun DetailsScreenPreviewLandscapePtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreen(uriData = uriData)
 }
 
@@ -285,6 +298,18 @@ fun DetailsScreenSkippedPreview() {
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
 fun DetailsScreenSkippedPreviewPtBr() {
+    DetailsScreenSkipped()
+}
+
+@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true)
+@Composable
+fun DetailsScreenSkippedPreviewLandscape() {
+    DetailsScreenSkipped()
+}
+
+@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
+@Composable
+fun DetailsScreenSkippedPreviewLandscapePtBr() {
     DetailsScreenSkipped()
 }
 
