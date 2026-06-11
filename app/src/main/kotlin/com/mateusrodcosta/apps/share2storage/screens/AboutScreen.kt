@@ -200,15 +200,13 @@ fun AboutScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        "About"
-                    )
+                    Text(stringResource(R.string.about_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.back_arrow)
                         )
                     }
                 },

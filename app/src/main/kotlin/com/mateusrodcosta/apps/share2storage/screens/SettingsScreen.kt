@@ -21,7 +21,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
@@ -44,6 +46,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -56,6 +59,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
@@ -145,69 +149,79 @@ private fun SettingsScreenContent(
     listItemColors: ListItemColors = ListItemDefaults.colors(),
 ) {
     Scaffold(topBar = {
-        TopAppBar(title = { Text(stringResource(R.string.settings_title)) }, navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    stringResource(R.string.back_arrow),
-                )
-            }
-        })
-    }) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Column {
-                    SectionHeader(stringResource(R.string.settings_category_file_picker))
-                    DefaultSaveLocationSetting(
-                        launchFilePicker = launchFilePicker,
-                        clearDefaultSaveLocation = clearDefaultSaveLocation,
-                        spDefaultSaveLocation = spDefaultSaveLocation,
-                        listItemColors = listItemColors,
-                    )
-                    SkipFilePickerSetting(
-                        spDefaultSaveLocation = spDefaultSaveLocation,
-                        updateSkipFilePicker = updateSkipFilePicker,
-                        spSkipFilePicker = spSkipFilePicker,
-                        listItemColors = listItemColors,
-                    )
-                    SectionHeader(stringResource(R.string.settings_category_file_details))
-                    SkipFileDetailsSetting(
-                        updateSkipFileDetails = updateSkipFileDetails,
-                        spSkipFileDetails = spSkipFileDetails,
-                        listItemColors = listItemColors,
-                    )
-                    ShowFilePreviewSetting(
-                        updateShowFilePreview = updateShowFilePreview,
-                        spShowFilePreview = spShowFilePreview,
-                        spSkipFileDetails = spSkipFileDetails,
-                        listItemColors = listItemColors,
-                    )
-                    SectionHeader(stringResource(R.string.settings_category_intents))
-                    InterceptActionViewIntentsSetting(
-                        updateInterceptActionViewIntents = updateInterceptActionViewIntents,
-                        spInterceptActionViewIntents = spInterceptActionViewIntents,
-                        listItemColors = listItemColors,
-                    )
-                    SectionHeader(stringResource(R.string.settings_category_about))
-                    ListItem(
-                        headlineContent = {
-                            Text(stringResource(R.string.settings_about))
-                        },
-                        leadingContent = {
-                            Icon(
-                                Icons.AutoMirrored.Filled.HelpOutline,
-                                contentDescription = stringResource(R.string.settings_about)
-                            )
-                        },
-                        colors = listItemColors,
-                        modifier = Modifier.clickable(onClick = onNavigateToAbout)
+        TopAppBar(
+            title = { Text(stringResource(R.string.settings_title)) },
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        stringResource(R.string.back_arrow),
                     )
                 }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = Color.Transparent
+            )
+        )
+    }) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Column(
+                modifier = Modifier
+                    .widthIn(max = 800.dp)
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+            ) {
+                SectionHeader(stringResource(R.string.settings_category_file_picker))
+                DefaultSaveLocationSetting(
+                    launchFilePicker = launchFilePicker,
+                    clearDefaultSaveLocation = clearDefaultSaveLocation,
+                    spDefaultSaveLocation = spDefaultSaveLocation,
+                    listItemColors = listItemColors,
+                )
+                SkipFilePickerSetting(
+                    spDefaultSaveLocation = spDefaultSaveLocation,
+                    updateSkipFilePicker = updateSkipFilePicker,
+                    spSkipFilePicker = spSkipFilePicker,
+                    listItemColors = listItemColors,
+                )
+                SectionHeader(stringResource(R.string.settings_category_file_details))
+                SkipFileDetailsSetting(
+                    updateSkipFileDetails = updateSkipFileDetails,
+                    spSkipFileDetails = spSkipFileDetails,
+                    listItemColors = listItemColors,
+                )
+                ShowFilePreviewSetting(
+                    updateShowFilePreview = updateShowFilePreview,
+                    spShowFilePreview = spShowFilePreview,
+                    spSkipFileDetails = spSkipFileDetails,
+                    listItemColors = listItemColors,
+                )
+                SectionHeader(stringResource(R.string.settings_category_intents))
+                InterceptActionViewIntentsSetting(
+                    updateInterceptActionViewIntents = updateInterceptActionViewIntents,
+                    spInterceptActionViewIntents = spInterceptActionViewIntents,
+                    listItemColors = listItemColors,
+                )
+                SectionHeader(stringResource(R.string.settings_category_about))
+                ListItem(
+                    headlineContent = {
+                        Text(stringResource(R.string.settings_about))
+                    },
+                    leadingContent = {
+                        Icon(
+                            Icons.AutoMirrored.Filled.HelpOutline,
+                            contentDescription = stringResource(R.string.settings_about)
+                        )
+                    },
+                    colors = listItemColors,
+                    modifier = Modifier.clickable(onClick = onNavigateToAbout)
+                )
             }
         }
     }
