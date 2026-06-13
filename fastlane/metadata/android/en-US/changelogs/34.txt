@@ -1,0 +1,6 @@
+For this release:
+• Migrated to Navigation Compose
+• Improved Settings screen and added new About screen (with third-party licenses)
+• Added Right-to-Left (RTL) support
+• Updated dependencies and translations
+• Many under-the-hood changes
