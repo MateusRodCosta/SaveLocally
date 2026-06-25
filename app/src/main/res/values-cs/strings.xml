@@ -6,8 +6,6 @@
     <string name="how_to_use_step_2">V nabídce sdílení zvolte „%s“</string>
     <string name="how_to_use_step_3">Otevře se obrazovka s podrobnostmi o souboru, stiskněte Uložit</string>
     <string name="how_to_use_step_4">Otevře se okno pro výběr souboru, zvolte umístění a název souboru</string>
-    <string name="donation_title">Podpořte nás</string>
-    <string name="donation_content">Líbí se vám aplikace? Zvažte finanční příspěvek! Pro více informací navštivte %s</string>
     <string name="about_title">O aplikaci</string>
     <string name="about_developer">Vytvořil Mateus Rodrigues Costa</string>
     <string name="about_icon_credits">Ikona aplikace od @swyzera</string>
