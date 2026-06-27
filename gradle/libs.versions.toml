@@ -1,7 +1,7 @@
 [versions]
 dependencyAnalysis = "3.16.0"
 agp = "9.2.1"
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 kotlinSerialization = "1.11.0"
 koinPlugin = "1.0.1"
 coroutines = "1.11.0"
