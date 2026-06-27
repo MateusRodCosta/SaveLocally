@@ -1,5 +1,5 @@
 [versions]
-dependencyAnalysis = "3.14.1"
+dependencyAnalysis = "3.16.0"
 agp = "9.2.1"
 kotlin = "2.3.21"
 kotlinSerialization = "1.11.0"
