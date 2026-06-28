@@ -35,4 +35,7 @@
     <string name="toast_saved_file_failure">Ocorreu um erro ao gravar o ficheiro.</string>
     <string name="save_button">Gravar</string>
     <string name="back_arrow">Voltar</string>
+    <string name="about_category_licenses">Licenças</string>
+    <string name="settings_category_about">Sobre</string>
+    <string name="settings_about">Sobre</string>
 </resources>
