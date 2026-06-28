@@ -1,0 +1,5 @@
+<strong>IMPORTANTE</strong>:
+Na versão 1.2.3 a cópia de ficheiro passou a usar um buffer de 1 kb e acidentalmente introduziu um bug: zeros seriam adicionados no final do ficheiro gravado para fazer o tamanho um múltiplo de 1 kb.
+Se os ficheiros que gravou não precisam ser uma cópia idêntica ao original, não há com o que se preocupar, do contrário esses zeros podem causar problemas (por exemplo, hashes divergirem).
+
+A versão 1.3.1 resolve esse bug. Sinto muito por qualquer inconveniência!

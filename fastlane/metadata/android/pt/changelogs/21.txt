@@ -1,0 +1,2 @@
+A restricão de tipos de ficheiros permitidos foi removida.
+For favor, reporte qualquer problema que possa surgir em https://github.com/MateusRodCosta/Share2Storage/issues

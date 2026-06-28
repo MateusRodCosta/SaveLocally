@@ -1,0 +1,5 @@
+<strong>IMPORTANTE</strong>:
+A partir da versão 1.2.3 a cópia de ficheiro passou a usar um buffer de 1 kb, mas isso introduziu um bug: zeros poderiam ser adicionados no final do ficheiro gravado.
+Isto foi corrigido na versão 1.3.1, por favor reporte qualquer problema!
+
+Esta é uma versão de manutenção com foco no apoio ao Java 21.

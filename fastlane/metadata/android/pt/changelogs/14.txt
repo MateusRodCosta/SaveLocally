@@ -1,0 +1,9 @@
+• Dependências atualizadas
+• Adicionada ecrã de Configurações com duas configurações: "Pular página de Pormenores do ficheiro" e "Local de gravação padrão"
+• Adicionada pré-visualização de imagens
+• Adicionado layout responsivo para o ecrã de Pormenores de Ficheiro
+• Adicionados créditos do ícone e ligação para doações
+• Mudanças no tema da app (cores e TopAppBars)
+• Corrigida a renderização do ícone de tipo de ficheiro
+• Adicionado ícone monocromático
+• Ativado visualização borda-a-borda

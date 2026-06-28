@@ -1,0 +1,3 @@
+• Dependências atualizadas
+• Adicionado apoio para ecrãs de abertura para versões do Android pre-12
+• Os ícones da barra de estado agora são brancos

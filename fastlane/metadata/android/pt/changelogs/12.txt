@@ -1,0 +1,1 @@
+- Ativado configuração de idioma por apps no Android 13+

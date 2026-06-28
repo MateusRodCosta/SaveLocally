@@ -1,0 +1,4 @@
+• As dependências foram atualizadas
+• Corrigido um problema em que a app trava ao tentar gravar ficheiros muito grandes
+  • Isto ocorria porque anteriormente o ficheiro inteiro era carregado na memória e ficheiros maiores atingiam um limite de uso de memória do sistema
+• A lógica de gravação de ficheiros agora executa de forma assíncrona graças às "coroutines"  do Kotlin

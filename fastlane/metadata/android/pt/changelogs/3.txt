@@ -1,0 +1,2 @@
+- Novo nome: Save Locally.
+- Várias melhorias de interface e no código.

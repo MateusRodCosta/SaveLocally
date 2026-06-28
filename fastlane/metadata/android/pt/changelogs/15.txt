@@ -1,0 +1,1 @@
+Várias melhorias na qualidade do código da app

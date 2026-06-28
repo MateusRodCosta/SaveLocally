@@ -1,0 +1,6 @@
+Nesta versão:
+• Migração para Navigation Compose
+• Melhorias no ecrã de Configurações e novo ecrã "Sobre" (com licenças de terceiros)
+• Adicionado apoio para layouts da direita para a esquerda (RTL)
+• Atualização de dependências e traduções
+• Diversas melhorias internas

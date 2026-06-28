@@ -1,0 +1,8 @@
+Já lidou com esta situação: usa uma app (como uma app bancária) e precisa de exportar um ficheiro urgentemente (por exemplo, um extrato bancário em PDF). Quer descarregar este ficheiro mas a app não oferece uma forma fácil para isto, o máximo que ele oferece é a opção de partilhar o ficheiro, fazendo com que tenha que enviar o ficheiro para si mesmo (ou para outra pessoa) por e-mail ou por um mensageiro instantâneo para só então ter a opção de gravá-lo.
+
+Isto acontece porque muitas apps decidem usar a funcionalidade de partilhamento do sistema ao invés de implementar a lógica necessária para a gravação de ficheiros. Então, o que pode ser feito?
+
+Nesses casos o Save Locally pode vir a calhar, apenas escolha-o nas opções de partilhamento e isto permitirá que grave o ficheiro em qualquer lugar localmente no seu dispositivo, também serão exibidos detalhes dom ficheiro antes (apesar de que isto pode ser pulado).
+Uma opção para interceptar intents de "Abrir com" também está disponível, permitindo-lhe a gravar um ficheiro mesmo que a app anterior tente forçar a visualização do ficheiro com um visualizador padrão para aquele tpo de ficheiro.
+
+Salvar Localmente é software livre desenvolvido com Jetpack Compose. O código-fonte está disponível em <a href="https://github.com/MateusRodCosta/SaveLocally">https://github.com/MateusRodCosta/SaveLocally</a> e licenciado sob AGPLv3+.

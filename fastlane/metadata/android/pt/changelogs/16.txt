@@ -1,0 +1,4 @@
+• Dependências atualizadas
+• Melhorias na estrutura dos ecrãs e lógica de navegação
+• Apoio ao Android 14
+• Adicionado layout em paisagem para o ecrã Principal

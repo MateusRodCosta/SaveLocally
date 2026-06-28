@@ -1,0 +1,5 @@
+IMPORTANTE: Uma versão futura poderá deixar de suportar o Android O, veja https://github.com/MateusRodCosta/Share2Storage/issues/38 para mais informações.
+
+• Dependências atualizadas
+• Nova opção "Pular seletor de ficheiros" quando uma pasta padrão é configurada
+• Melhorias de UX e novos valores padrões de configurações com foco em redução de fricção (devido a necessidades de utilizadores)

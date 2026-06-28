@@ -1,0 +1,2 @@
+• Adicionada a habilidade de também gravar textos partilhado ao invés de apenas ficheiros partilhados
+• Várias correções e melhorias por debaixo dos panos

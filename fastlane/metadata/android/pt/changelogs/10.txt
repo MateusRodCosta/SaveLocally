@@ -1,0 +1,4 @@
+Bibliotecas Jetpack Compose atualizadas e apoio ao Material 3 adicionado.
+
+Melhoras para o ecrã principal e a de partilhamento, tais como rolagem and informações sobre a app.
+Melhorias em como a app recebe as informações do ficheiro.
