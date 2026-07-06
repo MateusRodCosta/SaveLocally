@@ -35,4 +35,7 @@
     <string name="toast_saved_file_failure">حدث خطأ أثناء حفظ الملف.</string>
     <string name="save_button">احفظ</string>
     <string name="back_arrow">سهم الرجوع</string>
+    <string name="about_category_licenses">التراخيص</string>
+    <string name="settings_category_about">عن</string>
+    <string name="settings_about">عن</string>
 </resources>
