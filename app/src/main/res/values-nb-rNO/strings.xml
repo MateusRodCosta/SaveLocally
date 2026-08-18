@@ -1,3 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Lagre Lokalt</string>
+    <string name="how_to_use">Hvordan bruke appen</string>
+    <string name="how_to_use_step_1">Del en fil via Delings-ikonet</string>
+    <string name="how_to_use_step_2">Velg delingsvalget \"%s\"</string>
+    <string name="how_to_use_step_3">En dialog med detaljer om filen åpnes, trykk Lagre</string>
+    <string name="how_to_use_step_4">Filvelgeren åpnes, velg hvor du vil lagre, samt filnavnet</string>
+    <string name="about_title">Om</string>
+    <string name="about_developer">Utviklet av %s</string>
+    <string name="about_icon_credits">Appikon designet av %s</string>
+    <string name="about_github">Kildekoden er tilgjengelig på GitHub, %s, lisensiert under AGPLv3+</string>
+    <string name="about_category_licenses">Lisenser</string>
+    <string name="settings_title">Innstillinger</string>
+    <string name="settings_category_file_picker">Filvelger</string>
+    <string name="settings_default_save_location">Standard lagringslokasjon</string>
+    <string name="settings_default_save_location_last_used">Sist brukte mappe</string>
+    <string name="settings_default_save_location_select_folder">Velg mappe…</string>
+    <string name="settings_skip_file_picker">Hopp over filvelgeren</string>
+    <string name="settings_skip_file_picker_info">Hopp over filvelgeren og lagre filer umiddelbart (kun tilgjengelig når standardlokasjon er satt)</string>
+    <string name="settings_category_file_details">Fildetaljer</string>
+    <string name="settings_skip_file_details_page">Hopp over fildetaljersiden</string>
+    <string name="settings_skip_file_details_page_info">Åpne filvelger så snart fil er mottatt</string>
+    <string name="settings_show_file_preview">Vis forhåndsvisning av fil</string>
+    <string name="settings_show_file_preview_info">Vis forhåndsvisning av kompatible filtyper. Per nå er kun noen bildeformater støttet.</string>
+    <string name="settings_category_intents">Intents</string>
+    <string name="settings_intercept_action_view_intents">Overstyr ACTION_VIEW intents</string>
+    <string name="settings_intercept_action_view_intents_info">Tillat å registrere som et valg når apper prøver å automatisk åpne en filvisningsapp</string>
+    <string name="settings_category_about">Om</string>
+    <string name="settings_about">Om</string>
+    <string name="no_file_found">Ingen fil funnet</string>
+    <string name="saving_file">Lagrer fil…</string>
+    <string name="file_details">Fildetaljer</string>
+    <string name="file_name">Filnavn</string>
+    <string name="file_type">Filtype</string>
+    <string name="file_size">Filstørrelse</string>
+    <string name="toast_saved_file_success">Fil lagret!</string>
+    <string name="toast_saved_file_failure">En feil oppstod når filen skulle lagres.</string>
+    <string name="save_button">Lagre</string>
+    <string name="back_arrow">Tilbakeknapp</string>
 </resources>
