@@ -1,0 +1,4 @@
+- Oppdaterte Jetpack Compose-biblioteker
+- Oppdaterte appikonet
+- La til bruksinstruksjoner til hovedskjermen
+- Forbedringer til Delingsskjermen (filforhåndsvisning kommer i en framtidig versjon)

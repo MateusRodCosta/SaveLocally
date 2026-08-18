@@ -1,0 +1,3 @@
+• Oppdaterte avhengigheter
+• Støtte for oppstartsskjerm på Android 12 og lavere
+• Statuslinjeikoner burde nå være hvite

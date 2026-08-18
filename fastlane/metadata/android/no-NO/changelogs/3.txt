@@ -1,0 +1,2 @@
+- Nytt appnavn: Lagre Lokalt (Save Locally).
+- Flere forbedringer til brukergrensesnitt og kode.

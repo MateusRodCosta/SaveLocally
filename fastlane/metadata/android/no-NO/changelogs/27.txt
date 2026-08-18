@@ -1,0 +1,5 @@
+VIKTIG: En framtidig versjon vil kanskje fjerne støtte for Android 8 (Oreo), se https://github.com/MateusRodCosta/Share2Storage/issues/38 for mer informasjon.
+
+• Oppdaterte avhengigheter
+• Nytt valg: "Hopp over filvelger" når standardlokasjon er satt
+• Forbedret brukeropplevelse og standardvalg for mindre friksjon (etterspurt av noen brukere)

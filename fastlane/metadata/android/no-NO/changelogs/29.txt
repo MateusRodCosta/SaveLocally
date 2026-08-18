@@ -1,0 +1,2 @@
+• La til muligheten til å lagre delt tekst istedet for bare delte filer
+• Mange fikser og forbedringer under panseret

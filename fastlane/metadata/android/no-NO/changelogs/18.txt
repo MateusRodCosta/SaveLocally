@@ -1,0 +1,9 @@
+• Nedgradering av avhengigheter pga. problem med reproduserbare appbygg
+
+Endringer fra 1.2.0:
+• Upgraded dependencies
+• La til sjekker for å prøve å fikse et kræsj ved forhåndsvisning av bilder
+• La til et valg for å skru av forhåndsvisning av bilder
+• La til et valg for å omgå ACTION_VIEW intents
+• Restrukturering av flere skjermer
+• Mange endringer under panseret samt generelle forbedringer

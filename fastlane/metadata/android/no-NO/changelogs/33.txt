@@ -1,0 +1,10 @@
+Det har blitt ett år og nesten 700 brukere—takk for støtten!
+
+For utgivelse 2.1.0:
+• Migrerte til Clean Arch
+• Store endringer og forbedringer under panseret
+• Optimisert forhåndsvisningslogikk
+• Introduserte fonten FiraGO for branding
+• Oppdaterte avhengigheter
+• Full støtte for Android 16
+• Oppdaterte oversettelser

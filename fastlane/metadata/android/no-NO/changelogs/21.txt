@@ -1,0 +1,2 @@
+Begrensninger på hvilke filtyper som er støttet har blitt fjernet.
+Vennligst rapporter problemer på https://github.com/MateusRodCosta/Share2Storage/issues

@@ -1,0 +1,1 @@
+- Satt opp støtte for per-app språk på Android 13+

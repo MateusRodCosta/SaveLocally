@@ -1,0 +1,8 @@
+Har du noensinne vært i følgende scenario? Du bruker en app (f.eks en bank-app), og du trenger å eksportere en fil (f.eks. en kontoutskrift som PDF). Du vil laste ned den filen lokalt på enheten din, men appen har ingen enkel måte å gjøre det på, det beste den kan tilby er å dele filen, noe som betyr at du må sende den til deg selv (eller noen andre) via epost eller en direktemeldingsapp, for å så lagre den derfra.
+
+Dette skjer fordi mange apper velger å bruke systemets delingsfunksjonalitet istedet for å gjøre arbeidet som trengs for å implementere fillagringslogikk. Så, hva kan vi gjøre med dette?
+
+I disse tilfellene kan Lagre Lokalt være kjekk; du velger Lagre Lokalt på delingsvinduet som kommer opp, og appen lar deg lagre filen hvorsomhelst, lokalt på enheten din. Den viser også fildetaljer på forhånd (kan også skrus av).
+Et valg for å forbigå "Åpne med" intents er også tilgjengelig, som da lar deg lagre filer selv om kildeappen prøver å tvinge filen til å åpnes med standardapp for den gitte filtypen.
+
+Lagre Lokalt (Save Locally) er fri og gratis programvare med åpen kildekode (FLOSS), utviklet med Jetpack Compose. Kildekoden er tilgjengelig på <a href="https://github.com/MateusRodCosta/SaveLocally">https://github.com/MateusRodCosta/SaveLocally</a>, og er lisensiert under AGPLv3+.

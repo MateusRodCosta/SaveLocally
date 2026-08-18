@@ -1,0 +1,4 @@
+Oppdaterte Jetpack Compose-biblioteker og la til støtte for Material 3.
+
+Forbedringer til Hoved- og Delingsaktiviteter, slik som skrolling og Om-informasjon..
+Endret på hvordan appen mottar delt fildata.

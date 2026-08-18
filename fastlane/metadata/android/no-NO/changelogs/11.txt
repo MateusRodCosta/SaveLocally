@@ -1,0 +1,2 @@
+- Minimum støttet Android versjon er nå 8.0 (Oreo)
+- Oppdaterte avhengigheter

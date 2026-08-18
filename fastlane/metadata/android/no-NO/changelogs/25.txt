@@ -1,0 +1,9 @@
+VIKTIG: En framtidig versjon vil kanskje fjerne støtte for Android 8 (Oreo), se https://github.com/MateusRodCosta/Share2Storage/issues/38 for mer informasjon.
+
+• Oppdaterte avhengigheter
+• La til en snarvei til appinnstillinger på appinfosiden
+• Mange forbedringer til brukergrensesnittet under panseret
+• Forbedret tema (la til Material You)
+• Forbedret kant-til-kant-støtte
+• Flyttet Om-informasjonen til en dialog
+• Ukomprimert DEX (resulterer i en litt større APK, mindre installert størrelse)

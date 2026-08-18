@@ -1,0 +1,4 @@
+• Oppgraderte avhengigheter
+• Fikset et problem hvor appen kræsjet hvis den prøvde å lagre større filer
+  • Dette var pga. at hele filen ble tidligere lastet inn i minnet, og store filer traff systembegrensninger på minnebruk
+• Fillagringslogikken blir nå håndtert asynkront takket være medrutiner fra Kotlin

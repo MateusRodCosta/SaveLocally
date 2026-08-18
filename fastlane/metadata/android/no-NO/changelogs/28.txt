@@ -1,0 +1,3 @@
+Implementerte en fiks for feilen "lateinit property createFile has not been initialized".
+
+VIKTIG: Dette er den siste planlagte utgivelsen med støtte for Android 8 (Oreo).

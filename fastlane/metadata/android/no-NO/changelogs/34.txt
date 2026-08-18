@@ -1,0 +1,6 @@
+For denne utgivelsen:
+• Migrerte til Navigation Compose
+• Forbedret Innstillinger-skjermen og la til en ny Om-skjerm (med tredjepartslisenser)
+• La til støtte for høyre-til-venstre-språk (RTL)
+• Oppdaterte avhengigheter og oversettelser
+• Mange endringer under panseret

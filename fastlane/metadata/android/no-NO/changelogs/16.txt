@@ -1,0 +1,4 @@
+• Oppdaterte avhengigheter
+• Forbedringer til underliggende skjermstruktur og navigasjonslogikk
+• Støtte for Android 14
+• Støtte for horisontalt skjermoppsett på hovedskjermen

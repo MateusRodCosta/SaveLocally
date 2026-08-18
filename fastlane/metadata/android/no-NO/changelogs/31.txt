@@ -1,0 +1,2 @@
+Dette er en mindre vedlikeholdsutgivelse. Utviklingen vil fokusere på nye funksjoner i en ny utgivelse som også vil fjerne støtte for Android 8 (Oreo).
+Brukere som fortsatt trenger støtte for Android 8 burde laste ned en tidligere utgivelse fra GitHub på https://github.com/MateusRodCosta/SaveLocally/releases

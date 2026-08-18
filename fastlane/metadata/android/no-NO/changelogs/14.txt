@@ -1,0 +1,9 @@
+• Oppdaterte avhengigheter
+• La til Innstillinger-skjerm med to innstillinger: "Hopp over fildetaljer" og "Standard lagringslokasjon"
+• La til forhåndsvisning av bildefiler
+• La til responsiv oppsett for Fildetaljer-skjermen
+• La til ikonattribusjon samt lenke til donasjonssiden
+• Endring på apptema (farger og paneler)
+• Fikset tegning av filtypeikoner
+• La til enfarget ikon
+• Støtte for kant-til-kant-skjerm

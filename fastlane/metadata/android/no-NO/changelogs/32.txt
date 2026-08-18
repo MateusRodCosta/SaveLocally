@@ -1,0 +1,4 @@
+Versjon 2.0.0 fjerner støtte for Android 8 (Oreo), brukere som trenger støtte for Android 8 burde laste ned den siste kompatible versjonen på https://github.com/MateusRodCosta/SaveLocally/releases/tag/v1.4.4a
+
+Dette er også den første versjonen som legger til crowdsourcede oversettelser, tusen takk til de frivillige oversetterne.
+Se https://hosted.weblate.org/engage/save-locally/ for mer info.
