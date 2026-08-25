@@ -1,9 +1,9 @@
 [versions]
-dependencyAnalysis = "3.16.0"
+dependencyAnalysis = "3.18.0"
 agp = "9.3.2"
 kotlin = "2.4.10"
 kotlinSerialization = "1.11.0"
-koinPlugin = "1.0.1"
+koinPlugin = "1.1.0"
 coroutines = "1.11.0"
 core = "1.19.0"
 activity = "1.13.0"
@@ -22,7 +22,7 @@ androidxTestRules = "1.7.0"
 androidxJunit = "1.3.0"
 espressoCore = "3.7.0"
 lazycolumnscrollbar = "2.2.0"
-aboutLibraries = "15.0.2"
+aboutLibraries = "15.1.1"
 
 [libraries]
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
