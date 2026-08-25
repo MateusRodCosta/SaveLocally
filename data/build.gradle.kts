@@ -26,8 +26,11 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core)
     implementation(libs.androidx.core.ktx)
+
     api(libs.coroutines.core)
+    runtimeOnly(libs.coroutines.android)
 
     api(platform(libs.koin.bom))
     api(libs.koin.core)
