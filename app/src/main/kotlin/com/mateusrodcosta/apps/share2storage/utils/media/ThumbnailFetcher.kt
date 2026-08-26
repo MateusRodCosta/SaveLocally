@@ -28,7 +28,6 @@ import coil3.fetch.Fetcher
 import coil3.fetch.ImageFetchResult
 import coil3.request.Options
 import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
-import com.mateusrodcosta.apps.share2storage.utils.media.ThumbnailUtils
 
 class ThumbnailFetcher(
     private val context: Context,

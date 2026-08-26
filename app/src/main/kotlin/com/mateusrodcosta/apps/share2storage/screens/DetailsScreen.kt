@@ -111,16 +111,9 @@ fun DetailsScreen(
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
     launchFilePicker: () -> Unit? = {},
 ) {
-    val collectedUriData by if (detailsViewModel != null) {
-        detailsViewModel.uriData.collectAsState()
-    } else {
-        remember { mutableStateOf(uriData) }
-    }
-    val collectedShowFilePreview by if (detailsViewModel != null) {
-        detailsViewModel.showFilePreview.collectAsState()
-    } else {
-        remember { mutableStateOf(showFilePreview) }
-    }
+    val collectedUriData by detailsViewModel?.uriData?.collectAsState() ?: remember { mutableStateOf(uriData) }
+    val collectedShowFilePreview by detailsViewModel?.showFilePreview?.collectAsState()
+        ?: remember { mutableStateOf(showFilePreview) }
 
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 

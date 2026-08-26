@@ -36,6 +36,9 @@ fun <T> SharedPreferences.getTypedValue(key: String, defaultValue: T): T {
 // Instead of relying on androidx's https://developer.android.com/jetpack/androidx/releases/preference
 class SharedPreferenceUtils {
     companion object {
+        @JvmStatic
+        private val defaultSharedPreferencesMode: Int = Context.MODE_PRIVATE
+
         /**
          * Gets a {@link SharedPreferences} instance that points to the default file that is used by
          * the preference framework in the given context.
@@ -47,7 +50,7 @@ class SharedPreferenceUtils {
         @JvmStatic
         fun getDefaultSharedPreferences(context: Context): SharedPreferences {
             return context.getSharedPreferences(
-                getDefaultSharedPreferencesName(context), getDefaultSharedPreferencesMode()
+                getDefaultSharedPreferencesName(context), defaultSharedPreferencesMode
             )
         }
 
@@ -56,10 +59,6 @@ class SharedPreferenceUtils {
             return context.packageName + "_preferences"
         }
 
-        @JvmStatic
-        private fun getDefaultSharedPreferencesMode(): Int {
-            return Context.MODE_PRIVATE
-        }
     }
 }
 
