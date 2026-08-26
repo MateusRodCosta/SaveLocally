@@ -11,21 +11,18 @@ android {
     namespace = "com.mateusrodcosta.apps.share2storage.data"
     compileSdk {
         version = release(37) {
-            minorApiLevel = 0
+            minorApiLevel = 1
         }
     }
 
     defaultConfig {
-        minSdk = 28
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-proguard-rules.pro")
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-
 }
 
 kotlin {

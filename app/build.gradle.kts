@@ -25,7 +25,7 @@ android {
     namespace = "com.mateusrodcosta.apps.share2storage"
     compileSdk {
         version = release(37) {
-            minorApiLevel = 0
+            minorApiLevel = 1
         }
     }
 
