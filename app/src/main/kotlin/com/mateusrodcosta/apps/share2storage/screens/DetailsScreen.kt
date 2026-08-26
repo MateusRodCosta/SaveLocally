@@ -23,13 +23,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -72,8 +75,8 @@ import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
-import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
 import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
+import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
@@ -291,47 +294,67 @@ fun FilePreview(uriData: UriData, showFilePreview: Boolean = true) {
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
-fun DetailsScreenSkippedPreview() {
-    DetailsScreenSkipped()
+fun DetailsScreenSavingFileFeedbackPreview() {
+    DetailsScreenSavingFileFeedback()
 }
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
-fun DetailsScreenSkippedPreviewPtBr() {
-    DetailsScreenSkipped()
+fun DetailsScreenSavingFileFeedbackPreviewPtBr() {
+    DetailsScreenSavingFileFeedback()
 }
 
 @Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true)
 @Composable
-fun DetailsScreenSkippedPreviewLandscape() {
-    DetailsScreenSkipped()
+fun DetailsScreenSavingFileFeedbackPreviewLandscape() {
+    DetailsScreenSavingFileFeedback()
 }
 
 @Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
 @Composable
-fun DetailsScreenSkippedPreviewLandscapePtBr() {
-    DetailsScreenSkipped()
+fun DetailsScreenSavingFileFeedbackPreviewLandscapePtBr() {
+    DetailsScreenSavingFileFeedback()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreenSkipped() {
+fun DetailsScreenSavingFileFeedback(
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
+) {
+    val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
+
     SaveLocallyTheme {
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.file_details)) },
             )
         }) { paddingValues ->
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                Text(
-                    stringResource(R.string.saving_file),
-                    style = MaterialTheme.typography.headlineMedium
-                )
+            if(useLandscapeLayout) {
+                Row(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.size(64.dp))
+                    Spacer(modifier = Modifier.width(32.dp))
+                    Text(
+                        stringResource(R.string.saving_file),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.size(64.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        stringResource(R.string.saving_file),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
             }
         }
     }

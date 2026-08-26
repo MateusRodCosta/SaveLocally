@@ -33,7 +33,7 @@ import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
-import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSkipped
+import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSavingFileFeedback
 import com.mateusrodcosta.apps.share2storage.screens.DetailsViewModel
 import com.mateusrodcosta.apps.share2storage.utils.result.CreateDocumentWithInitialUri
 import kotlinx.coroutines.launch
@@ -135,7 +135,7 @@ class DetailsActivity : ComponentActivity() {
                             launchFilePicker()
                         }
                     }
-                    DetailsScreenSkipped()
+                    DetailsScreenSavingFileFeedback()
                 } else {
                     DetailsScreen(
                         detailsViewModel = viewModel,
