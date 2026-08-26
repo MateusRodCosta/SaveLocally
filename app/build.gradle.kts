@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.util.Properties
 
 plugins {
@@ -111,6 +112,7 @@ android {
 
 kotlin {
     compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_4
         jvmTarget = JvmTarget.JVM_21
     }
 }
