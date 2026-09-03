@@ -1,0 +1,2 @@
+Emergency release to fix a small issue where new permissions were added due to a legacy behavior of AGP.
+For more information see https://github.com/MateusRodCosta/SaveLocally/issues/58

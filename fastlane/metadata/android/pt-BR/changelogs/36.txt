@@ -1,0 +1,2 @@
+Lançamento emergencial para corrigir um pequeno problema em que novas permissões foram adicionadas devido a um comportamento legado do AGP.
+Para mais informações, leia https://github.com/MateusRodCosta/SaveLocally/issues/58
