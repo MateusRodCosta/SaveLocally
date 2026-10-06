@@ -189,12 +189,15 @@ class SaveLocallyService: Service(), KoinComponent {
                     .setAutoCancel(true)
                     .build()
 
-                notificationManager?.notify(notificationId, completedNotification)
+                val resultNotificationId = notificationId + 10000
+                notificationManager?.notify(resultNotificationId, completedNotification)
+                notificationManager?.cancel(notificationId)
             }
 
             val remainingJobs = activeJobsCount.decrementAndGet()
             if (remainingJobs <= 0) {
-                stopForeground(STOP_FOREGROUND_DETACH)
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                notificationManager?.cancel(PRIMARY_FOREGROUND_ID)
             }
 
             stopSelf(startId)
