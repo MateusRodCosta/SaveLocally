@@ -62,7 +62,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
                 contentResolver.openOutputStream(targetUri)?.use { outputStream ->
                     inputStream?.use { input ->
-                        val buffer = ByteArray(8192)
+                        val buffer = ByteArray(65536)
                         var bytesCopied = 0L
                         var bytesRead = input.read(buffer)
                         while (bytesRead >= 0) {
@@ -112,6 +112,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
         }
 
     private fun isVirtualFile(uri: Uri): Boolean {
+        if (uri.scheme != ContentResolver.SCHEME_CONTENT) return false
         if (!DocumentsContract.isDocumentUri(context, uri)) return false
 
         val cursor: Cursor = contentResolver.query(
