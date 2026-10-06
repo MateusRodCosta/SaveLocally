@@ -42,7 +42,8 @@ class SaveLocallyService: Service(), KoinComponent {
 
     companion object {
 
-        private const val CHANNEL_ID = "save_locally_channel"
+        private const val PROGRESS_CHANNEL_ID = "save_locally_in_progress_channel"
+        private const val RESULT_CHANNEL_ID = "save_locally_finished_channel"
         private const val PRIMARY_FOREGROUND_ID = 1000
 
         const val ACTION_SAVE_TEXT = "ACTION_SAVE_TEXT"
@@ -64,22 +65,31 @@ class SaveLocallyService: Service(), KoinComponent {
         fun getService(): SaveLocallyService = this@SaveLocallyService
     }
 
-    private fun createNotificationChannel() {
-        val name = getString(R.string.app_name)
-        val descriptionText = "File saving notification channel"
-        val importance = NotificationManager.IMPORTANCE_LOW
-        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-            description = descriptionText
+    private fun createNotificationChannels() {
+        val notificationManager = getSystemService(NotificationManager::class.java) ?: return
+
+        val progressChannel = NotificationChannel(
+            PROGRESS_CHANNEL_ID,
+            getString(R.string.saving_file),
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            description = "Ongoing file saving progress channel"
         }
 
-        val notificationManager: NotificationManager =
-            getSystemService(NotificationManager::class.java) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
+        val resultChannel = NotificationChannel(
+            RESULT_CHANNEL_ID,
+            getString(R.string.app_name),
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = "File save completion results channel"
+        }
+
+        notificationManager.createNotificationChannels(listOf(progressChannel, resultChannel))
     }
 
     override fun onCreate() {
         super.onCreate()
-        createNotificationChannel()
+        createNotificationChannels()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -88,7 +98,7 @@ class SaveLocallyService: Service(), KoinComponent {
         val notificationId = startId + PRIMARY_FOREGROUND_ID
         val activeJobs = activeJobsCount.incrementAndGet()
 
-        val progressNotification = NotificationCompat.Builder(this, CHANNEL_ID)
+        val progressNotification = NotificationCompat.Builder(this, PROGRESS_CHANNEL_ID)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.saving_file))
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -145,7 +155,7 @@ class SaveLocallyService: Service(), KoinComponent {
                                 val percent = ((bytesCopied * 100) / totalBytes).toInt()
 
                                 val progressNotification =
-                                    NotificationCompat.Builder(this@SaveLocallyService, CHANNEL_ID)
+                                    NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)
                                         .setContentTitle(fileName)
                                         .setContentText("$copiedStr / $totalStr")
                                         .setSmallIcon(R.mipmap.ic_launcher)
@@ -170,7 +180,7 @@ class SaveLocallyService: Service(), KoinComponent {
                     R.string.toast_saved_file_failure
                 }
 
-                val completedNotification = NotificationCompat.Builder(this@SaveLocallyService, CHANNEL_ID)
+                val completedNotification = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(messageRes))
                     .setSmallIcon(R.mipmap.ic_launcher)
