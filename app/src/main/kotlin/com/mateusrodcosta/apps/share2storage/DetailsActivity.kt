@@ -28,6 +28,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
@@ -47,12 +48,21 @@ class DetailsActivity : ComponentActivity() {
         registerForActivityResult(CreateDocumentWithInitialUri()) { uri ->
             uri?.let { targetUri ->
                 if (sharedContent != null) {
-                    viewModel.saveText(sharedContent.toString(), targetUri.toString())
-                } else {
-                    sourceFileUri?.let { sourceUri ->
-                        viewModel.saveFile(sourceUri.toString(), targetUri.toString())
+                    val intent = Intent(this, SaveLocallyService::class.java).apply {
+                        action = SaveLocallyService.ACTION_SAVE_TEXT
+                        putExtra(SaveLocallyService.EXTRA_TEXT, sharedContent.toString())
+                        putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
                     }
-                }
+
+                    ContextCompat.startForegroundService(this, intent)
+                } else {
+                    val intent = Intent(this, SaveLocallyService::class.java).apply {
+                        action = SaveLocallyService.ACTION_SAVE_FILE
+                        putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
+                        putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
+                    }
+
+                    ContextCompat.startForegroundService(this, intent)                }
             } ?: run {
                 if (viewModel.skipFileDetails.value == true) finish()
             }
