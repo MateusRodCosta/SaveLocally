@@ -48,11 +48,8 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
             runCatching {
                 val sourceUri = sourceUriString.toUri()
                 val targetUri = targetUriString.toUri()
-                val size = if (totalBytes > 0L) {
-                    totalBytes
-                } else {
-                    getFileMetadata(sourceUriString).getOrNull()?.size ?: -1L
-                }
+                val size = totalBytes.takeIf { it > 0L }
+                    ?: throw IllegalArgumentException("Invalid totalBytes ($totalBytes) for URI: $sourceUriString")
 
                 val inputStream = if (isVirtualFile(sourceUri)) {
                     getInputStreamForVirtualFile(sourceUri)
@@ -112,7 +109,6 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
         }
 
     private fun isVirtualFile(uri: Uri): Boolean {
-        if (uri.scheme != ContentResolver.SCHEME_CONTENT) return false
         if (!DocumentsContract.isDocumentUri(context, uri)) return false
 
         val cursor: Cursor = contentResolver.query(
