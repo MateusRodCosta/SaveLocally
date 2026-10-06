@@ -38,11 +38,21 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
     private val contentResolver: ContentResolver = context.contentResolver
 
-    override suspend fun saveFile(sourceUriString: String, targetUriString: String): Result<Unit> =
+    override suspend fun saveFile(
+        sourceUriString: String,
+        targetUriString: String,
+        totalBytes: Long,
+        onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)?
+    ): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
                 val sourceUri = sourceUriString.toUri()
                 val targetUri = targetUriString.toUri()
+                val size = if (totalBytes > 0L) {
+                    totalBytes
+                } else {
+                    getFileMetadata(sourceUriString).getOrNull()?.size ?: -1L
+                }
 
                 val inputStream = if (isVirtualFile(sourceUri)) {
                     getInputStreamForVirtualFile(sourceUri)
@@ -51,8 +61,17 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                 }
 
                 contentResolver.openOutputStream(targetUri)?.use { outputStream ->
-                    inputStream?.use { it.copyTo(outputStream) }
-                        ?: throw IOException("Could not open source input stream for URI: $sourceUri")
+                    inputStream?.use { input ->
+                        val buffer = ByteArray(8192)
+                        var bytesCopied = 0L
+                        var bytesRead = input.read(buffer)
+                        while (bytesRead >= 0) {
+                            outputStream.write(buffer, 0, bytesRead)
+                            bytesCopied += bytesRead
+                            onProgress?.invoke(bytesCopied, size)
+                            bytesRead = input.read(buffer)
+                        }
+                    } ?: throw IOException("Could not open input stream: $sourceUri")
                 } ?: throw IOException("Could not open target output stream for URI: $targetUri")
                 Unit
             }

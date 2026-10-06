@@ -25,7 +25,9 @@ import android.content.pm.ServiceInfo
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.text.format.Formatter
 import androidx.core.app.NotificationCompat
+import com.mateusrodcosta.apps.share2storage.domain.usecases.GetFileMetadataUseCase
 import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveFileUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class SaveLocallyService: Service(), KoinComponent {
 
     private val saveFileUseCase: SaveFileUseCase by inject()
+    private val getFileMetadataUseCase: GetFileMetadataUseCase by inject()
 
     companion object {
 
@@ -50,6 +53,9 @@ class SaveLocallyService: Service(), KoinComponent {
         const val EXTRA_TEXT = "text"
         const val EXTRA_SOURCE_URI = "sourceUri"
         const val EXTRA_TARGET_URI = "targetUri"
+
+        const val EXTRA_FILE_NAME = "fileName"
+        const val EXTRA_FILE_SIZE = "fileSize"
     }
 
     private val binder = LocalBinder()
@@ -117,8 +123,51 @@ class SaveLocallyService: Service(), KoinComponent {
                 ACTION_SAVE_FILE -> {
                     val sourceUri = intent.getStringExtra(EXTRA_SOURCE_URI)
                     val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
+
+                    val fileName = intent.getStringExtra(EXTRA_FILE_NAME)
+                        ?: getFileMetadataUseCase(sourceUri ?: "").getOrNull()?.displayName
+                        ?: getString(R.string.app_name)
+
+                    val fileSize = intent.getLongExtra(EXTRA_FILE_SIZE, -1L)
+
                     if (sourceUri != null && targetUri != null) {
-                        saveFileUseCase.saveFile(sourceUri, targetUri)
+                        var lastUpdateMs = 0L
+                        val updateIntervalMs = 250L
+
+                        saveFileUseCase.saveFile(sourceUri, targetUri, totalBytes = fileSize) { bytesCopied, totalBytes ->
+                            val now = System.currentTimeMillis()
+                            if (now - lastUpdateMs >= updateIntervalMs || bytesCopied == totalBytes) {
+                                lastUpdateMs = now
+
+                                val copiedStr = Formatter.formatShortFileSize(
+                                    this@SaveLocallyService,
+                                    bytesCopied
+                                )
+                                val totalStr = if (totalBytes > 0) Formatter.formatShortFileSize(
+                                    this@SaveLocallyService,
+                                    totalBytes
+                                ) else "?"
+
+                                val isIndeterminate = totalBytes <= 0
+                                val percent =
+                                    if (!isIndeterminate) ((bytesCopied * 100) / totalBytes).toInt() else 0
+
+                                val progressNotification =
+                                    NotificationCompat.Builder(this@SaveLocallyService, CHANNEL_ID)
+                                        .setContentTitle(fileName) // Shows File Name
+                                        .setContentText("$copiedStr / $totalStr") // Shows "1.2 MB / 100 MB"
+                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                        .setProgress(
+                                            100,
+                                            percent,
+                                            isIndeterminate
+                                        ) // Displays progress bar
+                                        .setOngoing(true)
+                                        .build()
+
+                                notificationManager?.notify(notificationId, progressNotification)
+                            }
+                        }
                     } else Result.failure(IllegalArgumentException("Missing params"))
                 }
                 else -> null

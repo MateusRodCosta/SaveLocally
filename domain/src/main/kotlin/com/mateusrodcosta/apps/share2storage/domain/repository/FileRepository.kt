@@ -22,7 +22,13 @@ import org.koin.core.annotation.Singleton
 
 @Singleton
 interface FileRepository {
-    suspend fun saveFile(sourceUriString: String, targetUriString: String): Result<Unit>
+    suspend fun saveFile(
+        sourceUriString: String,
+        targetUriString: String,
+        totalBytes: Long = -1L,
+        onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)? = null
+    ): Result<Unit>
+
     suspend fun saveText(text: String, targetUriString: String): Result<Unit>
     suspend fun getFileMetadata(uriString: String): Result<UriData>
 }

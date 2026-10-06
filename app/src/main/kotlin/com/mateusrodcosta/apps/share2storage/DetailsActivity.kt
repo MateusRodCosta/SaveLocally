@@ -60,6 +60,11 @@ class DetailsActivity : ComponentActivity() {
                         action = SaveLocallyService.ACTION_SAVE_FILE
                         putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
                         putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
+
+                        viewModel.uriData.value?.let { data ->
+                            putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
+                            putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
+                        }
                     }
 
                     ContextCompat.startForegroundService(this, intent)                }

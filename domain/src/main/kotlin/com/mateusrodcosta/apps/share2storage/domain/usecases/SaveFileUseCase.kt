@@ -23,8 +23,13 @@ import org.koin.core.annotation.Factory
 @Factory
 class SaveFileUseCase(private val fileRepository: FileRepository) {
 
-    suspend fun saveFile(sourceUriString: String, targetUriString: String): Result<Unit> {
-        return fileRepository.saveFile(sourceUriString, targetUriString)
+    suspend fun saveFile(
+        sourceUriString: String,
+        targetUriString: String,
+        totalBytes: Long = -1L,
+        onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)? = null
+    ): Result<Unit> {
+        return fileRepository.saveFile(sourceUriString, targetUriString, totalBytes, onProgress)
     }
 
     suspend fun saveText(text: String, targetUriString: String): Result<Unit> {
