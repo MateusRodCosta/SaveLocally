@@ -91,11 +91,13 @@ class SaveLocallyService: Service(), KoinComponent {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notificationManager = getSystemService(NotificationManager::class.java)
 
-        val notificationId = startId + PRIMARY_FOREGROUND_ID
         val activeJobs = activeJobsCount.incrementAndGet()
+        val notificationId = if (activeJobs == 1) PRIMARY_FOREGROUND_ID else startId + PRIMARY_FOREGROUND_ID
+
+        val initialFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
 
         val progressNotification = NotificationCompat.Builder(this, PROGRESS_CHANNEL_ID)
-            .setContentTitle(getString(R.string.app_name))
+            .setContentTitle(initialFileName)
             .setContentText(getString(R.string.saving_file))
             .setSmallIcon(R.drawable.ic_notification)
             .setOngoing(true)
@@ -182,8 +184,10 @@ class SaveLocallyService: Service(), KoinComponent {
                     R.string.toast_saved_file_failure
                 }
 
+                val completedFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
+
                 val completedNotification = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
-                    .setContentTitle(getString(R.string.app_name))
+                    .setContentTitle(completedFileName)
                     .setContentText(getString(messageRes))
                     .setSmallIcon(R.drawable.ic_notification)
                     .setAutoCancel(true)
