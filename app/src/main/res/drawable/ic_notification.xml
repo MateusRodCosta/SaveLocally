@@ -1,0 +1,37 @@
+<!--
+  ~     Copyright (C) 2026 Mateus Rodrigues Costa
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU Affero General Public License as
+  ~     published by the Free Software Foundation, either version 3 of the
+  ~     License, or (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU Affero General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512"
+    android:tint="#FFFFFF">
+  <group android:scaleX="1.84"
+      android:scaleY="1.84"
+      android:translateX="-215.04"
+      android:translateY="-215.04">
+    <group android:scaleX="0.515625"
+        android:scaleY="0.515625"
+        android:translateX="124"
+        android:translateY="124">
+        <path android:fillColor="#000"
+            android:pathData="M58.68,52.06C43.94,52.06 32,64.01 32,78.74v270.5c0,14.74 11.94,26.68 26.68,26.68h92.03l80.36,75.06 9.59,8.95 9.61,-8.95 80.38,-75.06h71.67c4.83,0 9.49,-1.83 13.03,-5.09l58.46,-53.97A19.21,19.21 0,0 0,480 302.74L480,78.74c0,-14.74 -11.94,-26.68 -26.68,-26.68h-88.45L364.87,72.47h-89.05L275.82,52.06ZM94.45,99.14L235,99.14v114.79h-52L183,336.19L94.45,336.19c-5.99,0 -10.85,-3.99 -10.85,-8.9L83.6,108.04c0,-4.91 4.86,-8.9 10.85,-8.9zM247,99.14h139.27c4.48,0 8.11,3.98 8.11,8.9h0.01v219.25c0,4.91 -3.64,8.9 -8.11,8.9h-87.92L298.36,213.93L247,213.93ZM407.18,106.02L474,106.02v14.73h-66.82zM426,129.77L474,129.77v14.72h-48ZM407.18,153.53L474,153.53v14.73h-66.82zM426,177.28L474,177.28v14.73h-48zM407.18,201.04L474,201.04v14.73h-66.82zM426,224.79L474,224.79v14.73h-48zM196.59,226.6h88.2v133.03h44.11l-88.21,82.39 -88.19,-82.39h44.1zM407.18,248.55L474,248.55v14.72h-66.82z" android:strokeWidth="1.12662"/>
+        <path android:fillAlpha="0" android:fillColor="#000" android:pathData="M212.58,20.39h32.01V62.15h-32.01z"/>
+    </group>
+  </group>
+</vector>

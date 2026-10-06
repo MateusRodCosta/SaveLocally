@@ -101,7 +101,7 @@ class SaveLocallyService: Service(), KoinComponent {
         val progressNotification = NotificationCompat.Builder(this, PROGRESS_CHANNEL_ID)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.saving_file))
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_notification)
             .setOngoing(true)
             .build()
 
@@ -158,7 +158,7 @@ class SaveLocallyService: Service(), KoinComponent {
                                     NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)
                                         .setContentTitle(fileName)
                                         .setContentText("$copiedStr / $totalStr")
-                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                        .setSmallIcon(R.drawable.ic_notification)
                                         .setProgress(100, percent, false)
                                         .setOngoing(true)
                                         .build()
@@ -183,7 +183,7 @@ class SaveLocallyService: Service(), KoinComponent {
                 val completedNotification = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(messageRes))
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_notification)
                     .setAutoCancel(true)
                     .build()
 
