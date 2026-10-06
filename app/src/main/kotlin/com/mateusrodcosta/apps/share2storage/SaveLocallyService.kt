@@ -25,12 +25,14 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.text.format.Formatter
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveFileUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.concurrent.atomic.AtomicInteger
@@ -114,6 +116,12 @@ class SaveLocallyService: Service(), KoinComponent {
         }
 
         serviceScope.launch {
+            if (intent?.action == ACTION_SAVE_FILE || intent?.action == ACTION_SAVE_TEXT) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(applicationContext, R.string.saving_file, Toast.LENGTH_SHORT).show()
+                }
+            }
+
             val result: Result<Unit>? = when (intent?.action) {
                 ACTION_SAVE_TEXT -> {
                     val text = intent.getStringExtra(EXTRA_TEXT)
