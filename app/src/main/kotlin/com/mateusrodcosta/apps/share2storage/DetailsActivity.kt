@@ -55,6 +55,7 @@ class DetailsActivity : ComponentActivity() {
                     }
 
                     ContextCompat.startForegroundService(this, intent)
+                    finish()
                 } else {
                     val intent = Intent(this, SaveLocallyService::class.java).apply {
                         action = SaveLocallyService.ACTION_SAVE_FILE
@@ -66,7 +67,9 @@ class DetailsActivity : ComponentActivity() {
                         putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
                     }
 
-                    ContextCompat.startForegroundService(this, intent)                }
+                    ContextCompat.startForegroundService(this, intent)
+                    finish()
+                }
             } ?: run {
                 if (viewModel.skipFileDetails.value == true) finish()
             }
@@ -108,11 +111,17 @@ class DetailsActivity : ComponentActivity() {
                                     initialUri
                                 )
                                 val file = dir?.createFile(data.mimeType, data.displayName)
-                                file?.uri?.let {
-                                    viewModel.saveFile(
-                                        sourceFileUri.toString(),
-                                        it.toString()
-                                    )
+                                file?.uri?.let { targetUri ->
+                                    val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
+                                        action = SaveLocallyService.ACTION_SAVE_FILE
+                                        putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
+                                        putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
+                                        putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
+                                        putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
+                                    }
+
+                                    ContextCompat.startForegroundService(this@DetailsActivity, intent)
+                                    finish()
                                 }
                             }
                         } else {
