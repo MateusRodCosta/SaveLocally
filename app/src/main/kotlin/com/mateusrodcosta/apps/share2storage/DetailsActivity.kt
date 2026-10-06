@@ -20,7 +20,6 @@ package com.mateusrodcosta.apps.share2storage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -86,7 +85,6 @@ class DetailsActivity : ComponentActivity() {
 
         setContent {
             val uriData by viewModel.uriData.collectAsState()
-            val saveResult by viewModel.saveResult.collectAsState()
             val skipDetails by viewModel.skipFileDetails.collectAsState()
             val skipPicker by viewModel.skipFilePicker.collectAsState()
             val defaultLocation by viewModel.defaultSaveLocation.collectAsState()
@@ -134,19 +132,6 @@ class DetailsActivity : ComponentActivity() {
                             )
                         }
                     }
-                }
-            }
-
-            LaunchedEffect(saveResult) {
-                saveResult?.let { result ->
-                    val message =
-                        if (result.isSuccess) R.string.toast_saved_file_success else R.string.toast_saved_file_failure
-                    Toast.makeText(baseContext, message, Toast.LENGTH_LONG).show()
-
-                    if (skipDetails == true || (skipPicker == true && defaultLocation != null)) {
-                        finish()
-                    }
-                    viewModel.resetSaveResult()
                 }
             }
 

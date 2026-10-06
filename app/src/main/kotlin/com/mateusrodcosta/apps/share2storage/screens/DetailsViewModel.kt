@@ -22,7 +22,6 @@ import androidx.lifecycle.viewModelScope
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.domain.usecases.GetFileMetadataUseCase
-import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveFileUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,8 +33,7 @@ import org.koin.core.annotation.KoinViewModel
 @KoinViewModel
 class DetailsViewModel(
     private val preferencesRepository: PreferencesRepository,
-    private val getFileMetadataUseCase: GetFileMetadataUseCase,
-    private val saveFileUseCase: SaveFileUseCase
+    private val getFileMetadataUseCase: GetFileMetadataUseCase
 ) : ViewModel() {
 
     val defaultSaveLocation: StateFlow<String?> = preferencesRepository.defaultSaveLocation
@@ -53,30 +51,11 @@ class DetailsViewModel(
     private val _uriData = MutableStateFlow<UriData?>(null)
     val uriData: StateFlow<UriData?> = _uriData.asStateFlow()
 
-    private val _saveResult = MutableStateFlow<Result<Unit>?>(null)
-    val saveResult: StateFlow<Result<Unit>?> = _saveResult.asStateFlow()
-
     fun loadMetadata(uriString: String) {
         viewModelScope.launch {
             getFileMetadataUseCase(uriString).onSuccess {
                 _uriData.value = it
             }
         }
-    }
-
-    fun saveFile(sourceUriString: String, targetUriString: String) {
-        viewModelScope.launch {
-            _saveResult.value = saveFileUseCase.saveFile(sourceUriString, targetUriString)
-        }
-    }
-
-    fun saveText(text: String, targetUriString: String) {
-        viewModelScope.launch {
-            _saveResult.value = saveFileUseCase.saveText(text, targetUriString)
-        }
-    }
-    
-    fun resetSaveResult() {
-        _saveResult.value = null
     }
 }

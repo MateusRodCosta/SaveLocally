@@ -22,7 +22,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.text.format.Formatter
@@ -57,13 +56,8 @@ class SaveLocallyService: Service(), KoinComponent {
         const val EXTRA_FILE_SIZE = "fileSize"
     }
 
-    private val binder = LocalBinder()
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val activeJobsCount = AtomicInteger(0)
-
-    inner class LocalBinder : Binder() {
-        fun getService(): SaveLocallyService = this@SaveLocallyService
-    }
 
     private fun createNotificationChannels() {
         val notificationManager = getSystemService(NotificationManager::class.java) ?: return
@@ -201,5 +195,5 @@ class SaveLocallyService: Service(), KoinComponent {
         return START_NOT_STICKY
     }
 
-    override fun onBind(intent: Intent): IBinder = binder
+    override fun onBind(intent: Intent): IBinder? = null
 }
