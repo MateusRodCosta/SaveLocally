@@ -38,4 +38,9 @@
     <string name="about_category_licenses">Ліцензії</string>
     <string name="settings_category_about">Про застосунок</string>
     <string name="settings_about">Про застосунок</string>
+    <string name="notification_channel_name_in_progress">Хід збереження файлу</string>
+    <string name="notification_channel_description_in_progress">Триває збереження поточного файлу</string>
+    <string name="notification_channel_name_finished">Збереження файлу завершено</string>
+    <string name="notification_channel_description_finished">Результат процесу збереження файлу</string>
+    <string name="message_saved_file_no_space">Недостатньо вільного місця для зберігання.</string>
 </resources>
