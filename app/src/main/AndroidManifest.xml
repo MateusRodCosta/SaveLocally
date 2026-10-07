@@ -70,7 +70,7 @@
         </activity-alias>
 
         <service
-            android:name=".SaveLocallyService"
+            android:name=".service.SaveLocallyService"
             android:foregroundServiceType="dataSync"
             android:exported="false">
         </service>

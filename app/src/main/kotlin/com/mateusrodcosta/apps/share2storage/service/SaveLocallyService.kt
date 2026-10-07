@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage
+package com.mateusrodcosta.apps.share2storage.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -27,6 +27,7 @@ import android.os.IBinder
 import android.text.format.Formatter
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
 import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveFileUseCase
 import kotlinx.coroutines.CoroutineScope
