@@ -17,9 +17,13 @@
 
 package com.mateusrodcosta.apps.share2storage
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -78,10 +82,27 @@ class DetailsActivity : ComponentActivity() {
     private var sharedContent: CharSequence? = null
     private var sourceFileUri: Uri? = null
 
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(
+                    this,
+                    R.string.message_notification_permission_check_denied,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        checkNotificationPermission()
         handleIntent(intent)
 
         setContent {

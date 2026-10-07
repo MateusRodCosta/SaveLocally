@@ -53,6 +53,10 @@
     <string name="message_saved_file_failure">An error occurred while saving the file.</string>
     <string name="message_saved_file_no_space">Not enough storage space available.</string>
 
+    <string name="message_notification_permission_granted">Notification permission granted!</string>
+    <string name="message_notification_permission_denied">Notification permission denied.</string>
+    <string name="message_notification_permission_check_denied">Notification permission denied. Check App permissions in Settings.</string>
+
     <string name="save_button">Save</string>
     <string name="back_arrow">Back Arrow</string>
 </resources>

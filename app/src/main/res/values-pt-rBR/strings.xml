@@ -53,6 +53,10 @@
     <string name="message_saved_file_failure">Ocorreu um erro ao salvar o arquivo.</string>
     <string name="message_saved_file_no_space">Espaço livre insuficiente.</string>
 
+    <string name="message_notification_permission_granted">Permissão de notificações concedida!</string>
+    <string name="message_notification_permission_denied">Permissão de notificações negada.</string>
+    <string name="message_notification_permission_check_denied">Permissão de notificações negada. Verifique as permissões do aplicativo nas Configurações.</string>
+
     <string name="save_button">Salvar</string>
     <string name="back_arrow">Voltar</string>
 </resources>
