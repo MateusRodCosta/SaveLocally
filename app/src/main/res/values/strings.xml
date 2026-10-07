@@ -44,9 +44,14 @@
     <string name="file_type">File type</string>
     <string name="file_size">File size</string>
 
-    <string name="toast_saved_file_success">File saved successfully!</string>
-    <string name="toast_saved_file_failure">An error occurred while saving the file.</string>
-    <string name="toast_saved_file_no_space">Not enough storage space available.</string>
+    <string name="notification_channel_name_in_progress">File saving progress</string>
+    <string name="notification_channel_description_in_progress">Ongoing progress of the current file being saved</string>
+    <string name="notification_channel_name_finished">Finished file saving</string>
+    <string name="notification_channel_description_finished">Result of the file saving process</string>
+
+    <string name="message_saved_file_success">File saved successfully!</string>
+    <string name="message_saved_file_failure">An error occurred while saving the file.</string>
+    <string name="message_saved_file_no_space">Not enough storage space available.</string>
 
     <string name="save_button">Save</string>
     <string name="back_arrow">Back Arrow</string>

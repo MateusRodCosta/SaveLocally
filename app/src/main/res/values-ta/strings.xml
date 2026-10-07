@@ -30,9 +30,9 @@
     <string name="file_name">கோப்பு பெயர்</string>
     <string name="file_type">கோப்பு வகை</string>
     <string name="file_size">கோப்பு அளவு</string>
-    <string name="toast_saved_file_success">கோப்பு வெற்றிகரமாக சேமிக்கப்பட்டது!</string>
+    <string name="message_saved_file_success">கோப்பு வெற்றிகரமாக சேமிக்கப்பட்டது!</string>
     <string name="save_button">சேமி</string>
     <string name="back_arrow">பின் அம்பு</string>
     <string name="about_title">பற்றி</string>
-    <string name="toast_saved_file_failure">கோப்பைச் சேமிக்கும்போது பிழை ஏற்பட்டது.</string>
+    <string name="message_saved_file_failure">கோப்பைச் சேமிக்கும்போது பிழை ஏற்பட்டது.</string>
 </resources>

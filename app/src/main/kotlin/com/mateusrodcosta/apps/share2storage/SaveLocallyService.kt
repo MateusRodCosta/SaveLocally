@@ -67,18 +67,18 @@ class SaveLocallyService: Service(), KoinComponent {
 
         val progressChannel = NotificationChannel(
             PROGRESS_CHANNEL_ID,
-            getString(R.string.saving_file),
+            getString(R.string.notification_channel_name_in_progress),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "Ongoing file saving progress channel"
+            description = getString(R.string.notification_channel_description_in_progress)
         }
 
         val resultChannel = NotificationChannel(
             RESULT_CHANNEL_ID,
-            getString(R.string.app_name),
+            getString(R.string.notification_channel_name_finished),
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
-            description = "File save completion results channel"
+            description = getString(R.string.notification_channel_description_finished)
         }
 
         notificationManager.createNotificationChannels(listOf(progressChannel, resultChannel))
@@ -188,9 +188,9 @@ class SaveLocallyService: Service(), KoinComponent {
                 )
 
                 val messageText = when {
-                    saveResult.isSuccess -> getString(R.string.toast_saved_file_success)
-                    isNoSpaceError -> getString(R.string.toast_saved_file_no_space)
-                    else -> getString(R.string.toast_saved_file_failure)
+                    saveResult.isSuccess -> getString(R.string.message_saved_file_success)
+                    isNoSpaceError -> getString(R.string.message_saved_file_no_space)
+                    else -> getString(R.string.message_saved_file_failure)
                 }
 
                 val completedFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)

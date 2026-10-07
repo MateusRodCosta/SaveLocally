@@ -31,8 +31,8 @@
     <string name="file_name">اسم الملف</string>
     <string name="file_type">نوع الملف</string>
     <string name="file_size">حجم الملف</string>
-    <string name="toast_saved_file_success">حُفظ الملف بنجاح!</string>
-    <string name="toast_saved_file_failure">حدث خطأ أثناء حفظ الملف.</string>
+    <string name="message_saved_file_success">حُفظ الملف بنجاح!</string>
+    <string name="message_saved_file_failure">حدث خطأ أثناء حفظ الملف.</string>
     <string name="save_button">احفظ</string>
     <string name="back_arrow">سهم الرجوع</string>
     <string name="about_category_licenses">التراخيص</string>

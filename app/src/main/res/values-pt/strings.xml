@@ -31,8 +31,8 @@
     <string name="file_name">Nome do ficheiro</string>
     <string name="file_type">Tipo do ficheiro</string>
     <string name="file_size">Tamanho do ficheiro</string>
-    <string name="toast_saved_file_success">Ficheiro gravado com sucesso!</string>
-    <string name="toast_saved_file_failure">Ocorreu um erro ao gravar o ficheiro.</string>
+    <string name="message_saved_file_success">Ficheiro gravado com sucesso!</string>
+    <string name="message_saved_file_failure">Ocorreu um erro ao gravar o ficheiro.</string>
     <string name="save_button">Gravar</string>
     <string name="back_arrow">Voltar</string>
     <string name="about_category_licenses">Licenças</string>

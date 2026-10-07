@@ -31,8 +31,8 @@
     <string name="file_name">Dateiname</string>
     <string name="file_type">Dateityp</string>
     <string name="file_size">Dateigröße</string>
-    <string name="toast_saved_file_success">Datei erfolgreich gespeichert!</string>
-    <string name="toast_saved_file_failure">Ein Fehler ist beim Speichern der Datei aufgetreten.</string>
+    <string name="message_saved_file_success">Datei erfolgreich gespeichert!</string>
+    <string name="message_saved_file_failure">Ein Fehler ist beim Speichern der Datei aufgetreten.</string>
     <string name="save_button">Speichern</string>
     <string name="back_arrow">Pfeil Zurück</string>
 </resources>

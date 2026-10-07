@@ -29,8 +29,8 @@
     <string name="file_name">Nazwa pliku</string>
     <string name="file_type">Typ pliku</string>
     <string name="file_size">Rozmiar pliku</string>
-    <string name="toast_saved_file_success">Plik zapisano pomyślnie!</string>
-    <string name="toast_saved_file_failure">Wystąpił błąd podczas zapisywania pliku.</string>
+    <string name="message_saved_file_success">Plik zapisano pomyślnie!</string>
+    <string name="message_saved_file_failure">Wystąpił błąd podczas zapisywania pliku.</string>
     <string name="back_arrow">Strzałka wstecz</string>
     <string name="how_to_use_step_1">Udostępnij plik za pomocą ikony udostępniania</string>
     <string name="about_github">Kod źródłowy dostępny na GitHubie pod adresem %s, licencja AGPLv3+</string>

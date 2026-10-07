@@ -44,8 +44,14 @@
     <string name="file_type">Tipo do arquivo</string>
     <string name="file_size">Tamanho do arquivo</string>
 
-    <string name="toast_saved_file_success">Arquivo salvo com sucesso!</string>
-    <string name="toast_saved_file_failure">Ocorreu um erro ao salvar o arquivo.</string>
+    <string name="notification_channel_name_in_progress">Progressso de salvamento</string>
+    <string name="notification_channel_description_in_progress">Progresso atual do arquivo sendo salvo atualmente</string>
+    <string name="notification_channel_name_finished">Processo de salvamento finalizado</string>
+    <string name="notification_channel_description_finished">Resultado do processo de salvamento do arquivo</string>
+
+    <string name="message_saved_file_success">Arquivo salvo com sucesso!</string>
+    <string name="message_saved_file_failure">Ocorreu um erro ao salvar o arquivo.</string>
+    <string name="message_saved_file_no_space">Espaço livre insuficiente.</string>
 
     <string name="save_button">Salvar</string>
     <string name="back_arrow">Voltar</string>

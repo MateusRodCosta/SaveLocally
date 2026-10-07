@@ -33,6 +33,6 @@
     <string name="settings_show_file_preview">Показывать предварительный просмотр файла</string>
     <string name="settings_show_file_preview_info">Показывать предварительный просмотр файлов для совместимых типов файлов. Сейчас поддерживаются только некоторые файлы изображений.</string>
     <string name="file_size">Размер файла</string>
-    <string name="toast_saved_file_success">Файл успешно сохранён!</string>
-    <string name="toast_saved_file_failure">При сохранении файла произошла ошибка.</string>
+    <string name="message_saved_file_success">Файл успешно сохранён!</string>
+    <string name="message_saved_file_failure">При сохранении файла произошла ошибка.</string>
 </resources>

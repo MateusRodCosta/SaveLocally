@@ -31,8 +31,8 @@
     <string name="file_name">Název souboru</string>
     <string name="file_type">Typ souboru</string>
     <string name="file_size">Velikost souboru</string>
-    <string name="toast_saved_file_success">Soubor úspěšně uložen!</string>
-    <string name="toast_saved_file_failure">Při ukládání souboru nastala chyba.</string>
+    <string name="message_saved_file_success">Soubor úspěšně uložen!</string>
+    <string name="message_saved_file_failure">Při ukládání souboru nastala chyba.</string>
     <string name="save_button">Uložit</string>
     <string name="back_arrow">Zpět</string>
 </resources>

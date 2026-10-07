@@ -31,8 +31,8 @@
     <string name="file_name">Nombre del archivo</string>
     <string name="file_type">Tipo del archivo</string>
     <string name="file_size">Tamaño del archivo</string>
-    <string name="toast_saved_file_success">¡Archivo guardado con éxito!</string>
+    <string name="message_saved_file_success">¡Archivo guardado con éxito!</string>
     <string name="save_button">Guardar</string>
     <string name="back_arrow">Botón de retroceder</string>
-    <string name="toast_saved_file_failure">Un error ocurrió mientras guardando el archivo.</string>
+    <string name="message_saved_file_failure">Un error ocurrió mientras guardando el archivo.</string>
 </resources>

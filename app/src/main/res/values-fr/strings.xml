@@ -18,8 +18,8 @@
     <string name="settings_category_intents">Intents</string>
     <string name="settings_intercept_action_view_intents">Intercepter les intents ACTION_VIEW</string>
     <string name="file_name">Nom du fichier</string>
-    <string name="toast_saved_file_success">Fichier correctement sauvegardé !</string>
-    <string name="toast_saved_file_failure">Une erreur est survenue pendant la sauvegarde du fichier.</string>
+    <string name="message_saved_file_success">Fichier correctement sauvegardé !</string>
+    <string name="message_saved_file_failure">Une erreur est survenue pendant la sauvegarde du fichier.</string>
     <string name="save_button">Sauvegarder</string>
     <string name="back_arrow">Flèche de retour arrière</string>
     <string name="settings_category_file_picker">Navigateur de fichiers</string>

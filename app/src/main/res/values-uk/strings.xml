@@ -9,7 +9,7 @@
     <string name="app_name">Локальне збереження</string>
     <string name="no_file_found">Файлів не знайдено</string>
     <string name="file_details">Інформація про файл</string>
-    <string name="toast_saved_file_failure">Під час збереження файлу сталася помилка.</string>
+    <string name="message_saved_file_failure">Під час збереження файлу сталася помилка.</string>
     <string name="back_arrow">Назад</string>
     <string name="how_to_use_step_3">Відкриється вікно з інформацією про файл, натисніть «Зберегти»</string>
     <string name="how_to_use_step_2">Виберіть «%s» у параметрах «Поділитися»</string>
@@ -20,7 +20,7 @@
     <string name="file_name">Назва файлу</string>
     <string name="file_type">Тип файлу</string>
     <string name="about_icon_credits">Значок застосунку розроблено %s</string>
-    <string name="toast_saved_file_success">Файл успішно збережено!</string>
+    <string name="message_saved_file_success">Файл успішно збережено!</string>
     <string name="about_github">Вихідний код доступний на Github за адресою %s по ліцензії AGPLv3+</string>
     <string name="settings_title">Налаштування</string>
     <string name="settings_category_file_picker">Вибір файлів</string>

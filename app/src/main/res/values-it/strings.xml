@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_intercept_action_view_intents">Intercetta gli intenti ACTION_VIEW</string>
-    <string name="toast_saved_file_success">File salvato con successo!</string>
+    <string name="message_saved_file_success">File salvato con successo!</string>
     <string name="how_to_use_step_1">Condividi il file tramite l\'icona Condividi</string>
     <string name="how_to_use_step_3">Si aprirà una schermata con i dettagli del file, premere Salva</string>
     <string name="how_to_use_step_4">Si aprirà il selettore file, seleziona dove salvare e il nome del file</string>
@@ -21,7 +21,7 @@
     <string name="no_file_found">Nessun file trovato</string>
     <string name="saving_file">Salvataggio del file…</string>
     <string name="file_details">Dettagli del file</string>
-    <string name="toast_saved_file_failure">Si è verificato un errore durante il salvataggio del file.</string>
+    <string name="message_saved_file_failure">Si è verificato un errore durante il salvataggio del file.</string>
     <string name="save_button">Salva</string>
     <string name="back_arrow">Freccia Indietro</string>
     <string name="how_to_use_step_2">Seleziona \"%s\" nelle opzioni di condivisione</string>

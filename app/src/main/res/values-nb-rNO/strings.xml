@@ -34,8 +34,8 @@
     <string name="file_name">Filnavn</string>
     <string name="file_type">Filtype</string>
     <string name="file_size">Filstørrelse</string>
-    <string name="toast_saved_file_success">Fil lagret!</string>
-    <string name="toast_saved_file_failure">En feil oppstod når filen skulle lagres.</string>
+    <string name="message_saved_file_success">Fil lagret!</string>
+    <string name="message_saved_file_failure">En feil oppstod når filen skulle lagres.</string>
     <string name="save_button">Lagre</string>
     <string name="back_arrow">Tilbakeknapp</string>
 </resources>
