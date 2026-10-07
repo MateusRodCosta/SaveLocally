@@ -42,6 +42,10 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
     private val contentResolver: ContentResolver = context.contentResolver
 
+    companion object {
+        private const val BUFFER_SIZE = 65536 // 64 KB
+    }
+
     override suspend fun saveFile(
         sourceUriString: String,
         targetUriString: String,
@@ -68,14 +72,13 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
                 contentResolver.openOutputStream(targetUri)?.use { outputStream ->
                     inputStream?.use { input ->
-                        val buffer = ByteArray(65536)
+                        val buffer = ByteArray(BUFFER_SIZE)
                         var bytesCopied = 0L
-                        var bytesRead = input.read(buffer)
-                        while (bytesRead >= 0) {
+                        var bytesRead: Int
+                        while (input.read(buffer).also { bytesRead = it } >= 0) {
                             outputStream.write(buffer, 0, bytesRead)
                             bytesCopied += bytesRead
                             onProgress?.invoke(bytesCopied, size)
-                            bytesRead = input.read(buffer)
                         }
                     } ?: throw IOException("Could not open input stream: $sourceUri")
                 } ?: throw IOException("Could not open target output stream for URI: $targetUri")
