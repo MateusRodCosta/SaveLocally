@@ -120,24 +120,31 @@ class PreferencesRepositoryImpl(private val context: Context) : PreferencesRepos
         }
         if (currentSaveLocation != saveLocationUri) {
             currentSaveLocation?.let { oldUri ->
-                contentResolver.persistedUriPermissions.find { it.uri == oldUri }
-                    ?.let { permission ->
-                        val flags =
-                            (if (permission.isReadPermission) Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            else 0) or (if (permission.isWritePermission) Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                            else 0)
+                if (oldUri.scheme == ContentResolver.SCHEME_CONTENT) {
+                    contentResolver.persistedUriPermissions.find { it.uri == oldUri }
+                        ?.let { permission ->
+                            val flags =
+                                (if (permission.isReadPermission) Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                else 0) or (if (permission.isWritePermission) Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                                else 0)
 
-                        contentResolver.releasePersistableUriPermission(
-                            oldUri, flags
-                        )
-
-                    }
+                            runCatching {
+                                contentResolver.releasePersistableUriPermission(
+                                    oldUri, flags
+                                )
+                            }
+                        }
+                }
             }
 
             saveLocationUri?.let { newUri ->
-                contentResolver.takePersistableUriPermission(
-                    newUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
+                if (newUri.scheme == ContentResolver.SCHEME_CONTENT) {
+                    runCatching {
+                        contentResolver.takePersistableUriPermission(
+                            newUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        )
+                    }
+                }
             }
         }
     }

@@ -18,11 +18,14 @@
 package com.mateusrodcosta.apps.share2storage
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,6 +39,7 @@ import androidx.core.content.IntentCompat
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
+import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSavingFileFeedback
 import com.mateusrodcosta.apps.share2storage.screens.DetailsViewModel
@@ -113,7 +117,7 @@ class DetailsActivity : ComponentActivity() {
 
             val launchFilePicker = {
                 val data = uriData
-                val initialUri = defaultLocation?.toUri()
+                val initialUri = defaultLocation?.takeIf { it != AppConstants.MEDIASTORE_DOWNLOADS_URI }?.toUri()
                 when {
                     sharedContent != null -> createFileLauncher.launch(
                         CreateDocumentWithInitialUri.Input(
@@ -124,18 +128,29 @@ class DetailsActivity : ComponentActivity() {
                     )
 
                     data != null -> {
-                        if (skipPicker == true && initialUri != null) {
+                        if (skipPicker == true && defaultLocation != null) {
                             lifecycleScope.launch {
-                                val dir = DocumentFile.fromTreeUri(
-                                    applicationContext,
-                                    initialUri
-                                )
-                                val file = dir?.createFile(data.mimeType, data.displayName)
-                                file?.uri?.let { targetUri ->
+                                val saveLocation = defaultLocation ?: return@launch
+                                val targetUri = if (saveLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    val values = ContentValues().apply {
+                                        put(MediaStore.MediaColumns.DISPLAY_NAME, data.displayName)
+                                        put(MediaStore.MediaColumns.MIME_TYPE, data.mimeType)
+                                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                                    }
+                                    contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+                                } else {
+                                    val dir = DocumentFile.fromTreeUri(
+                                        applicationContext,
+                                        saveLocation.toUri()
+                                    )
+                                    dir?.createFile(data.mimeType, data.displayName)?.uri
+                                }
+
+                                targetUri?.let { uri ->
                                     val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
                                         action = SaveLocallyService.ACTION_SAVE_FILE
                                         putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
-                                        putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
+                                        putExtra(SaveLocallyService.EXTRA_TARGET_URI, uri.toString())
                                         putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                                         putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
                                     }

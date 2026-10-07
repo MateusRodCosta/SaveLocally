@@ -17,6 +17,7 @@
 
 package com.mateusrodcosta.apps.share2storage.screens.components.dialogs
 
+import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Card
@@ -47,12 +48,14 @@ fun DefaultFolderDialogContentPreviewPtBr() {
 fun DefaultFolderDialog(
     onDismissRequest: () -> Unit,
     clearDefaultSaveLocation: () -> Unit = {},
+    selectDownloadsFolder: () -> Unit = {},
     launchFilePicker: () -> Unit = {}
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         DefaultFolderDialogContent(
             onDismissRequest = onDismissRequest,
             clearDefaultSaveLocation = clearDefaultSaveLocation,
+            selectDownloadsFolder = selectDownloadsFolder,
             launchFilePicker = launchFilePicker
         )
     }
@@ -62,6 +65,7 @@ fun DefaultFolderDialog(
 fun DefaultFolderDialogContent(
     onDismissRequest: () -> Unit = {},
     clearDefaultSaveLocation: () -> Unit = {},
+    selectDownloadsFolder: () -> Unit = {},
     launchFilePicker: () -> Unit = {},
 ) {
     SaveLocallyTheme {
@@ -72,6 +76,13 @@ fun DefaultFolderDialogContent(
                     onDismissRequest()
                 }),
                     headlineContent = { Text(stringResource(R.string.settings_default_save_location_last_used)) })
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    ListItem(modifier = Modifier.clickable(onClick = {
+                        selectDownloadsFolder()
+                        onDismissRequest()
+                    }),
+                        headlineContent = { Text(stringResource(R.string.settings_default_save_location_downloads)) })
+                }
                 ListItem(modifier = Modifier.clickable(onClick = {
                     launchFilePicker()
                     onDismissRequest()

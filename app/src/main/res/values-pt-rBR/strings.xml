@@ -19,6 +19,7 @@
     <string name="settings_category_file_picker">Seletor de Arquivos</string>
     <string name="settings_default_save_location">Local de salvamento padrão</string>
     <string name="settings_default_save_location_last_used">Última pasta usada</string>
+    <string name="settings_default_save_location_downloads">Pasta Downloads (Android 10+)</string>
     <string name="settings_default_save_location_select_folder">Selecionar pasta…</string>
     <string name="settings_skip_file_picker">Pular seletor de arquivos</string>
     <string name="settings_skip_file_picker_info">Pular seletor de arquivos e salvar imediatamente (apenas disponível quando uma pasta padrão for configurada)</string>

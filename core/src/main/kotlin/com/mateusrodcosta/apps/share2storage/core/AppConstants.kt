@@ -8,5 +8,7 @@ class AppConstants {
         const val GITHUB_PROFILE = "https://github.com/MateusRodCosta"
         const val SWY_WEBSITE = "https://swyswann.com.br/"
         const val GITHUB_REPO = "https://github.com/MateusRodCosta/SaveLocally"
+
+        const val MEDIASTORE_DOWNLOADS_URI = "mediastore://downloads"
     }
 }

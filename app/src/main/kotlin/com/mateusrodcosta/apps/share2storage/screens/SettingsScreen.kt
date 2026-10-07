@@ -63,6 +63,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
 import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.DefaultFolderDialog
@@ -128,6 +129,7 @@ fun SettingsScreen(
         onBackClick = onBackClick,
         launchFilePicker = { settingsViewModel?.getSaveLocationDirIntent()?.launch(null) },
         clearDefaultSaveLocation = { settingsViewModel?.clearDefaultSaveLocation() },
+        selectDownloadsFolder = { settingsViewModel?.updateDefaultSaveLocationDownloads() },
         updateSkipFilePicker = { value: Boolean ->
             settingsViewModel?.updateSkipFilePicker(value)
         },
@@ -156,6 +158,7 @@ private fun SettingsScreenContent(
     onBackClick: () -> Unit = {},
     launchFilePicker: () -> Unit = {},
     clearDefaultSaveLocation: () -> Unit = {},
+    selectDownloadsFolder: () -> Unit = {},
     updateSkipFilePicker: (Boolean) -> Unit = {},
     updateSkipFileDetails: (Boolean) -> Unit = {},
     updateInterceptActionViewIntents: (Boolean) -> Unit = {},
@@ -195,6 +198,7 @@ private fun SettingsScreenContent(
                 DefaultSaveLocationSetting(
                     launchFilePicker = launchFilePicker,
                     clearDefaultSaveLocation = clearDefaultSaveLocation,
+                    selectDownloadsFolder = selectDownloadsFolder,
                     spDefaultSaveLocation = spDefaultSaveLocation,
                     listItemColors = listItemColors,
                 )
@@ -245,6 +249,7 @@ private fun SettingsScreenContent(
 fun DefaultSaveLocationSetting(
     launchFilePicker: () -> Unit,
     clearDefaultSaveLocation: () -> Unit,
+    selectDownloadsFolder: () -> Unit = {},
     spDefaultSaveLocation: StateFlow<String?>,
     listItemColors: ListItemColors,
 ) {
@@ -257,6 +262,7 @@ fun DefaultSaveLocationSetting(
                 openDefaultFolderDialog.value = false
             },
             clearDefaultSaveLocation = clearDefaultSaveLocation,
+            selectDownloadsFolder = selectDownloadsFolder,
             launchFilePicker = launchFilePicker,
         )
     }
@@ -267,10 +273,12 @@ fun DefaultSaveLocationSetting(
             Text(stringResource(R.string.settings_default_save_location))
         },
         supportingContent = {
-            Text(
-                defaultSaveLocation?.toUri()?.path
-                    ?: stringResource(R.string.settings_default_save_location_last_used)
-            )
+            val text = when (defaultSaveLocation) {
+                null -> stringResource(R.string.settings_default_save_location_last_used)
+                AppConstants.MEDIASTORE_DOWNLOADS_URI -> stringResource(R.string.settings_default_save_location_downloads)
+                else -> defaultSaveLocation?.toUri()?.path ?: stringResource(R.string.settings_default_save_location_last_used)
+            }
+            Text(text)
         },
         leadingContent = {
             Icon(Icons.Default.Folder, null)
@@ -289,9 +297,15 @@ fun SkipFilePickerSetting(
     val skipFilePicker by spSkipFilePicker.collectAsState()
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
 
-    val checked = skipFilePicker ?: PreferencesRepository.SKIP_FILE_PICKER_DEFAULT
+    val checked = if (defaultSaveLocation == null) {
+        false
+    } else {
+        skipFilePicker ?: PreferencesRepository.SKIP_FILE_PICKER_DEFAULT
+    }
+    val isDownloadsFolder = defaultSaveLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI
+    val isEnabled = defaultSaveLocation != null && !isDownloadsFolder
 
-    ListItem(modifier = if (defaultSaveLocation != null) Modifier.toggleable(
+    ListItem(modifier = if (isEnabled) Modifier.toggleable(
         value = checked,
         onValueChange = { updateSkipFilePicker(it) },
         role = Role.Switch
@@ -303,7 +317,7 @@ fun SkipFilePickerSetting(
         Icon(Icons.Default.FastForward, null)
     }, trailingContent = {
         Switch(
-            enabled = defaultSaveLocation != null,
+            enabled = isEnabled,
             checked = checked,
             onCheckedChange = null,
         )

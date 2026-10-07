@@ -21,6 +21,7 @@ import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -75,8 +76,18 @@ class SettingsViewModel(private val repository: PreferencesRepository) : ViewMod
         }
     }
 
+    fun updateDefaultSaveLocationDownloads() {
+        viewModelScope.launch {
+            repository.setDefaultSaveLocation(AppConstants.MEDIASTORE_DOWNLOADS_URI)
+            repository.setSkipFilePicker(true)
+        }
+    }
+
     fun clearDefaultSaveLocation() {
-        updateDefaultSaveLocation(null)
+        viewModelScope.launch {
+            repository.setDefaultSaveLocation(null)
+            repository.setSkipFilePicker(false)
+        }
     }
 
     fun updateSkipFileDetails(value: Boolean) {

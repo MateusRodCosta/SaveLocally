@@ -37,13 +37,17 @@ class CreateDocumentWithInitialUri :
             .putExtra(Intent.EXTRA_TITLE, input.fileName)
             .also { i ->
                 Log.d("CreateDocumentWithInitialUri] initialUri", input.initialUri.toString())
-                input.initialUri?.let {
-                    val documentUri = DocumentsContract.buildDocumentUriUsingTree(
-                        input.initialUri,
-                        DocumentsContract.getTreeDocumentId(input.initialUri)
-                    )
-                    Log.d("CreateDocumentWithInitialUri] documentUri", documentUri.toString())
-                    i.putExtra(DocumentsContract.EXTRA_INITIAL_URI, documentUri)
+                input.initialUri?.let { uri ->
+                    if (DocumentsContract.isTreeUri(uri)) {
+                        runCatching {
+                            val documentUri = DocumentsContract.buildDocumentUriUsingTree(
+                                uri,
+                                DocumentsContract.getTreeDocumentId(uri)
+                            )
+                            Log.d("CreateDocumentWithInitialUri] documentUri", documentUri.toString())
+                            i.putExtra(DocumentsContract.EXTRA_INITIAL_URI, documentUri)
+                        }
+                    }
                 }
             }
     }
