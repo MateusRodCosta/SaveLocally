@@ -21,8 +21,11 @@ import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Environment
+import android.os.StatFs
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
+import android.system.Os
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.repository.FileRepository
@@ -50,6 +53,11 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                 val targetUri = targetUriString.toUri()
                 val size = totalBytes.takeIf { it > 0L }
                     ?: throw IllegalArgumentException("Invalid totalBytes ($totalBytes) for URI: $sourceUriString")
+
+                val availableFreeBytes = getAvailableFreeBytes(targetUri)
+                if (availableFreeBytes in 0..<size) {
+                    throw IOException("Insufficient storage space: $size bytes needed, but only $availableFreeBytes bytes available.")
+                }
 
                 val inputStream = if (isVirtualFile(sourceUri)) {
                     getInputStreamForVirtualFile(sourceUri)
@@ -119,6 +127,24 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
             if (it.moveToFirst()) it.getInt(0) else 0
         }
         return flags and DocumentsContract.Document.FLAG_VIRTUAL_DOCUMENT != 0
+    }
+
+    private fun getAvailableFreeBytes(uri: Uri): Long {
+        val safBytes = runCatching {
+            contentResolver.openFileDescriptor(uri, "w")?.use { pfd ->
+                val stats = Os.fstatvfs(pfd.fileDescriptor)
+                stats.f_bavail * stats.f_frsize
+            }
+        }.getOrNull()
+
+        if (safBytes != null && safBytes > 0L) {
+            return safBytes
+        }
+
+        return runCatching {
+            val statFs = StatFs(Environment.getExternalStorageDirectory().path)
+            statFs.availableBytes
+        }.getOrDefault(-1L)
     }
 
     @Throws(IOException::class)

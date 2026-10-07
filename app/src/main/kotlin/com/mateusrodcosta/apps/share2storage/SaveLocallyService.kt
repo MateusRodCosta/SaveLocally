@@ -178,17 +178,24 @@ class SaveLocallyService: Service(), KoinComponent {
             }
 
             result?.let { saveResult ->
-                val messageRes = if (saveResult.isSuccess) {
-                    R.string.toast_saved_file_success
-                } else {
-                    R.string.toast_saved_file_failure
+                val exception = saveResult.exceptionOrNull()
+                val isNoSpaceError = exception != null && (
+                    exception.message?.contains("Insufficient storage space", ignoreCase = true) == true ||
+                    exception.message?.contains("ENOSPC", ignoreCase = true) == true ||
+                    exception.message?.contains("No space left", ignoreCase = true) == true
+                )
+
+                val messageText = when {
+                    saveResult.isSuccess -> getString(R.string.toast_saved_file_success)
+                    isNoSpaceError -> getString(R.string.toast_saved_file_no_space)
+                    else -> getString(R.string.toast_saved_file_failure)
                 }
 
                 val completedFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
 
                 val completedNotification = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
                     .setContentTitle(completedFileName)
-                    .setContentText(getString(messageRes))
+                    .setContentText(messageText)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setAutoCancel(true)
                     .build()
