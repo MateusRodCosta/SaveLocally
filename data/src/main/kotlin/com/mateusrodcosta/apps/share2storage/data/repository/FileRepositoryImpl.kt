@@ -88,7 +88,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
             runCatching {
                 val targetUri = targetUriString.toUri()
                 contentResolver.openOutputStream(targetUri)?.use { outputStream ->
-                    text.byteInputStream().copyTo(outputStream)
+                    outputStream.write(text.toByteArray(Charsets.UTF_8))
                 } ?: throw IOException("Could not open target output stream for URI: $targetUri")
                 Unit
             }
