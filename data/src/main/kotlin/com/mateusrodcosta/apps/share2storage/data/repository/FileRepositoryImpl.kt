@@ -28,6 +28,7 @@ import android.provider.OpenableColumns
 import android.system.Os
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
+import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
 import com.mateusrodcosta.apps.share2storage.domain.repository.FileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -56,7 +57,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
                 val availableFreeBytes = getAvailableFreeBytes(targetUri)
                 if (availableFreeBytes in 0..<size) {
-                    throw IOException("Insufficient storage space: $size bytes needed, but only $availableFreeBytes bytes available.")
+                    throw InsufficientStorageException(requiredBytes = size, availableBytes = availableFreeBytes)
                 }
 
                 val inputStream = if (isVirtualFile(sourceUri)) {

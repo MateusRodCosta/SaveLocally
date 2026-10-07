@@ -27,6 +27,7 @@ import android.os.IBinder
 import android.text.format.Formatter
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
 import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveFileUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -180,6 +181,7 @@ class SaveLocallyService: Service(), KoinComponent {
             result?.let { saveResult ->
                 val exception = saveResult.exceptionOrNull()
                 val isNoSpaceError = exception != null && (
+                    exception is InsufficientStorageException ||
                     exception.message?.contains("Insufficient storage space", ignoreCase = true) == true ||
                     exception.message?.contains("ENOSPC", ignoreCase = true) == true ||
                     exception.message?.contains("No space left", ignoreCase = true) == true
