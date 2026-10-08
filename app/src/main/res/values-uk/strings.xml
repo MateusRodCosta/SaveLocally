@@ -43,4 +43,8 @@
     <string name="notification_channel_name_finished">Збереження файлу завершено</string>
     <string name="notification_channel_description_finished">Результат процесу збереження файлу</string>
     <string name="message_saved_file_no_space">Недостатньо вільного місця для зберігання.</string>
+    <string name="settings_default_save_location_downloads">Тека Download (Android 10+)</string>
+    <string name="message_notification_permission_granted">Дозвіл на сповіщення надано!</string>
+    <string name="message_notification_permission_denied">Дозвіл на сповіщення відхилено.</string>
+    <string name="message_notification_permission_check_denied">Дозвіл на сповіщення відхилено. Перевірте дозволи для застосунку в налаштуваннях.</string>
 </resources>
