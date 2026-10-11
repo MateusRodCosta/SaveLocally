@@ -31,6 +31,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,9 +41,11 @@ import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
+import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
 import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSavingFileFeedback
 import com.mateusrodcosta.apps.share2storage.screens.DetailsViewModel
+import com.mateusrodcosta.apps.share2storage.screens.MultiDetailsScreen
 import com.mateusrodcosta.apps.share2storage.service.SaveLocallyService
 import com.mateusrodcosta.apps.share2storage.utils.result.CreateDocumentWithInitialUri
 import kotlinx.coroutines.launch
@@ -83,9 +86,70 @@ class DetailsActivity : ComponentActivity() {
             }
         }
 
+    private val openFolderLauncher: ActivityResultLauncher<Uri?> =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { treeUri ->
+            treeUri?.let { folderUri ->
+                val uriDataList = viewModel.uriDataList.value
+                if (!uriDataList.isNullOrEmpty()) {
+                    saveMultipleFiles(folderUri, uriDataList)
+                }
+            } ?: run {
+                if (viewModel.skipFileDetails.value == true) finish()
+            }
+        }
+
     private var sharedContent: CharSequence? = null
     private var sourceFileUri: Uri? = null
     private var sourceFileUriList: List<Uri>? = null
+
+    private fun saveMultipleFiles(folderTreeUri: Uri, uriDataList: List<UriData>) {
+        lifecycleScope.launch {
+            val dir = DocumentFile.fromTreeUri(applicationContext, folderTreeUri) ?: return@launch
+            val sourceUris = sourceFileUriList ?: return@launch
+
+            sourceUris.forEachIndexed { index, sourceUri ->
+                val data = uriDataList.getOrNull(index) ?: return@forEachIndexed
+                val createdFile = dir.createFile(data.mimeType, data.displayName) ?: return@forEachIndexed
+
+                val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
+                    action = SaveLocallyService.ACTION_SAVE_FILE
+                    putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
+                    putExtra(SaveLocallyService.EXTRA_TARGET_URI, createdFile.uri.toString())
+                    putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
+                    putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
+                }
+                ContextCompat.startForegroundService(this@DetailsActivity, intent)
+            }
+            finish()
+        }
+    }
+
+    private fun saveMultipleFilesToDownloads(uriDataList: List<UriData>) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
+        lifecycleScope.launch {
+            val sourceUris = sourceFileUriList ?: return@launch
+
+            sourceUris.forEachIndexed { index, sourceUri ->
+                val data = uriDataList.getOrNull(index) ?: return@forEachIndexed
+                val values = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, data.displayName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, data.mimeType)
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                }
+                val targetUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values) ?: return@forEachIndexed
+
+                val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
+                    action = SaveLocallyService.ACTION_SAVE_FILE
+                    putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
+                    putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
+                    putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
+                    putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
+                }
+                ContextCompat.startForegroundService(this@DetailsActivity, intent)
+            }
+            finish()
+        }
+    }
 
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -112,12 +176,14 @@ class DetailsActivity : ComponentActivity() {
 
         setContent {
             val uriData by viewModel.uriData.collectAsState()
+            val uriDataList by viewModel.uriDataList.collectAsState()
             val skipDetails by viewModel.skipFileDetails.collectAsState()
             val skipPicker by viewModel.skipFilePicker.collectAsState()
             val defaultLocation by viewModel.defaultSaveLocation.collectAsState()
 
             val launchFilePicker = {
                 val data = uriData
+                val dataList = uriDataList
                 val initialUri = defaultLocation?.takeIf { it != AppConstants.MEDIASTORE_DOWNLOADS_URI }?.toUri()
                 when {
                     sharedContent != null -> createFileLauncher.launch(
@@ -127,6 +193,18 @@ class DetailsActivity : ComponentActivity() {
                             initialUri
                         )
                     )
+
+                    !dataList.isNullOrEmpty() && dataList.size > 1 -> {
+                        if (skipPicker == true && defaultLocation != null) {
+                            if (defaultLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                saveMultipleFilesToDownloads(dataList)
+                            } else if (initialUri != null) {
+                                saveMultipleFiles(initialUri, dataList)
+                            }
+                        } else {
+                            openFolderLauncher.launch(initialUri)
+                        }
+                    }
 
                     data != null -> {
                         if (skipPicker == true && defaultLocation != null) {
@@ -176,17 +254,24 @@ class DetailsActivity : ComponentActivity() {
             // Wait for skipDetails to be loaded from preferences
             if (skipDetails != null) {
                 if (skipDetails == true) {
-                    LaunchedEffect(uriData, sharedContent, skipPicker, defaultLocation) {
-                        if ((uriData != null || sharedContent != null) && skipPicker != null) {
+                    LaunchedEffect(uriData, uriDataList, sharedContent, skipPicker, defaultLocation) {
+                        if ((uriData != null || uriDataList != null || sharedContent != null) && skipPicker != null) {
                             launchFilePicker()
                         }
                     }
                     DetailsScreenSavingFileFeedback()
                 } else {
-                    DetailsScreen(
-                        detailsViewModel = viewModel,
-                        launchFilePicker = { launchFilePicker() }
-                    )
+                    if (!uriDataList.isNullOrEmpty() && uriDataList!!.size > 1) {
+                        MultiDetailsScreen(
+                            detailsViewModel = viewModel,
+                            launchFilePicker = { launchFilePicker() }
+                        )
+                    } else {
+                        DetailsScreen(
+                            detailsViewModel = viewModel,
+                            launchFilePicker = { launchFilePicker() }
+                        )
+                    }
                 }
             }
         }
