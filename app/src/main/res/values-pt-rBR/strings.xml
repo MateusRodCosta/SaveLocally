@@ -59,6 +59,9 @@
     <string name="message_notification_permission_check_denied">Permissão de notificações negada. Verifique as permissões do aplicativo nas Configurações.</string>
 
     <string name="save_button">Salvar</string>
+    <string name="save_files_separately">Salvar arquivos separadamente</string>
+    <string name="save_as_zip">Salvar como arquivo ZIP</string>
+    <string name="save_as_zip_default_filename">Arquivo</string>
     <string name="select_all">Selecionar tudo</string>
     <string name="deselect_all">Desmarcar tudo</string>
     <string name="back_arrow">Voltar</string>

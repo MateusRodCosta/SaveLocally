@@ -88,6 +88,18 @@ class DetailsActivity : ComponentActivity() {
 
     private var pendingSelectedUriDataList: List<UriData>? = null
 
+    private val createZipFileLauncher: ActivityResultLauncher<CreateDocumentWithInitialUri.Input> =
+        registerForActivityResult(CreateDocumentWithInitialUri()) { zipUri ->
+            zipUri?.let { targetZipUri ->
+                val uriDataList = pendingSelectedUriDataList ?: viewModel.uriDataList.value
+                if (!uriDataList.isNullOrEmpty()) {
+                    saveZippedFiles(targetZipUri, uriDataList)
+                }
+            } ?: run {
+                if (viewModel.skipFileDetails.value == true) finish()
+            }
+        }
+
     private val openFolderLauncher: ActivityResultLauncher<Uri?> =
         registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { treeUri ->
             treeUri?.let { folderUri ->
@@ -153,6 +165,24 @@ class DetailsActivity : ComponentActivity() {
         }
     }
 
+    private fun saveZippedFiles(targetZipUri: Uri, uriDataList: List<UriData>) {
+        lifecycleScope.launch {
+            val sourceUris = uriDataList.map { it.uri }
+            val fileNames = uriDataList.map { it.displayName }
+            val defaultZipName = getString(R.string.save_as_zip_default_filename) + ".zip"
+
+            val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
+                action = SaveLocallyService.ACTION_SAVE_ZIPPED_FILES
+                putStringArrayListExtra(SaveLocallyService.EXTRA_SOURCE_URIS, ArrayList(sourceUris))
+                putStringArrayListExtra(SaveLocallyService.EXTRA_FILE_NAMES, ArrayList(fileNames))
+                putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetZipUri.toString())
+                putExtra(SaveLocallyService.EXTRA_FILE_NAME, defaultZipName)
+            }
+            ContextCompat.startForegroundService(this@DetailsActivity, intent)
+            finish()
+        }
+    }
+
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
@@ -183,10 +213,12 @@ class DetailsActivity : ComponentActivity() {
             val skipPicker by viewModel.skipFilePicker.collectAsState()
             val defaultLocation by viewModel.defaultSaveLocation.collectAsState()
 
-            val launchFilePicker = { selectedItems: List<UriData>? ->
+            val launchFilePicker = { selectedItems: List<UriData>?, asZip: Boolean ->
                 val data = uriData
                 val dataList = selectedItems ?: uriDataList
                 val initialUri = defaultLocation?.takeIf { it != AppConstants.MEDIASTORE_DOWNLOADS_URI }?.toUri()
+                val zipDefaultName = getString(R.string.save_as_zip_default_filename) + ".zip"
+
                 when {
                     sharedContent != null -> createFileLauncher.launch(
                         CreateDocumentWithInitialUri.Input(
@@ -198,14 +230,40 @@ class DetailsActivity : ComponentActivity() {
 
                     !dataList.isNullOrEmpty() && dataList.size > 1 -> {
                         pendingSelectedUriDataList = dataList
-                        if (skipPicker == true && defaultLocation != null) {
-                            if (defaultLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                saveMultipleFilesToDownloads(dataList)
-                            } else if (initialUri != null) {
-                                saveMultipleFiles(initialUri, dataList)
+                        if (asZip) {
+                            if (skipPicker == true && defaultLocation != null) {
+                                val targetZipUri = if (defaultLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    val values = ContentValues().apply {
+                                        put(MediaStore.MediaColumns.DISPLAY_NAME, zipDefaultName)
+                                        put(MediaStore.MediaColumns.MIME_TYPE, "application/zip")
+                                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                                    }
+                                    contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+                                } else if (initialUri != null) {
+                                    val dir = DocumentFile.fromTreeUri(applicationContext, initialUri)
+                                    dir?.createFile("application/zip", zipDefaultName)?.uri
+                                } else null
+
+                                targetZipUri?.let { saveZippedFiles(it, dataList) }
+                            } else {
+                                createZipFileLauncher.launch(
+                                    CreateDocumentWithInitialUri.Input(
+                                        zipDefaultName,
+                                        "application/zip",
+                                        initialUri
+                                    )
+                                )
                             }
                         } else {
-                            openFolderLauncher.launch(initialUri)
+                            if (skipPicker == true && defaultLocation != null) {
+                                if (defaultLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    saveMultipleFilesToDownloads(dataList)
+                                } else if (initialUri != null) {
+                                    saveMultipleFiles(initialUri, dataList)
+                                }
+                            } else {
+                                openFolderLauncher.launch(initialUri)
+                            }
                         }
                     }
 
@@ -259,7 +317,7 @@ class DetailsActivity : ComponentActivity() {
                 if (skipDetails == true) {
                     LaunchedEffect(uriData, uriDataList, sharedContent, skipPicker, defaultLocation) {
                         if ((uriData != null || uriDataList != null || sharedContent != null) && skipPicker != null) {
-                            launchFilePicker(null)
+                            launchFilePicker(null, false)
                         }
                     }
                     DetailsScreenSavingFileFeedback()
@@ -267,12 +325,12 @@ class DetailsActivity : ComponentActivity() {
                     if (!uriDataList.isNullOrEmpty() && uriDataList!!.size > 1) {
                         MultiDetailsScreen(
                             detailsViewModel = viewModel,
-                            launchFilePicker = { selectedList -> launchFilePicker(selectedList) }
+                            launchFilePicker = { selectedList, asZip -> launchFilePicker(selectedList, asZip) }
                         )
                     } else {
                         DetailsScreen(
                             detailsViewModel = viewModel,
-                            launchFilePicker = { launchFilePicker(null) }
+                            launchFilePicker = { launchFilePicker(null, false) }
                         )
                     }
                 }

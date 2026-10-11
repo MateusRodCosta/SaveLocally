@@ -34,8 +34,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -52,6 +55,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -99,11 +103,13 @@ fun MultiDetailsScreen(
     uriDataList: List<UriData>? = null,
     showFilePreview: Boolean = true,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
-    launchFilePicker: (List<UriData>) -> Unit = {},
+    launchFilePicker: (List<UriData>, Boolean) -> Unit = { _, _ -> },
 ) {
     val collectedUriDataList by detailsViewModel?.uriDataList?.collectAsState() ?: remember { mutableStateOf(uriDataList) }
     val collectedShowFilePreview by detailsViewModel?.showFilePreview?.collectAsState()
         ?: remember { mutableStateOf(showFilePreview) }
+
+    var isMenuExpanded by remember { mutableStateOf(false) }
 
     val selectedUris = remember(collectedUriDataList) {
         mutableStateMapOf<String, Boolean>().apply {
@@ -149,26 +155,54 @@ fun MultiDetailsScreen(
             )
         }, floatingActionButton = {
             if (collectedUriDataList != null) {
-                FloatingActionButton(
-                    modifier = Modifier.windowInsetsPadding(
-                        WindowInsets.systemBars.only(
-                            WindowInsetsSides.Horizontal
+                Box {
+                    FloatingActionButton(
+                        modifier = Modifier.windowInsetsPadding(
+                            WindowInsets.systemBars.only(
+                                WindowInsetsSides.Horizontal
+                            )
+                        ),
+                        onClick = {
+                            if (hasSelection) {
+                                if (selectedItems.size > 1) {
+                                    isMenuExpanded = true
+                                } else {
+                                    launchFilePicker(selectedItems, false)
+                                }
+                            }
+                        },
+                        content = {
+                            Icon(
+                                Icons.Rounded.Download,
+                                contentDescription = stringResource(R.string.save_button)
+                            )
+                        },
+                        containerColor = if (hasSelection) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = if (hasSelection) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+
+                    DropdownMenu(
+                        expanded = isMenuExpanded,
+                        onDismissRequest = { isMenuExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.save_files_separately)) },
+                            leadingIcon = { Icon(Icons.Rounded.Download, null) },
+                            onClick = {
+                                isMenuExpanded = false
+                                launchFilePicker(selectedItems, false)
+                            }
                         )
-                    ),
-                    onClick = {
-                        if (hasSelection) {
-                            launchFilePicker(selectedItems)
-                        }
-                    },
-                    content = {
-                        Icon(
-                            Icons.Rounded.Download,
-                            contentDescription = stringResource(R.string.save_button)
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.save_as_zip)) },
+                            leadingIcon = { Icon(Icons.Rounded.Archive, null) },
+                            onClick = {
+                                isMenuExpanded = false
+                                launchFilePicker(selectedItems, true)
+                            }
                         )
-                    },
-                    containerColor = if (hasSelection) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = if (hasSelection) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                    }
+                }
             }
         }) { paddingValues ->
             Box(
@@ -189,7 +223,7 @@ fun MultiDetailsScreen(
                                         selectedUris[data.uri] = selectedUris[data.uri] != true
                                     },
                                     onSaveIndividualFile = {
-                                        launchFilePicker(listOf(data))
+                                        launchFilePicker(listOf(data), false)
                                     },
                                     modifier = Modifier.fillParentMaxSize()
                                 )
@@ -206,7 +240,7 @@ fun MultiDetailsScreen(
                                         selectedUris[data.uri] = selectedUris[data.uri] != true
                                     },
                                     onSaveIndividualFile = {
-                                        launchFilePicker(listOf(data))
+                                        launchFilePicker(listOf(data), false)
                                     }
                                 )
                             }

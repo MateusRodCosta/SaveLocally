@@ -30,6 +30,7 @@ import androidx.core.app.NotificationCompat
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
 import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveFileUseCase
+import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveZippedFilesUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -42,6 +43,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class SaveLocallyService: Service(), KoinComponent {
 
     private val saveFileUseCase: SaveFileUseCase by inject()
+    private val saveZippedFilesUseCase: SaveZippedFilesUseCase by inject()
 
     companion object {
 
@@ -51,12 +53,15 @@ class SaveLocallyService: Service(), KoinComponent {
 
         const val ACTION_SAVE_TEXT = "ACTION_SAVE_TEXT"
         const val ACTION_SAVE_FILE = "ACTION_SAVE_FILE"
+        const val ACTION_SAVE_ZIPPED_FILES = "ACTION_SAVE_ZIPPED_FILES"
 
         const val EXTRA_TEXT = "text"
         const val EXTRA_SOURCE_URI = "sourceUri"
+        const val EXTRA_SOURCE_URIS = "sourceUris"
         const val EXTRA_TARGET_URI = "targetUri"
 
         const val EXTRA_FILE_NAME = "fileName"
+        const val EXTRA_FILE_NAMES = "fileNames"
         const val EXTRA_FILE_SIZE = "fileSize"
     }
 
@@ -120,7 +125,7 @@ class SaveLocallyService: Service(), KoinComponent {
         }
 
         serviceScope.launch {
-            if (intent?.action == ACTION_SAVE_FILE || intent?.action == ACTION_SAVE_TEXT) {
+            if (setOf(ACTION_SAVE_FILE, ACTION_SAVE_TEXT, ACTION_SAVE_ZIPPED_FILES).contains(intent?.action)) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(applicationContext, R.string.saving_file, Toast.LENGTH_SHORT).show()
                 }
@@ -174,6 +179,42 @@ class SaveLocallyService: Service(), KoinComponent {
                         }
                     } else {
                         Result.failure(IllegalArgumentException("Missing required EXTRA_SOURCE_URI, EXTRA_TARGET_URI, EXTRA_FILE_NAME, or EXTRA_FILE_SIZE"))
+                    }
+                }
+                ACTION_SAVE_ZIPPED_FILES -> {
+                    val sourceUris = intent.getStringArrayListExtra(EXTRA_SOURCE_URIS)
+                    val fileNames = intent.getStringArrayListExtra(EXTRA_FILE_NAMES)
+                    val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
+
+                    if (!sourceUris.isNullOrEmpty() && !fileNames.isNullOrEmpty() && targetUri != null && sourceUris.size == fileNames.size) {
+                        val files = sourceUris.zip(fileNames)
+                        var lastUpdateMs = 0L
+                        val updateIntervalMs = 250L
+
+                        saveZippedFilesUseCase(files, targetUri) { bytesCopied, currentFileName ->
+                            val now = System.currentTimeMillis()
+                            if (now - lastUpdateMs >= updateIntervalMs) {
+                                lastUpdateMs = now
+
+                                val copiedStr = Formatter.formatShortFileSize(
+                                    this@SaveLocallyService,
+                                    bytesCopied
+                                )
+
+                                val progressNotification =
+                                    NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)
+                                        .setContentTitle(initialFileName)
+                                        .setContentText("$copiedStr - $currentFileName")
+                                        .setSmallIcon(R.drawable.ic_notification)
+                                        .setProgress(0, 0, true)
+                                        .setOngoing(true)
+                                        .build()
+
+                                notificationManager?.notify(notificationId, progressNotification)
+                            }
+                        }
+                    } else {
+                        Result.failure(IllegalArgumentException("Missing required params for zipping"))
                     }
                 }
                 else -> null

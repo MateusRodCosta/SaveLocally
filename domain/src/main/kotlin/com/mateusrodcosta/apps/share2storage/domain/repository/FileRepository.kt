@@ -30,5 +30,12 @@ interface FileRepository {
     ): Result<Unit>
 
     suspend fun saveText(text: String, targetUriString: String): Result<Unit>
+
+    suspend fun saveZippedFiles(
+        files: List<Pair<String, String>>,
+        targetZipUriString: String,
+        onProgress: ((bytesCopied: Long, currentFileName: String) -> Unit)? = null
+    ): Result<Unit>
+
     suspend fun getFileMetadata(uriString: String): Result<UriData>
 }

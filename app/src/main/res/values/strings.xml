@@ -59,6 +59,9 @@
     <string name="message_notification_permission_check_denied">Notification permission denied. Check App permissions in Settings.</string>
 
     <string name="save_button">Save</string>
+    <string name="save_files_separately">Save files separately</string>
+    <string name="save_as_zip">Save as ZIP archive</string>
+    <string name="save_as_zip_default_filename">Archive</string>
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect all</string>
     <string name="back_arrow">Back Arrow</string>

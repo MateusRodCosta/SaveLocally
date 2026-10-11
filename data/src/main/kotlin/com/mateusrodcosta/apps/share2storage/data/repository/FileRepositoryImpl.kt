@@ -97,6 +97,47 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
             }
         }
 
+    override suspend fun saveZippedFiles(
+        files: List<Pair<String, String>>,
+        targetZipUriString: String,
+        onProgress: ((bytesCopied: Long, currentFileName: String) -> Unit)?
+    ): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val targetZipUri = targetZipUriString.toUri()
+                val outputStream = contentResolver.openOutputStream(targetZipUri)
+                    ?: throw IOException("Could not open target output stream for ZIP URI: $targetZipUri")
+
+                var totalBytesWritten = 0L
+                val buffer = ByteArray(BUFFER_SIZE)
+
+                java.util.zip.ZipOutputStream(java.io.BufferedOutputStream(outputStream)).use { zipOut ->
+                    files.forEach { (sourceUriString, fileName) ->
+                        val sourceUri = sourceUriString.toUri()
+                        val inputStream = if (isVirtualFile(sourceUri)) {
+                            getInputStreamForVirtualFile(sourceUri)
+                        } else {
+                            contentResolver.openInputStream(sourceUri)
+                        }
+
+                        inputStream?.use { input ->
+                            val zipEntry = java.util.zip.ZipEntry(fileName)
+                            zipOut.putNextEntry(zipEntry)
+
+                            var bytesRead: Int
+                            while (input.read(buffer).also { bytesRead = it } >= 0) {
+                                zipOut.write(buffer, 0, bytesRead)
+                                totalBytesWritten += bytesRead
+                                onProgress?.invoke(totalBytesWritten, fileName)
+                            }
+                            zipOut.closeEntry()
+                        } ?: throw IOException("Could not open input stream for URI: $sourceUriString")
+                    }
+                }
+                Unit
+            }
+        }
+
     override suspend fun getFileMetadata(uriString: String): Result<UriData> =
         withContext(Dispatchers.IO) {
             runCatching {
