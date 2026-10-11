@@ -25,6 +25,6 @@ class SaveZippedFilesUseCase(private val fileRepository: FileRepository) {
     suspend operator fun invoke(
         files: List<Pair<String, String>>,
         targetZipUriString: String,
-        onProgress: ((bytesCopied: Long, currentFileName: String) -> Unit)? = null
+        onProgress: ((bytesCopied: Long, totalBytes: Long, currentFileName: String) -> Unit)? = null
     ): Result<Unit> = fileRepository.saveZippedFiles(files, targetZipUriString, onProgress)
 }

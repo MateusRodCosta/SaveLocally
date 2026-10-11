@@ -18,6 +18,7 @@
 package com.mateusrodcosta.apps.share2storage
 
 import android.Manifest
+import android.content.ClipData
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -119,14 +120,15 @@ class DetailsActivity : ComponentActivity() {
     private fun saveMultipleFiles(folderTreeUri: Uri, uriDataList: List<UriData>) {
         lifecycleScope.launch {
             val dir = DocumentFile.fromTreeUri(applicationContext, folderTreeUri) ?: return@launch
-            val sourceUris = sourceFileUriList ?: return@launch
 
-            sourceUris.forEachIndexed { index, sourceUri ->
-                val data = uriDataList.getOrNull(index) ?: return@forEachIndexed
-                val createdFile = dir.createFile(data.mimeType, data.displayName) ?: return@forEachIndexed
+            uriDataList.forEach { data ->
+                val sourceUri = data.uri.toUri()
+                val createdFile = dir.createFile(data.mimeType, data.displayName) ?: return@forEach
 
                 val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
                     action = SaveLocallyService.ACTION_SAVE_FILE
+                    this.data = sourceUri
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
                     putExtra(SaveLocallyService.EXTRA_TARGET_URI, createdFile.uri.toString())
                     putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
@@ -141,19 +143,19 @@ class DetailsActivity : ComponentActivity() {
     private fun saveMultipleFilesToDownloads(uriDataList: List<UriData>) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
         lifecycleScope.launch {
-            val sourceUris = sourceFileUriList ?: return@launch
-
-            sourceUris.forEachIndexed { index, sourceUri ->
-                val data = uriDataList.getOrNull(index) ?: return@forEachIndexed
+            uriDataList.forEach { data ->
+                val sourceUri = data.uri.toUri()
                 val values = ContentValues().apply {
                     put(MediaStore.MediaColumns.DISPLAY_NAME, data.displayName)
                     put(MediaStore.MediaColumns.MIME_TYPE, data.mimeType)
                     put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
                 }
-                val targetUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values) ?: return@forEachIndexed
+                val targetUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values) ?: return@forEach
 
                 val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
                     action = SaveLocallyService.ACTION_SAVE_FILE
+                    this.data = sourceUri
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
                     putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
                     putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
@@ -167,12 +169,23 @@ class DetailsActivity : ComponentActivity() {
 
     private fun saveZippedFiles(targetZipUri: Uri, uriDataList: List<UriData>) {
         lifecycleScope.launch {
+            val sourceUriObjects = uriDataList.map { it.uri.toUri() }
             val sourceUris = uriDataList.map { it.uri }
             val fileNames = uriDataList.map { it.displayName }
             val defaultZipName = getString(R.string.save_as_zip_default_filename) + ".zip"
 
+            val clipData = if (sourceUriObjects.isNotEmpty()) {
+                val clip = ClipData.newUri(contentResolver, "source_uris", sourceUriObjects.first())
+                sourceUriObjects.drop(1).forEach { uri ->
+                    clip.addItem(ClipData.Item(uri))
+                }
+                clip
+            } else null
+
             val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
                 action = SaveLocallyService.ACTION_SAVE_ZIPPED_FILES
+                this.clipData = clipData
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 putStringArrayListExtra(SaveLocallyService.EXTRA_SOURCE_URIS, ArrayList(sourceUris))
                 putStringArrayListExtra(SaveLocallyService.EXTRA_FILE_NAMES, ArrayList(fileNames))
                 putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetZipUri.toString())

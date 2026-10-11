@@ -26,6 +26,7 @@ import android.os.StatFs
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import android.system.Os
+import android.util.Log
 import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
@@ -100,43 +101,94 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
     override suspend fun saveZippedFiles(
         files: List<Pair<String, String>>,
         targetZipUriString: String,
-        onProgress: ((bytesCopied: Long, currentFileName: String) -> Unit)?
+        onProgress: ((bytesCopied: Long, totalBytes: Long, currentFileName: String) -> Unit)?
     ): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
                 val targetZipUri = targetZipUriString.toUri()
+
+                val totalInputBytes = files.sumOf { (sourceUriString, _) ->
+                    getFileMetadata(sourceUriString).getOrNull()?.size ?: 0L
+                }
+                if (totalInputBytes > 0L) {
+                    val availableFreeBytes = getAvailableFreeBytes(targetZipUri)
+                    if (availableFreeBytes in 0..<totalInputBytes) {
+                        throw InsufficientStorageException(requiredBytes = totalInputBytes, availableBytes = availableFreeBytes)
+                    }
+                }
+
                 val outputStream = contentResolver.openOutputStream(targetZipUri)
                     ?: throw IOException("Could not open target output stream for ZIP URI: $targetZipUri")
 
                 var totalBytesWritten = 0L
                 val buffer = ByteArray(BUFFER_SIZE)
+                val usedEntryNames = mutableSetOf<String>()
 
-                java.util.zip.ZipOutputStream(java.io.BufferedOutputStream(outputStream)).use { zipOut ->
-                    files.forEach { (sourceUriString, fileName) ->
+                val bufferedOut = java.io.BufferedOutputStream(outputStream)
+                val zipOut = java.util.zip.ZipOutputStream(bufferedOut)
+
+                try {
+                    files.forEach { (sourceUriString, rawFileName) ->
                         val sourceUri = sourceUriString.toUri()
                         val inputStream = if (isVirtualFile(sourceUri)) {
-                            getInputStreamForVirtualFile(sourceUri)
+                            runCatching { getInputStreamForVirtualFile(sourceUri) }.onFailure { e ->
+                                Log.e("FileRepositoryImpl", "Could not open virtual file input stream for: $sourceUriString", e)
+                            }.getOrNull()
                         } else {
-                            contentResolver.openInputStream(sourceUri)
+                            runCatching { contentResolver.openInputStream(sourceUri) }.onFailure { e ->
+                                Log.e("FileRepositoryImpl", "Could not open input stream for: $sourceUriString", e)
+                            }.getOrNull()
                         }
 
-                        inputStream?.use { input ->
-                            val zipEntry = java.util.zip.ZipEntry(fileName)
-                            zipOut.putNextEntry(zipEntry)
+                        if (inputStream != null) {
+                            inputStream.use { input ->
+                                val sanitizedName = rawFileName.replace('/', '_').replace('\\', '_').ifBlank { "file" }
+                                val uniqueName = getUniqueZipEntryName(sanitizedName, usedEntryNames)
+                                usedEntryNames.add(uniqueName)
 
-                            var bytesRead: Int
-                            while (input.read(buffer).also { bytesRead = it } >= 0) {
-                                zipOut.write(buffer, 0, bytesRead)
-                                totalBytesWritten += bytesRead
-                                onProgress?.invoke(totalBytesWritten, fileName)
+                                val zipEntry = java.util.zip.ZipEntry(uniqueName).apply {
+                                    time = System.currentTimeMillis()
+                                }
+                                zipOut.putNextEntry(zipEntry)
+
+                                var bytesRead: Int
+                                while (input.read(buffer).also { bytesRead = it } >= 0) {
+                                    zipOut.write(buffer, 0, bytesRead)
+                                    totalBytesWritten += bytesRead
+                                    onProgress?.invoke(totalBytesWritten, totalInputBytes, uniqueName)
+                                }
+                                zipOut.closeEntry()
                             }
-                            zipOut.closeEntry()
-                        } ?: throw IOException("Could not open input stream for URI: $sourceUriString")
+                        }
                     }
+                    zipOut.finish()
+                    zipOut.flush()
+                    bufferedOut.flush()
+                } finally {
+                    runCatching { zipOut.close() }
+                    runCatching { bufferedOut.close() }
+                    runCatching { outputStream.close() }
                 }
                 Unit
             }
         }
+
+    private fun getUniqueZipEntryName(fileName: String, usedNames: Set<String>): String {
+        if (!usedNames.contains(fileName)) return fileName
+
+        val dotIndex = fileName.lastIndexOf('.')
+        val nameWithoutExtension = if (dotIndex != -1) fileName.substring(0, dotIndex) else fileName
+        val extension = if (dotIndex != -1) fileName.substring(dotIndex) else ""
+
+        var counter = 1
+        var candidateName: String
+        do {
+            candidateName = "$nameWithoutExtension ($counter)$extension"
+            counter++
+        } while (usedNames.contains(candidateName))
+
+        return candidateName
+    }
 
     override suspend fun getFileMetadata(uriString: String): Result<UriData> =
         withContext(Dispatchers.IO) {

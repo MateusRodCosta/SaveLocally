@@ -191,9 +191,9 @@ class SaveLocallyService: Service(), KoinComponent {
                         var lastUpdateMs = 0L
                         val updateIntervalMs = 250L
 
-                        saveZippedFilesUseCase(files, targetUri) { bytesCopied, currentFileName ->
+                        saveZippedFilesUseCase(files, targetUri) { bytesCopied, totalBytes, currentFileName ->
                             val now = System.currentTimeMillis()
-                            if (now - lastUpdateMs >= updateIntervalMs) {
+                            if (now - lastUpdateMs >= updateIntervalMs || (totalBytes > 0L && bytesCopied == totalBytes)) {
                                 lastUpdateMs = now
 
                                 val copiedStr = Formatter.formatShortFileSize(
@@ -201,12 +201,26 @@ class SaveLocallyService: Service(), KoinComponent {
                                     bytesCopied
                                 )
 
+                                val progressText = if (totalBytes > 0L) {
+                                    val totalStr = Formatter.formatShortFileSize(
+                                        this@SaveLocallyService,
+                                        totalBytes
+                                    )
+                                    "$copiedStr / $totalStr — $currentFileName"
+                                } else {
+                                    "$copiedStr — $currentFileName"
+                                }
+
+                                val percent = if (totalBytes > 0L) {
+                                    ((bytesCopied * 100) / totalBytes).toInt().coerceIn(0, 100)
+                                } else 0
+
                                 val progressNotification =
                                     NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)
                                         .setContentTitle(initialFileName)
-                                        .setContentText("$copiedStr - $currentFileName")
+                                        .setContentText(progressText)
                                         .setSmallIcon(R.drawable.ic_notification)
-                                        .setProgress(0, 0, true)
+                                        .setProgress(if (totalBytes > 0L) 100 else 0, percent, totalBytes <= 0L)
                                         .setOngoing(true)
                                         .build()
 
