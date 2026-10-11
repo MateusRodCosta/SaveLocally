@@ -118,6 +118,7 @@ kotlin {
 dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.exifinterface)
 
     implementation(libs.kotlinx.serialization.core)
 

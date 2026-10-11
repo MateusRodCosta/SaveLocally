@@ -18,8 +18,13 @@
 package com.mateusrodcosta.apps.share2storage.utils.media
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.pdf.PdfRenderer
+import android.media.MediaMetadataRetriever
 import android.os.Build
+import androidx.core.graphics.createBitmap
+import androidx.exifinterface.media.ExifInterface
 import coil3.ImageLoader
 import coil3.asImage
 import coil3.decode.DataSource
@@ -36,24 +41,15 @@ class ThumbnailFetcher(
 
     override suspend fun fetch(): FetchResult? {
         return try {
+            val mimeType = context.contentResolver.getType(data.uri) ?: ""
+            val primaryType = mimeType.substringBefore('/')
+
             val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                context.contentResolver.loadThumbnail(data.uri, data.size, null)
+                runCatching {
+                    context.contentResolver.loadThumbnail(data.uri, data.size, null)
+                }.getOrNull() ?: fetchFallbackBitmap(mimeType, primaryType)
             } else {
-                context.contentResolver.openFileDescriptor(data.uri, "r")?.use { fileDescriptor ->
-                    val fd = fileDescriptor.fileDescriptor
-
-                    val options = BitmapFactory.Options().apply {
-                        inJustDecodeBounds = true
-                    }
-                    BitmapFactory.decodeFileDescriptor(fd, null, options)
-
-                    options.inSampleSize = ThumbnailUtils.calculateInSampleSize(
-                        options, data.size.width, data.size.height
-                    )
-                    options.inJustDecodeBounds = false
-
-                    BitmapFactory.decodeFileDescriptor(fd, null, options)
-                }
+                fetchFallbackBitmap(mimeType, primaryType)
             }
 
             bitmap?.let {
@@ -63,8 +59,105 @@ class ThumbnailFetcher(
                     dataSource = DataSource.DISK
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
+        }
+    }
+
+    private fun fetchFallbackBitmap(mimeType: String, primaryType: String): Bitmap? {
+        return when {
+            primaryType == "video" -> {
+                runCatching {
+                    val retriever = MediaMetadataRetriever()
+                    try {
+                        retriever.setDataSource(context, data.uri)
+                        retriever.getScaledFrameAtTime(
+                            -1L,
+                            MediaMetadataRetriever.OPTION_CLOSEST_SYNC,
+                            data.size.width,
+                            data.size.height
+                        ) ?: retriever.frameAtTime
+                    } finally {
+                        retriever.release()
+                    }
+                }.getOrNull()
+            }
+
+            primaryType == "audio" -> {
+                runCatching {
+                    val retriever = MediaMetadataRetriever()
+                    try {
+                        retriever.setDataSource(context, data.uri)
+                        val picture = retriever.embeddedPicture
+                        picture?.let { bytes ->
+                            val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, boundsOptions)
+                            val sampleSize = ThumbnailUtils.calculateInSampleSize(
+                                boundsOptions, data.size.width, data.size.height
+                            )
+                            val decodeOptions = BitmapFactory.Options().apply { inSampleSize = sampleSize }
+                            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, decodeOptions)
+                        }
+                    } finally {
+                        retriever.release()
+                    }
+                }.getOrNull()
+            }
+
+            mimeType == "application/pdf" -> {
+                runCatching {
+                    context.contentResolver.openFileDescriptor(data.uri, "r")?.use { pfd ->
+                        val renderer = PdfRenderer(pfd)
+                        if (renderer.pageCount > 0) {
+                            val page = renderer.openPage(0)
+                            val targetWidth = if (page.width > 0) page.width.coerceAtMost(data.size.width) else data.size.width
+                            val targetHeight = if (page.height > 0) page.height.coerceAtMost(data.size.height) else data.size.height
+                            val bitmap = createBitmap(targetWidth, targetHeight)
+                            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                            page.close()
+                            renderer.close()
+                            bitmap
+                        } else null
+                    }
+                }.getOrNull()
+            }
+
+            else -> {
+                runCatching {
+                    val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                    context.contentResolver.openInputStream(data.uri)?.use { stream ->
+                        BitmapFactory.decodeStream(stream, null, boundsOptions)
+                    }
+
+                    val sampleSize = ThumbnailUtils.calculateInSampleSize(
+                        boundsOptions, data.size.width, data.size.height
+                    )
+
+                    val decodeOptions = BitmapFactory.Options().apply { inSampleSize = sampleSize }
+                    val decodedBitmap = context.contentResolver.openInputStream(data.uri)?.use { stream ->
+                        BitmapFactory.decodeStream(stream, null, decodeOptions)
+                    }
+
+                    decodedBitmap?.let { bitmap ->
+                        val rotation = context.contentResolver.openInputStream(data.uri)?.use { stream ->
+                            val exif = ExifInterface(stream)
+                            when (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+                                ExifInterface.ORIENTATION_ROTATE_90 -> 90
+                                ExifInterface.ORIENTATION_ROTATE_180 -> 180
+                                ExifInterface.ORIENTATION_ROTATE_270 -> 270
+                                else -> 0
+                            }
+                        } ?: 0
+
+                        if (rotation != 0) {
+                            val matrix = android.graphics.Matrix().apply { postRotate(rotation.toFloat()) }
+                            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+                        } else {
+                            bitmap
+                        }
+                    }
+                }.getOrNull()
+            }
         }
     }
 
