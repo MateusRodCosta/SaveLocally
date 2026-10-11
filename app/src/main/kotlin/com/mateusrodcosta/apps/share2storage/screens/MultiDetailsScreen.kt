@@ -39,6 +39,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -187,6 +188,9 @@ fun MultiDetailsScreen(
                                     onToggleSelection = {
                                         selectedUris[data.uri] = selectedUris[data.uri] != true
                                     },
+                                    onSaveIndividualFile = {
+                                        launchFilePicker(listOf(data))
+                                    },
                                     modifier = Modifier.fillParentMaxSize()
                                 )
                             }
@@ -200,6 +204,9 @@ fun MultiDetailsScreen(
                                     isChecked = selectedUris[data.uri] == true,
                                     onToggleSelection = {
                                         selectedUris[data.uri] = selectedUris[data.uri] != true
+                                    },
+                                    onSaveIndividualFile = {
+                                        launchFilePicker(listOf(data))
                                     }
                                 )
                             }
@@ -215,29 +222,57 @@ fun MultiDetailsScreen(
 }
 
 @Composable
+fun SingleFileHeader(
+    isChecked: Boolean,
+    onToggleSelection: () -> Unit,
+    modifier: Modifier = Modifier,
+    onSaveIndividualFile: () -> Unit = {},
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable { onToggleSelection() }
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                checked = isChecked,
+                onCheckedChange = { onToggleSelection() }
+            )
+        }
+        IconButton(onClick = onSaveIndividualFile) {
+            Icon(
+                Icons.Rounded.Download,
+                contentDescription = stringResource(R.string.save_button)
+            )
+        }
+    }
+}
+
+@Composable
 fun SingleFileDetailsPortrait(
     uriData: UriData,
     showFilePreview: Boolean,
     isChecked: Boolean,
-    onToggleSelection: () -> Unit
+    onToggleSelection: () -> Unit,
+    onSaveIndividualFile: () -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onToggleSelection() },
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                checked = isChecked,
-                onCheckedChange = { onToggleSelection() }
-            )
-        }
+        SingleFileHeader(
+            isChecked = isChecked,
+            onToggleSelection = onToggleSelection,
+            onSaveIndividualFile = onSaveIndividualFile
+        )
         FilePreview(uriData, showFilePreview = showFilePreview)
         Box {
             FileInfo(uriData, scrollable = false)
@@ -251,22 +286,15 @@ fun SingleFileDetailsLandscape(
     showFilePreview: Boolean,
     isChecked: Boolean,
     onToggleSelection: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSaveIndividualFile: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onToggleSelection() },
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                checked = isChecked,
-                onCheckedChange = { onToggleSelection() }
-            )
-        }
+        SingleFileHeader(
+            isChecked = isChecked,
+            onToggleSelection = onToggleSelection,
+            onSaveIndividualFile = onSaveIndividualFile
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
