@@ -51,10 +51,25 @@ class DetailsViewModel(
     private val _uriData = MutableStateFlow<UriData?>(null)
     val uriData: StateFlow<UriData?> = _uriData.asStateFlow()
 
+    private val _uriDataList = MutableStateFlow<List<UriData>?>(null)
+    val uriDataList: StateFlow<List<UriData>?> = _uriDataList.asStateFlow()
+
     fun loadMetadata(uriString: String) {
         viewModelScope.launch {
             getFileMetadataUseCase(uriString).onSuccess {
                 _uriData.value = it
+            }
+        }
+    }
+
+    fun loadMetadataList(uriStrings: List<String>) {
+        viewModelScope.launch {
+            val list = uriStrings.mapNotNull { uriString ->
+                getFileMetadataUseCase(uriString).getOrNull()
+            }
+            if (list.isNotEmpty()) {
+                _uriDataList.value = list
+                _uriData.value = list.firstOrNull()
             }
         }
     }

@@ -85,6 +85,7 @@ class DetailsActivity : ComponentActivity() {
 
     private var sharedContent: CharSequence? = null
     private var sourceFileUri: Uri? = null
+    private var sourceFileUriList: List<Uri>? = null
 
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -203,19 +204,33 @@ class DetailsActivity : ComponentActivity() {
         if (extraText != null) {
             sharedContent = extraText
         } else {
-            sourceFileUri = when (action) {
-                Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(
+            if (action == Intent.ACTION_SEND_MULTIPLE) {
+                val streamUris = IntentCompat.getParcelableArrayListExtra(
                     intent,
                     Intent.EXTRA_STREAM,
                     Uri::class.java
                 )
+                if (!streamUris.isNullOrEmpty()) {
+                    sourceFileUriList = streamUris
+                    sourceFileUri = streamUris.firstOrNull()
+                    viewModel.loadMetadataList(streamUris.map { it.toString() })
+                }
+            } else {
+                sourceFileUri = when (action) {
+                    Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(
+                        intent,
+                        Intent.EXTRA_STREAM,
+                        Uri::class.java
+                    )
 
-                Intent.ACTION_VIEW -> intent.data
-                else -> null
-            }
+                    Intent.ACTION_VIEW -> intent.data
+                    else -> null
+                }
 
-            sourceFileUri?.let { uri ->
-                viewModel.loadMetadata(uri.toString())
+                sourceFileUri?.let { uri ->
+                    sourceFileUriList = listOf(uri)
+                    viewModel.loadMetadata(uri.toString())
+                }
             }
         }
     }
