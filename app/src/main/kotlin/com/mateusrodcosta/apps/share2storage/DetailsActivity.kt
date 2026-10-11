@@ -86,10 +86,12 @@ class DetailsActivity : ComponentActivity() {
             }
         }
 
+    private var pendingSelectedUriDataList: List<UriData>? = null
+
     private val openFolderLauncher: ActivityResultLauncher<Uri?> =
         registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { treeUri ->
             treeUri?.let { folderUri ->
-                val uriDataList = viewModel.uriDataList.value
+                val uriDataList = pendingSelectedUriDataList ?: viewModel.uriDataList.value
                 if (!uriDataList.isNullOrEmpty()) {
                     saveMultipleFiles(folderUri, uriDataList)
                 }
@@ -181,9 +183,9 @@ class DetailsActivity : ComponentActivity() {
             val skipPicker by viewModel.skipFilePicker.collectAsState()
             val defaultLocation by viewModel.defaultSaveLocation.collectAsState()
 
-            val launchFilePicker = {
+            val launchFilePicker = { selectedItems: List<UriData>? ->
                 val data = uriData
-                val dataList = uriDataList
+                val dataList = selectedItems ?: uriDataList
                 val initialUri = defaultLocation?.takeIf { it != AppConstants.MEDIASTORE_DOWNLOADS_URI }?.toUri()
                 when {
                     sharedContent != null -> createFileLauncher.launch(
@@ -195,6 +197,7 @@ class DetailsActivity : ComponentActivity() {
                     )
 
                     !dataList.isNullOrEmpty() && dataList.size > 1 -> {
+                        pendingSelectedUriDataList = dataList
                         if (skipPicker == true && defaultLocation != null) {
                             if (defaultLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                                 saveMultipleFilesToDownloads(dataList)
@@ -256,7 +259,7 @@ class DetailsActivity : ComponentActivity() {
                 if (skipDetails == true) {
                     LaunchedEffect(uriData, uriDataList, sharedContent, skipPicker, defaultLocation) {
                         if ((uriData != null || uriDataList != null || sharedContent != null) && skipPicker != null) {
-                            launchFilePicker()
+                            launchFilePicker(null)
                         }
                     }
                     DetailsScreenSavingFileFeedback()
@@ -264,12 +267,12 @@ class DetailsActivity : ComponentActivity() {
                     if (!uriDataList.isNullOrEmpty() && uriDataList!!.size > 1) {
                         MultiDetailsScreen(
                             detailsViewModel = viewModel,
-                            launchFilePicker = { launchFilePicker() }
+                            launchFilePicker = { selectedList -> launchFilePicker(selectedList) }
                         )
                     } else {
                         DetailsScreen(
                             detailsViewModel = viewModel,
-                            launchFilePicker = { launchFilePicker() }
+                            launchFilePicker = { launchFilePicker(null) }
                         )
                     }
                 }

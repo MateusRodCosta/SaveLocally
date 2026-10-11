@@ -17,6 +17,7 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,11 +42,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -95,18 +98,53 @@ fun MultiDetailsScreen(
     uriDataList: List<UriData>? = null,
     showFilePreview: Boolean = true,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
-    launchFilePicker: () -> Unit? = {},
+    launchFilePicker: (List<UriData>) -> Unit = {},
 ) {
     val collectedUriDataList by detailsViewModel?.uriDataList?.collectAsState() ?: remember { mutableStateOf(uriDataList) }
     val collectedShowFilePreview by detailsViewModel?.showFilePreview?.collectAsState()
         ?: remember { mutableStateOf(showFilePreview) }
+
+    val selectedUris = remember(collectedUriDataList) {
+        mutableStateMapOf<String, Boolean>().apply {
+            collectedUriDataList?.forEach { put(it.uri, true) }
+        }
+    }
+
+    val selectedItems = collectedUriDataList?.filter { selectedUris[it.uri] == true } ?: emptyList()
+    val hasSelection = selectedItems.isNotEmpty()
+
+    val totalCount = collectedUriDataList?.size ?: 0
+    val allSelected = totalCount > 0 && selectedItems.size == totalCount
+
+    val toggleSelectAll: () -> Unit = {
+        val targetState = !allSelected
+        collectedUriDataList?.forEach { data ->
+            selectedUris[data.uri] = targetState
+        }
+    }
 
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 
     SaveLocallyTheme {
         Scaffold(topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.file_details)) },
+                title = {
+                    if (totalCount > 0) {
+                        Text("${selectedItems.size} / $totalCount")
+                    } else {
+                        Text(stringResource(R.string.file_details))
+                    }
+                },
+                actions = {
+                    if (totalCount > 0) {
+                        TextButton(onClick = toggleSelectAll) {
+                            Text(
+                                if (allSelected) stringResource(R.string.deselect_all)
+                                else stringResource(R.string.select_all)
+                            )
+                        }
+                    }
+                }
             )
         }, floatingActionButton = {
             if (collectedUriDataList != null) {
@@ -116,15 +154,19 @@ fun MultiDetailsScreen(
                             WindowInsetsSides.Horizontal
                         )
                     ),
-                    onClick = { launchFilePicker() },
+                    onClick = {
+                        if (hasSelection) {
+                            launchFilePicker(selectedItems)
+                        }
+                    },
                     content = {
                         Icon(
                             Icons.Rounded.Download,
                             contentDescription = stringResource(R.string.save_button)
                         )
                     },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = if (hasSelection) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = if (hasSelection) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }) { paddingValues ->
@@ -137,18 +179,29 @@ fun MultiDetailsScreen(
                 if (collectedUriDataList != null) {
                     if (useLandscapeLayout) {
                         LazyRow(modifier = Modifier.fillMaxSize()) {
-                            itemsIndexed(collectedUriDataList!!) { index, data ->
+                            itemsIndexed(collectedUriDataList!!) { _, data ->
                                 SingleFileDetailsLandscape(
-                                    data,
-                                    collectedShowFilePreview == true,
+                                    uriData = data,
+                                    showFilePreview = collectedShowFilePreview == true,
+                                    isChecked = selectedUris[data.uri] == true,
+                                    onToggleSelection = {
+                                        selectedUris[data.uri] = selectedUris[data.uri] != true
+                                    },
                                     modifier = Modifier.fillParentMaxSize()
                                 )
                             }
                         }
                     } else  {
                         LazyColumn {
-                            itemsIndexed(collectedUriDataList!!) { index, data ->
-                                SingleFileDetailsPortrait(data, collectedShowFilePreview == true)
+                            itemsIndexed(collectedUriDataList!!) { _, data ->
+                                SingleFileDetailsPortrait(
+                                    uriData = data,
+                                    showFilePreview = collectedShowFilePreview == true,
+                                    isChecked = selectedUris[data.uri] == true,
+                                    onToggleSelection = {
+                                        selectedUris[data.uri] = selectedUris[data.uri] != true
+                                    }
+                                )
                             }
                         }
                     }
@@ -162,18 +215,28 @@ fun MultiDetailsScreen(
 }
 
 @Composable
-fun SingleFileDetailsPortrait(uriData: UriData, showFilePreview: Boolean) {
+fun SingleFileDetailsPortrait(
+    uriData: UriData,
+    showFilePreview: Boolean,
+    isChecked: Boolean,
+    onToggleSelection: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onToggleSelection() },
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                checked = false, onCheckedChange = null)
+                checked = isChecked,
+                onCheckedChange = { onToggleSelection() }
+            )
         }
         FilePreview(uriData, showFilePreview = showFilePreview)
         Box {
@@ -186,16 +249,22 @@ fun SingleFileDetailsPortrait(uriData: UriData, showFilePreview: Boolean) {
 fun SingleFileDetailsLandscape(
     uriData: UriData,
     showFilePreview: Boolean,
+    isChecked: Boolean,
+    onToggleSelection: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onToggleSelection() },
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                checked = false, onCheckedChange = null
+                checked = isChecked,
+                onCheckedChange = { onToggleSelection() }
             )
         }
         Row(
