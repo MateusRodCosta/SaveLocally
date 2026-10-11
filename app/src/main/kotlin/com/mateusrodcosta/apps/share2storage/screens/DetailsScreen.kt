@@ -17,8 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
-import android.text.format.Formatter
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,19 +32,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AudioFile
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material.icons.outlined.VideoFile
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -59,22 +50,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.window.core.layout.WindowSizeClass
-import coil3.compose.AsyncImagePainter
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
-import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
 import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
+import com.mateusrodcosta.apps.share2storage.screens.shared.FileInfo
+import com.mateusrodcosta.apps.share2storage.screens.shared.FilePreview
 import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
 import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
 
@@ -172,7 +158,11 @@ fun FileDetailsPortrait(uriData: UriData, showFilePreview: Boolean) {
                 .fillMaxSize()
                 .weight(1.0f)
         ) {
-            FilePreview(uriData, showFilePreview)
+            FilePreview(
+                uriData,
+                showFilePreview = showFilePreview,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
         Box {
             FileInfo(uriData)
@@ -188,99 +178,10 @@ fun FileDetailsLandscape(uriData: UriData, showFilePreview: Boolean) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = Modifier.weight(1.0f)) {
-            FilePreview(uriData, showFilePreview)
+            FilePreview(uriData, showFilePreview = showFilePreview)
         }
         Box(modifier = Modifier.weight(1.0f)) {
             FileInfo(uriData)
-        }
-    }
-}
-
-@Composable
-fun FileInfo(uriData: UriData) {
-    Column(
-        modifier = Modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center
-    ) {
-        FileInfoLine(
-            label = stringResource(R.string.file_name),
-            content = uriData.displayName
-        )
-        FileInfoLine(
-            label = stringResource(R.string.file_type),
-            content = uriData.mimeType
-        )
-        FileInfoLine(
-            label = stringResource(R.string.file_size),
-            content = Formatter.formatFileSize(LocalContext.current, uriData.size)
-        )
-    }
-}
-
-@Composable
-fun FileInfoLine(label: String, content: String) {
-    ListItem(modifier = Modifier.clickable { }, headlineContent = {
-        Text(label)
-    }, supportingContent = {
-        Text(content, softWrap = true)
-    })
-}
-
-@Composable
-fun FilePreview(uriData: UriData, showFilePreview: Boolean = true) {
-    val mimeType = uriData.mimeType
-    val primaryType = mimeType.substringBefore('/')
-    val fallbackFileIcon = when (primaryType) {
-        "image" -> Icons.Outlined.Image
-        "audio" -> Icons.Outlined.AudioFile
-        "video" -> Icons.Outlined.VideoFile
-        else -> Icons.Outlined.Description
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        if (showFilePreview) {
-            SubcomposeAsyncImage(
-                modifier = Modifier.align(Alignment.Center),
-                model = MediaThumbnail(uriData.uri.toUri()),
-                contentDescription = stringResource(R.string.app_name),
-                contentScale = ContentScale.Fit,
-            ) {
-                val state by painter.state.collectAsState()
-
-                when (state) {
-                    is AsyncImagePainter.State.Loading -> {
-                        CircularProgressIndicator()
-                    }
-                    // Display fallback icon if can't create thumbnail
-                    is AsyncImagePainter.State.Error -> {
-                        Icon(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .align(Alignment.Center),
-                            imageVector = fallbackFileIcon,
-                            contentDescription = stringResource(R.string.app_name),
-                            tint = MaterialTheme.colorScheme.tertiary
-                        )
-                    }
-
-                    else -> {
-                        SubcomposeAsyncImageContent()
-                    }
-                }
-            }
-        } else {
-            Icon(
-                modifier = Modifier
-                    .size(128.dp)
-                    .align(Alignment.Center),
-                imageVector = fallbackFileIcon,
-                contentDescription = stringResource(R.string.app_name),
-                tint = MaterialTheme.colorScheme.tertiary
-            )
         }
     }
 }
