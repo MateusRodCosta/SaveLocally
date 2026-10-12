@@ -46,4 +46,9 @@
     <string name="message_notification_permission_granted">Дозвіл на сповіщення надано!</string>
     <string name="message_notification_permission_denied">Дозвіл на сповіщення відхилено.</string>
     <string name="message_notification_permission_check_denied">Дозвіл на сповіщення відхилено. Перевірте дозволи для застосунку в налаштуваннях.</string>
+    <string name="save_files_separately">Зберігати файли окремо</string>
+    <string name="save_as_zip">Зберегти як ZIP-архів</string>
+    <string name="save_as_zip_default_filename">Архів</string>
+    <string name="select_all">Вибрати все</string>
+    <string name="deselect_all">Зняти вибір</string>
 </resources>
