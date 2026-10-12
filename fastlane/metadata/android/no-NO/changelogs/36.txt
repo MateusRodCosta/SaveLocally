@@ -1,0 +1,2 @@
+Nødutgivelse for å fikse et lite problem hvor nye tillatelser ble lagt til, pga. eldre AGP-oppførsel.
+For mer informasjon, se https://github.com/MateusRodCosta/SaveLocally/issues/58
