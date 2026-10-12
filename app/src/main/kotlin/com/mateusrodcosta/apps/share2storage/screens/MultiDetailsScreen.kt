@@ -17,7 +17,17 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,21 +45,23 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Archive
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -58,6 +70,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -132,6 +145,16 @@ fun MultiDetailsScreen(
 
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 
+    LaunchedEffect(selectedItems.size) {
+        if (selectedItems.size <= 1) {
+            isMenuExpanded = false
+        }
+    }
+
+    BackHandler(enabled = isMenuExpanded && hasSelection && selectedItems.size > 1) {
+        isMenuExpanded = false
+    }
+
     SaveLocallyTheme {
         Scaffold(topBar = {
             TopAppBar(
@@ -155,17 +178,48 @@ fun MultiDetailsScreen(
             )
         }, floatingActionButton = {
             if (collectedUriDataList != null) {
-                Box {
-                    FloatingActionButton(
-                        modifier = Modifier.windowInsetsPadding(
-                            WindowInsets.systemBars.only(
-                                WindowInsetsSides.Horizontal
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.windowInsetsPadding(
+                        WindowInsets.systemBars.only(
+                            WindowInsetsSides.Horizontal
+                        )
+                    )
+                ) {
+                    AnimatedVisibility(
+                        visible = isMenuExpanded && hasSelection && selectedItems.size > 1,
+                        enter = fadeIn() + expandVertically(expandFrom = Alignment.Bottom) + slideInVertically { it / 2 },
+                        exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Bottom) + slideOutVertically { it / 2 }
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            FabMenuItem(
+                                text = stringResource(R.string.save_files_separately),
+                                icon = Icons.Rounded.Download,
+                                onClick = {
+                                    isMenuExpanded = false
+                                    launchFilePicker(selectedItems, false)
+                                }
                             )
-                        ),
+                            FabMenuItem(
+                                text = stringResource(R.string.save_as_zip),
+                                icon = Icons.Rounded.Archive,
+                                onClick = {
+                                    isMenuExpanded = false
+                                    launchFilePicker(selectedItems, true)
+                                }
+                            )
+                        }
+                    }
+
+                    FloatingActionButton(
                         onClick = {
                             if (hasSelection) {
                                 if (selectedItems.size > 1) {
-                                    isMenuExpanded = true
+                                    isMenuExpanded = !isMenuExpanded
                                 } else {
                                     launchFilePicker(selectedItems, false)
                                 }
@@ -173,35 +227,13 @@ fun MultiDetailsScreen(
                         },
                         content = {
                             Icon(
-                                Icons.Rounded.Download,
+                                imageVector = if (isMenuExpanded && selectedItems.size > 1) Icons.Rounded.Close else Icons.Rounded.Download,
                                 contentDescription = stringResource(R.string.save_button)
                             )
                         },
                         containerColor = if (hasSelection) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = if (hasSelection) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-
-                    DropdownMenu(
-                        expanded = isMenuExpanded,
-                        onDismissRequest = { isMenuExpanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.save_files_separately)) },
-                            leadingIcon = { Icon(Icons.Rounded.Download, null) },
-                            onClick = {
-                                isMenuExpanded = false
-                                launchFilePicker(selectedItems, false)
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.save_as_zip)) },
-                            leadingIcon = { Icon(Icons.Rounded.Archive, null) },
-                            onClick = {
-                                isMenuExpanded = false
-                                launchFilePicker(selectedItems, true)
-                            }
-                        )
-                    }
                 }
             }
         }) { paddingValues ->
@@ -229,7 +261,7 @@ fun MultiDetailsScreen(
                                 )
                             }
                         }
-                    } else  {
+                    } else {
                         LazyColumn {
                             itemsIndexed(collectedUriDataList!!) { _, data ->
                                 SingleFileDetailsPortrait(
@@ -245,6 +277,18 @@ fun MultiDetailsScreen(
                                 )
                             }
                         }
+                    }
+
+                    if (isMenuExpanded && hasSelection && selectedItems.size > 1) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.32f))
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) { isMenuExpanded = false }
+                        )
                     }
                 } else Text(
                     stringResource(R.string.no_file_found),
@@ -346,6 +390,42 @@ fun SingleFileDetailsLandscape(
             Box(modifier = Modifier.weight(3.0f)) {
                 FileInfo(uriData)
             }
+        }
+    }
+}
+
+@Composable
+fun FabMenuItem(
+    text: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.clickable(onClick = onClick)
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            shadowElevation = 2.dp
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+            )
+        }
+        SmallFloatingActionButton(
+            onClick = onClick,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = text
+            )
         }
     }
 }
