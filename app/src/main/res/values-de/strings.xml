@@ -8,7 +8,7 @@
     <string name="how_to_use_step_4">Die Dateiauswahl öffnet sich. Wähle einen Speicherort und einen Dateinamen</string>
     <string name="about_title">Über</string>
     <string name="about_developer">Entwickelt von %s</string>
-    <string name="about_icon_credits">App-Icon entworfen von %s</string>
+    <string name="about_icon_credits">App-Symbol entworfen von %s</string>
     <string name="about_github">Quellcode ist verfügbar auf GitHub unter %s, lizensiert unter der AGPLv3+</string>
     <string name="settings_title">Einstellungen</string>
     <string name="settings_category_file_picker">Dateiauswahl</string>
@@ -34,4 +34,11 @@
     <string name="message_saved_file_failure">Ein Fehler ist beim Speichern der Datei aufgetreten.</string>
     <string name="save_button">Speichern</string>
     <string name="back_arrow">Pfeil Zurück</string>
+    <string name="deselect_all">Alles abwählen</string>
+    <string name="about_category_licenses">Lizenzen</string>
+    <string name="settings_category_about">Über</string>
+    <string name="settings_about">Über</string>
+    <string name="notification_channel_name_in_progress">Fortschritt bei der Dateispeicherung</string>
+    <string name="notification_channel_name_finished">Dateispeicherung abgeschlossen</string>
+    <string name="notification_channel_description_finished">Ergebnis des Dateispeichervorgangs</string>
 </resources>
