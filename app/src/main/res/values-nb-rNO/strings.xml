@@ -37,4 +37,18 @@
     <string name="message_saved_file_failure">En feil oppstod når filen skulle lagres.</string>
     <string name="save_button">Lagre</string>
     <string name="back_arrow">Tilbakeknapp</string>
+    <string name="deselect_all">Avmarker alle</string>
+    <string name="settings_default_save_location_downloads">Nedlastingsmappe (Android 10+)</string>
+    <string name="notification_channel_name_in_progress">Fillagringsframdrift</string>
+    <string name="notification_channel_description_in_progress">Framdrift av lagring av den gjeldende fil</string>
+    <string name="notification_channel_name_finished">Ferdig med å lagre fil</string>
+    <string name="notification_channel_description_finished">Resultat av fillagringsprosessen</string>
+    <string name="message_saved_file_no_space">Ikke nok lagringsplass tilgjengelig.</string>
+    <string name="message_notification_permission_granted">Varseltillatelse gitt!</string>
+    <string name="message_notification_permission_denied">Varseltillatelse nektet.</string>
+    <string name="message_notification_permission_check_denied">Varseltillatelse nektet. Sjekk appens tillatelser i Innstillinger.</string>
+    <string name="save_files_separately">Lagre filer separat</string>
+    <string name="save_as_zip">Lagre som ZIP-arkiv</string>
+    <string name="save_as_zip_default_filename">Arkiv</string>
+    <string name="select_all">Velg alle</string>
 </resources>
