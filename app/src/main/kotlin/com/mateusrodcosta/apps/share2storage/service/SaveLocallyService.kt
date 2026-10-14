@@ -81,7 +81,7 @@ class SaveLocallyService: Service(), KoinComponent {
         val progressChannel = NotificationChannel(
             PROGRESS_CHANNEL_ID,
             getString(R.string.notification_channel_name_in_progress),
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
             description = getString(R.string.notification_channel_description_in_progress)
         }
@@ -139,6 +139,7 @@ class SaveLocallyService: Service(), KoinComponent {
             .setContentTitle(initialFileName)
             .setContentText(getString(R.string.saving_file))
             .setSmallIcon(R.drawable.ic_notification)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .addAction(
                 R.drawable.ic_notification,
                 getString(R.string.cancel_button),
@@ -208,6 +209,7 @@ class SaveLocallyService: Service(), KoinComponent {
                                             .setContentTitle(fileName)
                                             .setContentText("$copiedStr / $totalStr")
                                             .setSmallIcon(R.drawable.ic_notification)
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                             .setProgress(100, percent, false)
                                             .addAction(
                                                 R.drawable.ic_notification,
@@ -263,6 +265,7 @@ class SaveLocallyService: Service(), KoinComponent {
                                             .setContentTitle(initialFileName)
                                             .setContentText(progressText)
                                             .setSmallIcon(R.drawable.ic_notification)
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                             .setProgress(if (totalBytes > 0L) 100 else 0, percent, totalBytes <= 0L)
                                             .addAction(
                                                 R.drawable.ic_notification,
