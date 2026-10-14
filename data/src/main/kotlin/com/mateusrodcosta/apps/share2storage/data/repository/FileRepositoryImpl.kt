@@ -56,9 +56,9 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
         onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)?
     ): Result<Unit> =
         withContext(Dispatchers.IO) {
+            val sourceUri = runCatching { sourceUriString.toUri() }.getOrNull()
             val targetUri = targetUriString.toUri()
             runCatching {
-                val sourceUri = sourceUriString.toUri()
                 val size = totalBytes.takeIf { it > 0L }
                     ?: throw IllegalArgumentException("Invalid totalBytes ($totalBytes) for URI: $sourceUriString")
 
@@ -67,10 +67,13 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                     throw InsufficientStorageException(requiredBytes = size, availableBytes = availableFreeBytes)
                 }
 
-                val inputStream = if (isVirtualFile(sourceUri)) {
-                    getInputStreamForVirtualFile(sourceUri)
+                val actualSourceUri = sourceUri
+                    ?: throw IllegalArgumentException("Invalid sourceUri: $sourceUriString")
+
+                val inputStream = if (isVirtualFile(actualSourceUri)) {
+                    getInputStreamForVirtualFile(actualSourceUri)
                 } else {
-                    contentResolver.openInputStream(sourceUri)
+                    contentResolver.openInputStream(actualSourceUri)
                 }
 
                 contentResolver.openOutputStream(targetUri)?.use { outputStream ->
@@ -84,11 +87,11 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                             bytesCopied += bytesRead
                             onProgress?.invoke(bytesCopied, size)
                         }
-                    } ?: throw IOException("Could not open input stream: $sourceUri")
+                    } ?: throw IOException("Could not open input stream: $sourceUriString")
                 } ?: throw IOException("Could not open target output stream for URI: $targetUri")
                 Unit
             }.onFailure { e ->
-                deleteFile(targetUri)
+                deleteFile(targetUri, sourceUri)
                 if (e is CancellationException) throw e
             }
         }
@@ -185,15 +188,27 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
             }
         }
 
-    private fun deleteFile(uri: Uri) {
+    private fun deleteFile(targetUri: Uri, sourceUri: Uri? = null) {
+        if (sourceUri != null && targetUri == sourceUri) {
+            Log.w("FileRepositoryImpl", "Skipping delete: targetUri is identical to sourceUri ($targetUri)")
+            return
+        }
+
         runCatching {
-            if (DocumentsContract.isDocumentUri(context, uri)) {
-                DocumentsContract.deleteDocument(contentResolver, uri)
-            } else {
-                contentResolver.delete(uri, null, null)
+            var deleted = false
+            if (DocumentsContract.isDocumentUri(context, targetUri) || DocumentsContract.isTreeUri(targetUri)) {
+                runCatching {
+                    deleted = DocumentsContract.deleteDocument(contentResolver, targetUri)
+                }
+            }
+
+            if (!deleted) {
+                runCatching {
+                    contentResolver.delete(targetUri, null, null)
+                }
             }
         }.onFailure { e ->
-            Log.e("FileRepositoryImpl", "Failed to delete partially written file: $uri", e)
+            Log.w("FileRepositoryImpl", "Could not delete partially written file: $targetUri", e)
         }
     }
 

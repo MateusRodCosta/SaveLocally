@@ -56,32 +56,41 @@ class DetailsActivity : ComponentActivity() {
 
     private val viewModel: DetailsViewModel by viewModel()
 
+    private fun Intent.grantTargetUriPermission(targetUri: Uri?): Intent {
+        if (targetUri != null) {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            this.clipData = ClipData.newUri(contentResolver, "targetUri", targetUri)
+        }
+        return this
+    }
+
+    private fun startSaveService(action: String, targetUri: Uri, setup: Intent.() -> Unit = {}) {
+        val intent = Intent(this, SaveLocallyService::class.java).apply {
+            this.action = action
+            grantTargetUriPermission(targetUri)
+            setup()
+        }
+        ContextCompat.startForegroundService(this, intent)
+    }
+
     private val createFileLauncher: ActivityResultLauncher<CreateDocumentWithInitialUri.Input> =
         registerForActivityResult(CreateDocumentWithInitialUri()) { uri ->
             uri?.let { targetUri ->
                 if (sharedContent != null) {
-                    val intent = Intent(this, SaveLocallyService::class.java).apply {
-                        action = SaveLocallyService.ACTION_SAVE_TEXT
+                    startSaveService(SaveLocallyService.ACTION_SAVE_TEXT, targetUri) {
                         putExtra(SaveLocallyService.EXTRA_TEXT, sharedContent.toString())
                         putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
                     }
-
-                    ContextCompat.startForegroundService(this, intent)
-                    finish()
                 } else {
-                    val intent = Intent(this, SaveLocallyService::class.java).apply {
-                        action = SaveLocallyService.ACTION_SAVE_FILE
+                    val data = checkNotNull(viewModel.uriData.value) { "UriData metadata must be loaded before saving" }
+                    startSaveService(SaveLocallyService.ACTION_SAVE_FILE, targetUri) {
                         putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
                         putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
-
-                        val data = checkNotNull(viewModel.uriData.value) { "UriData metadata must be loaded before saving" }
                         putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                         putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
                     }
-
-                    ContextCompat.startForegroundService(this, intent)
-                    finish()
                 }
+                finish()
             } ?: run {
                 if (viewModel.skipFileDetails.value == true) finish()
             }
@@ -125,16 +134,12 @@ class DetailsActivity : ComponentActivity() {
                 val sourceUri = data.uri.toUri()
                 val createdFile = dir.createFile(data.mimeType, data.displayName) ?: return@forEach
 
-                val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
-                    action = SaveLocallyService.ACTION_SAVE_FILE
-                    this.data = sourceUri
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                startSaveService(SaveLocallyService.ACTION_SAVE_FILE, createdFile.uri) {
                     putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
                     putExtra(SaveLocallyService.EXTRA_TARGET_URI, createdFile.uri.toString())
                     putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                     putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
                 }
-                ContextCompat.startForegroundService(this@DetailsActivity, intent)
             }
             finish()
         }
@@ -152,16 +157,12 @@ class DetailsActivity : ComponentActivity() {
                 }
                 val targetUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values) ?: return@forEach
 
-                val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
-                    action = SaveLocallyService.ACTION_SAVE_FILE
-                    this.data = sourceUri
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                startSaveService(SaveLocallyService.ACTION_SAVE_FILE, targetUri) {
                     putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
                     putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
                     putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                     putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
                 }
-                ContextCompat.startForegroundService(this@DetailsActivity, intent)
             }
             finish()
         }
@@ -169,29 +170,16 @@ class DetailsActivity : ComponentActivity() {
 
     private fun saveZippedFiles(targetZipUri: Uri, uriDataList: List<UriData>) {
         lifecycleScope.launch {
-            val sourceUriObjects = uriDataList.map { it.uri.toUri() }
             val sourceUris = uriDataList.map { it.uri }
             val fileNames = uriDataList.map { it.displayName }
             val defaultZipName = getString(R.string.save_as_zip_default_filename) + ".zip"
 
-            val clipData = if (sourceUriObjects.isNotEmpty()) {
-                val clip = ClipData.newUri(contentResolver, "source_uris", sourceUriObjects.first())
-                sourceUriObjects.drop(1).forEach { uri ->
-                    clip.addItem(ClipData.Item(uri))
-                }
-                clip
-            } else null
-
-            val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
-                action = SaveLocallyService.ACTION_SAVE_ZIPPED_FILES
-                this.clipData = clipData
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startSaveService(SaveLocallyService.ACTION_SAVE_ZIPPED_FILES, targetZipUri) {
                 putStringArrayListExtra(SaveLocallyService.EXTRA_SOURCE_URIS, ArrayList(sourceUris))
                 putStringArrayListExtra(SaveLocallyService.EXTRA_FILE_NAMES, ArrayList(fileNames))
                 putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetZipUri.toString())
                 putExtra(SaveLocallyService.EXTRA_FILE_NAME, defaultZipName)
             }
-            ContextCompat.startForegroundService(this@DetailsActivity, intent)
             finish()
         }
     }
@@ -300,15 +288,12 @@ class DetailsActivity : ComponentActivity() {
                                 }
 
                                 targetUri?.let { uri ->
-                                    val intent = Intent(this@DetailsActivity, SaveLocallyService::class.java).apply {
-                                        action = SaveLocallyService.ACTION_SAVE_FILE
+                                    startSaveService(SaveLocallyService.ACTION_SAVE_FILE, uri) {
                                         putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
                                         putExtra(SaveLocallyService.EXTRA_TARGET_URI, uri.toString())
                                         putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                                         putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
                                     }
-
-                                    ContextCompat.startForegroundService(this@DetailsActivity, intent)
                                     finish()
                                 }
                             }
