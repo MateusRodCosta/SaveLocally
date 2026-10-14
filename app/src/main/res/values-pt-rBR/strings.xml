@@ -61,6 +61,8 @@
 
     <string name="save_button">Salvar</string>
     <string name="cancel_button">Cancelar</string>
+    <string name="open_file_button">Abrir arquivo</string>
+    <string name="open_location_button">Abrir local</string>
 
     <string name="save_files_separately">Salvar arquivos separadamente</string>
     <string name="save_as_zip">Salvar como arquivo ZIP</string>

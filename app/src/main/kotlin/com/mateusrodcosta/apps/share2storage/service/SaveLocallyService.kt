@@ -17,6 +17,7 @@
 
 package com.mateusrodcosta.apps.share2storage.service
 
+import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -25,9 +26,11 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import android.provider.DocumentsContract
 import android.text.format.Formatter
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
 import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveFileUseCase
@@ -306,15 +309,82 @@ class SaveLocallyService: Service(), KoinComponent {
                     }
 
                     val completedFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
+                    val resultNotificationId = notificationId + 10000
 
-                    val completedNotification = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
+                    val completedNotificationBuilder = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
                         .setContentTitle(completedFileName)
                         .setContentText(messageText)
                         .setSmallIcon(R.drawable.ic_notification)
                         .setAutoCancel(true)
-                        .build()
 
-                    val resultNotificationId = notificationId + 10000
+                    val targetUriString = intent?.getStringExtra(EXTRA_TARGET_URI)
+                    if (saveResult.isSuccess && targetUriString != null) {
+                        val targetUri = targetUriString.toUri()
+                        val mimeType = contentResolver.getType(targetUri) ?: "*/*"
+
+                        val openFileIntent = Intent(Intent.ACTION_VIEW).apply {
+                            setDataAndType(targetUri, mimeType)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+
+                        val openFilePendingIntent = PendingIntent.getActivity(
+                            this@SaveLocallyService,
+                            resultNotificationId,
+                            openFileIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
+
+                        val docId = runCatching {
+                            if (DocumentsContract.isDocumentUri(this@SaveLocallyService, targetUri)) {
+                                DocumentsContract.getDocumentId(targetUri)
+                            } else null
+                        }.getOrNull()
+
+                        val openFolderIntent = if (docId != null && docId.contains('/')) {
+                            val parentDocId = docId.substringBeforeLast('/')
+                            val authority = targetUri.authority ?: "com.android.externalstorage.documents"
+                            val parentUri = DocumentsContract.buildDocumentUri(authority, parentDocId)
+                            Intent(Intent.ACTION_VIEW).apply {
+                                setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                        } else if (docId != null && docId.contains(':')) {
+                            val volume = docId.substringBefore(':')
+                            val authority = targetUri.authority ?: "com.android.externalstorage.documents"
+                            val parentUri = DocumentsContract.buildDocumentUri(authority, "$volume:")
+                            Intent(Intent.ACTION_VIEW).apply {
+                                setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                        } else {
+                            Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                        }
+
+                        val openFolderPendingIntent = PendingIntent.getActivity(
+                            this@SaveLocallyService,
+                            resultNotificationId + 1,
+                            openFolderIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
+
+                        completedNotificationBuilder
+                            .setContentIntent(openFilePendingIntent)
+                            .addAction(
+                                R.drawable.ic_notification,
+                                getString(R.string.open_file_button),
+                                openFilePendingIntent
+                            )
+                            .addAction(
+                                R.drawable.ic_notification,
+                                getString(R.string.open_location_button),
+                                openFolderPendingIntent
+                            )
+                    }
+
+                    val completedNotification = completedNotificationBuilder.build()
                     notificationManager?.notify(resultNotificationId, completedNotification)
                     notificationManager?.cancel(notificationId)
                 }
