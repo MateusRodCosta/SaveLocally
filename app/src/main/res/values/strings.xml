@@ -53,12 +53,15 @@
     <string name="message_saved_file_success">File saved successfully!</string>
     <string name="message_saved_file_failure">An error occurred while saving the file.</string>
     <string name="message_saved_file_no_space">Not enough storage space available.</string>
+    <string name="message_save_cancelled">Saving cancelled.</string>
 
     <string name="message_notification_permission_granted">Notification permission granted!</string>
     <string name="message_notification_permission_denied">Notification permission denied.</string>
     <string name="message_notification_permission_check_denied">Notification permission denied. Check App permissions in Settings.</string>
 
     <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
+
     <string name="save_files_separately">Save files separately</string>
     <string name="save_as_zip">Save as ZIP archive</string>
     <string name="save_as_zip_default_filename">Archive</string>

@@ -19,6 +19,7 @@ package com.mateusrodcosta.apps.share2storage.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
@@ -31,13 +32,16 @@ import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
 import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveFileUseCase
 import com.mateusrodcosta.apps.share2storage.domain.usecases.SaveZippedFilesUseCase
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class SaveLocallyService: Service(), KoinComponent {
@@ -54,6 +58,7 @@ class SaveLocallyService: Service(), KoinComponent {
         const val ACTION_SAVE_TEXT = "ACTION_SAVE_TEXT"
         const val ACTION_SAVE_FILE = "ACTION_SAVE_FILE"
         const val ACTION_SAVE_ZIPPED_FILES = "ACTION_SAVE_ZIPPED_FILES"
+        const val ACTION_CANCEL_SAVE = "ACTION_CANCEL_SAVE"
 
         const val EXTRA_TEXT = "text"
         const val EXTRA_SOURCE_URI = "sourceUri"
@@ -63,10 +68,12 @@ class SaveLocallyService: Service(), KoinComponent {
         const val EXTRA_FILE_NAME = "fileName"
         const val EXTRA_FILE_NAMES = "fileNames"
         const val EXTRA_FILE_SIZE = "fileSize"
+        const val EXTRA_NOTIFICATION_ID = "notificationId"
     }
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val activeJobsCount = AtomicInteger(0)
+    private val activeJobsMap = ConcurrentHashMap<Int, Job>()
 
     private fun createNotificationChannels() {
         val notificationManager = getSystemService(NotificationManager::class.java) ?: return
@@ -90,6 +97,19 @@ class SaveLocallyService: Service(), KoinComponent {
         notificationManager.createNotificationChannels(listOf(progressChannel, resultChannel))
     }
 
+    private fun buildCancelPendingIntent(notificationId: Int): PendingIntent {
+        val cancelIntent = Intent(this, SaveLocallyService::class.java).apply {
+            action = ACTION_CANCEL_SAVE
+            putExtra(EXTRA_NOTIFICATION_ID, notificationId)
+        }
+        return PendingIntent.getService(
+            this,
+            notificationId,
+            cancelIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
     override fun onCreate() {
         super.onCreate()
         createNotificationChannels()
@@ -98,15 +118,32 @@ class SaveLocallyService: Service(), KoinComponent {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notificationManager = getSystemService(NotificationManager::class.java)
 
+        if (intent?.action == ACTION_CANCEL_SAVE) {
+            val notificationIdToCancel = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
+            if (notificationIdToCancel != -1) {
+                val jobToCancel = activeJobsMap.remove(notificationIdToCancel)
+                jobToCancel?.cancel()
+                notificationManager?.cancel(notificationIdToCancel)
+                Toast.makeText(applicationContext, R.string.message_save_cancelled, Toast.LENGTH_SHORT).show()
+            }
+            return START_NOT_STICKY
+        }
+
         val activeJobs = activeJobsCount.incrementAndGet()
         val notificationId = if (activeJobs == 1) PRIMARY_FOREGROUND_ID else startId + PRIMARY_FOREGROUND_ID
 
         val initialFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
+        val cancelPendingIntent = buildCancelPendingIntent(notificationId)
 
         val progressNotification = NotificationCompat.Builder(this, PROGRESS_CHANNEL_ID)
             .setContentTitle(initialFileName)
             .setContentText(getString(R.string.saving_file))
             .setSmallIcon(R.drawable.ic_notification)
+            .addAction(
+                R.drawable.ic_notification,
+                getString(R.string.cancel_button),
+                cancelPendingIntent
+            )
             .setOngoing(true)
             .build()
 
@@ -124,153 +161,172 @@ class SaveLocallyService: Service(), KoinComponent {
             notificationManager?.notify(notificationId, progressNotification)
         }
 
-        serviceScope.launch {
-            if (setOf(ACTION_SAVE_FILE, ACTION_SAVE_TEXT, ACTION_SAVE_ZIPPED_FILES).contains(intent?.action)) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(applicationContext, R.string.saving_file, Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            val result: Result<Unit>? = when (intent?.action) {
-                ACTION_SAVE_TEXT -> {
-                    val text = intent.getStringExtra(EXTRA_TEXT)
-                    val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
-                    if (text != null && targetUri != null) {
-                        saveFileUseCase.saveText(text, targetUri)
-                    } else Result.failure(IllegalArgumentException("Missing params"))
-                }
-                ACTION_SAVE_FILE -> {
-                    val sourceUri = intent.getStringExtra(EXTRA_SOURCE_URI)
-                    val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
-                    val fileName = intent.getStringExtra(EXTRA_FILE_NAME)
-                    val fileSize = intent.getLongExtra(EXTRA_FILE_SIZE, -1L).takeIf { it > 0L }
-
-                    if (sourceUri != null && targetUri != null && fileName != null && fileSize != null) {
-                        var lastUpdateMs = 0L
-                        val updateIntervalMs = 250L
-
-                        saveFileUseCase.saveFile(sourceUri, targetUri, totalBytes = fileSize) { bytesCopied, totalBytes ->
-                            val now = System.currentTimeMillis()
-                            if (now - lastUpdateMs >= updateIntervalMs || bytesCopied == totalBytes) {
-                                lastUpdateMs = now
-
-                                val copiedStr = Formatter.formatShortFileSize(
-                                    this@SaveLocallyService,
-                                    bytesCopied
-                                )
-                                val totalStr = Formatter.formatShortFileSize(
-                                    this@SaveLocallyService,
-                                    totalBytes
-                                )
-
-                                val percent = ((bytesCopied * 100) / totalBytes).toInt()
-
-                                val progressNotification =
-                                    NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)
-                                        .setContentTitle(fileName)
-                                        .setContentText("$copiedStr / $totalStr")
-                                        .setSmallIcon(R.drawable.ic_notification)
-                                        .setProgress(100, percent, false)
-                                        .setOngoing(true)
-                                        .build()
-
-                                notificationManager?.notify(notificationId, progressNotification)
-                            }
-                        }
-                    } else {
-                        Result.failure(IllegalArgumentException("Missing required EXTRA_SOURCE_URI, EXTRA_TARGET_URI, EXTRA_FILE_NAME, or EXTRA_FILE_SIZE"))
+        val job = serviceScope.launch {
+            try {
+                if (setOf(ACTION_SAVE_FILE, ACTION_SAVE_TEXT, ACTION_SAVE_ZIPPED_FILES).contains(intent?.action)) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(applicationContext, R.string.saving_file, Toast.LENGTH_SHORT).show()
                     }
                 }
-                ACTION_SAVE_ZIPPED_FILES -> {
-                    val sourceUris = intent.getStringArrayListExtra(EXTRA_SOURCE_URIS)
-                    val fileNames = intent.getStringArrayListExtra(EXTRA_FILE_NAMES)
-                    val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
 
-                    if (!sourceUris.isNullOrEmpty() && !fileNames.isNullOrEmpty() && targetUri != null && sourceUris.size == fileNames.size) {
-                        val files = sourceUris.zip(fileNames)
-                        var lastUpdateMs = 0L
-                        val updateIntervalMs = 250L
+                val result: Result<Unit>? = when (intent?.action) {
+                    ACTION_SAVE_TEXT -> {
+                        val text = intent.getStringExtra(EXTRA_TEXT)
+                        val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
+                        if (text != null && targetUri != null) {
+                            saveFileUseCase.saveText(text, targetUri)
+                        } else Result.failure(IllegalArgumentException("Missing params"))
+                    }
+                    ACTION_SAVE_FILE -> {
+                        val sourceUri = intent.getStringExtra(EXTRA_SOURCE_URI)
+                        val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
+                        val fileName = intent.getStringExtra(EXTRA_FILE_NAME)
+                        val fileSize = intent.getLongExtra(EXTRA_FILE_SIZE, -1L).takeIf { it > 0L }
 
-                        saveZippedFilesUseCase(files, targetUri) { bytesCopied, totalBytes, currentFileName ->
-                            val now = System.currentTimeMillis()
-                            if (now - lastUpdateMs >= updateIntervalMs || (totalBytes > 0L && bytesCopied == totalBytes)) {
-                                lastUpdateMs = now
+                        if (sourceUri != null && targetUri != null && fileName != null && fileSize != null) {
+                            var lastUpdateMs = 0L
+                            val updateIntervalMs = 250L
 
-                                val copiedStr = Formatter.formatShortFileSize(
-                                    this@SaveLocallyService,
-                                    bytesCopied
-                                )
+                            saveFileUseCase.saveFile(sourceUri, targetUri, totalBytes = fileSize) { bytesCopied, totalBytes ->
+                                val now = System.currentTimeMillis()
+                                if (now - lastUpdateMs >= updateIntervalMs || bytesCopied == totalBytes) {
+                                    lastUpdateMs = now
 
-                                val progressText = if (totalBytes > 0L) {
+                                    val copiedStr = Formatter.formatShortFileSize(
+                                        this@SaveLocallyService,
+                                        bytesCopied
+                                    )
                                     val totalStr = Formatter.formatShortFileSize(
                                         this@SaveLocallyService,
                                         totalBytes
                                     )
-                                    "$copiedStr / $totalStr — $currentFileName"
-                                } else {
-                                    "$copiedStr — $currentFileName"
+
+                                    val percent = ((bytesCopied * 100) / totalBytes).toInt()
+
+                                    val updatedNotification =
+                                        NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)
+                                            .setContentTitle(fileName)
+                                            .setContentText("$copiedStr / $totalStr")
+                                            .setSmallIcon(R.drawable.ic_notification)
+                                            .setProgress(100, percent, false)
+                                            .addAction(
+                                                R.drawable.ic_notification,
+                                                getString(R.string.cancel_button),
+                                                cancelPendingIntent
+                                            )
+                                            .setOngoing(true)
+                                            .build()
+
+                                    notificationManager?.notify(notificationId, updatedNotification)
                                 }
-
-                                val percent = if (totalBytes > 0L) {
-                                    ((bytesCopied * 100) / totalBytes).toInt().coerceIn(0, 100)
-                                } else 0
-
-                                val progressNotification =
-                                    NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)
-                                        .setContentTitle(initialFileName)
-                                        .setContentText(progressText)
-                                        .setSmallIcon(R.drawable.ic_notification)
-                                        .setProgress(if (totalBytes > 0L) 100 else 0, percent, totalBytes <= 0L)
-                                        .setOngoing(true)
-                                        .build()
-
-                                notificationManager?.notify(notificationId, progressNotification)
                             }
+                        } else {
+                            Result.failure(IllegalArgumentException("Missing required EXTRA_SOURCE_URI, EXTRA_TARGET_URI, EXTRA_FILE_NAME, or EXTRA_FILE_SIZE"))
                         }
-                    } else {
-                        Result.failure(IllegalArgumentException("Missing required params for zipping"))
                     }
+                    ACTION_SAVE_ZIPPED_FILES -> {
+                        val sourceUris = intent.getStringArrayListExtra(EXTRA_SOURCE_URIS)
+                        val fileNames = intent.getStringArrayListExtra(EXTRA_FILE_NAMES)
+                        val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
+
+                        if (!sourceUris.isNullOrEmpty() && !fileNames.isNullOrEmpty() && targetUri != null && sourceUris.size == fileNames.size) {
+                            val files = sourceUris.zip(fileNames)
+                            var lastUpdateMs = 0L
+                            val updateIntervalMs = 250L
+
+                            saveZippedFilesUseCase(files, targetUri) { bytesCopied, totalBytes, currentFileName ->
+                                val now = System.currentTimeMillis()
+                                if (now - lastUpdateMs >= updateIntervalMs || (totalBytes > 0L && bytesCopied == totalBytes)) {
+                                    lastUpdateMs = now
+
+                                    val copiedStr = Formatter.formatShortFileSize(
+                                        this@SaveLocallyService,
+                                        bytesCopied
+                                    )
+
+                                    val progressText = if (totalBytes > 0L) {
+                                        val totalStr = Formatter.formatShortFileSize(
+                                            this@SaveLocallyService,
+                                            totalBytes
+                                        )
+                                        "$copiedStr / $totalStr — $currentFileName"
+                                    } else {
+                                        "$copiedStr — $currentFileName"
+                                    }
+
+                                    val percent = if (totalBytes > 0L) {
+                                        ((bytesCopied * 100) / totalBytes).toInt().coerceIn(0, 100)
+                                    } else 0
+
+                                    val updatedNotification =
+                                        NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)
+                                            .setContentTitle(initialFileName)
+                                            .setContentText(progressText)
+                                            .setSmallIcon(R.drawable.ic_notification)
+                                            .setProgress(if (totalBytes > 0L) 100 else 0, percent, totalBytes <= 0L)
+                                            .addAction(
+                                                R.drawable.ic_notification,
+                                                getString(R.string.cancel_button),
+                                                cancelPendingIntent
+                                            )
+                                            .setOngoing(true)
+                                            .build()
+
+                                    notificationManager?.notify(notificationId, updatedNotification)
+                                }
+                            }
+                        } else {
+                            Result.failure(IllegalArgumentException("Missing required params for zipping"))
+                        }
+                    }
+                    else -> null
                 }
-                else -> null
-            }
 
-            result?.let { saveResult ->
-                val exception = saveResult.exceptionOrNull()
-                val isNoSpaceError = exception != null && (
-                    exception is InsufficientStorageException ||
-                    exception.message?.contains("Insufficient storage space", ignoreCase = true) == true ||
-                    exception.message?.contains("ENOSPC", ignoreCase = true) == true ||
-                    exception.message?.contains("No space left", ignoreCase = true) == true
-                )
+                result?.let { saveResult ->
+                    val exception = saveResult.exceptionOrNull()
+                    if (exception is CancellationException) {
+                        notificationManager?.cancel(notificationId)
+                        return@launch
+                    }
 
-                val messageText = when {
-                    saveResult.isSuccess -> getString(R.string.message_saved_file_success)
-                    isNoSpaceError -> getString(R.string.message_saved_file_no_space)
-                    else -> getString(R.string.message_saved_file_failure)
+                    val isNoSpaceError = exception != null && (
+                        exception is InsufficientStorageException ||
+                        exception.message?.contains("Insufficient storage space", ignoreCase = true) == true ||
+                        exception.message?.contains("ENOSPC", ignoreCase = true) == true ||
+                        exception.message?.contains("No space left", ignoreCase = true) == true
+                    )
+
+                    val messageText = when {
+                        saveResult.isSuccess -> getString(R.string.message_saved_file_success)
+                        isNoSpaceError -> getString(R.string.message_saved_file_no_space)
+                        else -> getString(R.string.message_saved_file_failure)
+                    }
+
+                    val completedFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
+
+                    val completedNotification = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
+                        .setContentTitle(completedFileName)
+                        .setContentText(messageText)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setAutoCancel(true)
+                        .build()
+
+                    val resultNotificationId = notificationId + 10000
+                    notificationManager?.notify(resultNotificationId, completedNotification)
+                    notificationManager?.cancel(notificationId)
                 }
-
-                val completedFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
-
-                val completedNotification = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
-                    .setContentTitle(completedFileName)
-                    .setContentText(messageText)
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setAutoCancel(true)
-                    .build()
-
-                val resultNotificationId = notificationId + 10000
-                notificationManager?.notify(resultNotificationId, completedNotification)
-                notificationManager?.cancel(notificationId)
+            } finally {
+                activeJobsMap.remove(notificationId)
+                val remainingJobs = activeJobsCount.decrementAndGet()
+                if (remainingJobs <= 0) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    notificationManager?.cancel(PRIMARY_FOREGROUND_ID)
+                }
+                stopSelf(startId)
             }
-
-            val remainingJobs = activeJobsCount.decrementAndGet()
-            if (remainingJobs <= 0) {
-                stopForeground(STOP_FOREGROUND_REMOVE)
-                notificationManager?.cancel(PRIMARY_FOREGROUND_ID)
-            }
-
-            stopSelf(startId)
         }
+
+        activeJobsMap[notificationId] = job
 
         return START_NOT_STICKY
     }

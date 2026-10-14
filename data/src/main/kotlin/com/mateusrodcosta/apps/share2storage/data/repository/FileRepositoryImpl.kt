@@ -31,7 +31,9 @@ import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
 import com.mateusrodcosta.apps.share2storage.domain.repository.FileRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
 import java.io.FileNotFoundException
@@ -77,6 +79,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                         var bytesCopied = 0L
                         var bytesRead: Int
                         while (input.read(buffer).also { bytesRead = it } >= 0) {
+                            coroutineContext.ensureActive()
                             outputStream.write(buffer, 0, bytesRead)
                             bytesCopied += bytesRead
                             onProgress?.invoke(bytesCopied, size)
@@ -84,6 +87,8 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                     } ?: throw IOException("Could not open input stream: $sourceUri")
                 } ?: throw IOException("Could not open target output stream for URI: $targetUri")
                 Unit
+            }.onFailure { e ->
+                if (e is CancellationException) throw e
             }
         }
 
@@ -153,6 +158,7 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
                                 var bytesRead: Int
                                 while (input.read(buffer).also { bytesRead = it } >= 0) {
+                                    coroutineContext.ensureActive()
                                     zipOut.write(buffer, 0, bytesRead)
                                     totalBytesWritten += bytesRead
                                     onProgress?.invoke(totalBytesWritten, totalInputBytes, uniqueName)
@@ -170,6 +176,8 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                     runCatching { outputStream.close() }
                 }
                 Unit
+            }.onFailure { e ->
+                if (e is CancellationException) throw e
             }
         }
 
