@@ -41,4 +41,17 @@
     <string name="notification_channel_name_in_progress">Fortschritt bei der Dateispeicherung</string>
     <string name="notification_channel_name_finished">Dateispeicherung abgeschlossen</string>
     <string name="notification_channel_description_finished">Ergebnis des Dateispeichervorgangs</string>
+    <string name="cancel_button">Abbrechen</string>
+    <string name="open_file_button">Datei öffnen</string>
+    <string name="save_as_zip">Als ZIP-Archiv speichern</string>
+    <string name="save_as_zip_default_filename">Archiv</string>
+    <string name="select_all">Alles auswählen</string>
+    <string name="settings_show_file_preview_info_all_types">Dateivorschauen für kompatible Dateitypen anzeigen.</string>
+    <string name="notification_channel_description_in_progress">Aktueller Fortschritt beim Speichern der aktuellen Datei</string>
+    <string name="message_saved_file_no_space">Es ist nicht genügend Speicherplatz verfügbar.</string>
+    <string name="message_save_cancelled">Speichern abgebrochen.</string>
+    <string name="message_notification_permission_granted">Benachrichtigungsberechtigung erteilt!</string>
+    <string name="message_notification_permission_denied">Benachrichtigungsberechtigung verweigert.</string>
+    <string name="message_notification_permission_check_denied">Benachrichtigungsberechtigung verweigert. Überprüfe die App-Berechtigungen in den Einstellungen.</string>
+    <string name="save_files_separately">Dateien separat speichern</string>
 </resources>
