@@ -47,6 +47,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -339,21 +340,26 @@ fun SingleFileDetailsPortrait(
     uriData: UriData,
     showFilePreview: Boolean,
     isChecked: Boolean,
+    modifier: Modifier = Modifier,
     onToggleSelection: () -> Unit,
     onSaveIndividualFile: () -> Unit = {}
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+    Card(
+        modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        SingleFileHeader(
-            isChecked = isChecked,
-            onToggleSelection = onToggleSelection,
-            onSaveIndividualFile = onSaveIndividualFile
-        )
-        FilePreview(uriData, showFilePreview = showFilePreview)
-        Box {
-            FileInfo(uriData, scrollable = false)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            SingleFileHeader(
+                isChecked = isChecked,
+                onToggleSelection = onToggleSelection,
+                onSaveIndividualFile = onSaveIndividualFile
+            )
+            FilePreview(uriData, showFilePreview = showFilePreview)
+            Box {
+                FileInfo(uriData, scrollable = false)
+            }
         }
     }
 }
@@ -367,28 +373,32 @@ fun SingleFileDetailsLandscape(
     modifier: Modifier = Modifier,
     onSaveIndividualFile: () -> Unit = {},
 ) {
-    Column(modifier = modifier) {
-        SingleFileHeader(
-            isChecked = isChecked,
-            onToggleSelection = onToggleSelection,
-            onSaveIndividualFile = onSaveIndividualFile
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1.0f),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(modifier = Modifier.weight(2.0f)) {
-                FilePreview(
-                    uriData,
-                    showFilePreview = showFilePreview,
-                    modifier = Modifier.align(Alignment.Center),
-                )
-            }
-            Box(modifier = Modifier.weight(3.0f)) {
-                FileInfo(uriData)
+    Card(
+        modifier.padding(horizontal = 64.dp, vertical = 32.dp)
+    ) {
+        Column {
+            SingleFileHeader(
+                isChecked = isChecked,
+                onToggleSelection = onToggleSelection,
+                onSaveIndividualFile = onSaveIndividualFile
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1.0f),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(modifier = Modifier.weight(2.0f)) {
+                    FilePreview(
+                        uriData,
+                        showFilePreview = showFilePreview,
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                }
+                Box(modifier = Modifier.weight(3.0f)) {
+                    FileInfo(uriData)
+                }
             }
         }
     }
