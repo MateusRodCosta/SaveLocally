@@ -377,7 +377,7 @@ fun ShowFilePreviewSetting(
     ), headlineContent = {
         Text(stringResource(R.string.settings_show_file_preview))
     }, supportingContent = {
-        Text(stringResource(R.string.settings_show_file_preview_info))
+        Text(stringResource(R.string.settings_show_file_preview_info_all_types))
     }, leadingContent = {
         Icon(Icons.Default.Image, null)
     }, trailingContent = {

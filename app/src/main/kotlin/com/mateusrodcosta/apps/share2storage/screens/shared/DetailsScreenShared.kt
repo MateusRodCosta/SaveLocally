@@ -116,7 +116,7 @@ fun FilePreview(uriData: UriData, modifier: Modifier = Modifier, showFilePreview
         if (showFilePreview) {
             SubcomposeAsyncImage(
                 modifier = Modifier.align(Alignment.Center),
-                model = MediaThumbnail(uriData.uri.toUri()),
+                model = MediaThumbnail(uriData.uri.toUri(), mimeType = uriData.mimeType),
                 contentDescription = stringResource(R.string.app_name),
                 contentScale = ContentScale.Fit,
             ) {

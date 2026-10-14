@@ -28,7 +28,7 @@
     <string name="settings_skip_file_details_page">Pular página de Detalhes do arquivo</string>
     <string name="settings_skip_file_details_page_info">Abrir seletor de arquivos assim que receber arquivo</string>
     <string name="settings_show_file_preview">Mostrar prévia do arquivo</string>
-    <string name="settings_show_file_preview_info">Mostrar pré-visualização para tipos de arquivo compatíveis. Atualmente apenas alguns tipos de arquivos de imagem são suportados.</string>
+    <string name="settings_show_file_preview_info_all_types">Mostrar pré-visualização para tipos de arquivo compatíveis.</string>
 
     <string name="settings_category_intents">Intents</string>
     <string name="settings_intercept_action_view_intents">Intercepta intents do tipo ACTION_VIEW</string>

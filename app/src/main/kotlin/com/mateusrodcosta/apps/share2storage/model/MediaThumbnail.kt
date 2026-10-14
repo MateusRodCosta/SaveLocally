@@ -22,5 +22,6 @@ import android.util.Size
 
 data class MediaThumbnail(
     val uri: Uri,
-    val size: Size = Size(1024, 1024)
+    val size: Size = Size(1024, 1024),
+    val mimeType: String = ""
 )

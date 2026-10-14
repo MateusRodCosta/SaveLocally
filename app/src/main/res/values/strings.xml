@@ -28,7 +28,7 @@
     <string name="settings_skip_file_details_page">Skip File Details page</string>
     <string name="settings_skip_file_details_page_info">Open file picker as soon as file is received</string>
     <string name="settings_show_file_preview">Show file preview</string>
-    <string name="settings_show_file_preview_info">Show file previews for compatible file types. Currently only some image files are supported.</string>
+    <string name="settings_show_file_preview_info_all_types">Show file previews for compatible file types.</string>
 
     <string name="settings_category_intents">Intents</string>
     <string name="settings_intercept_action_view_intents">Intercept ACTION_VIEW intents</string>

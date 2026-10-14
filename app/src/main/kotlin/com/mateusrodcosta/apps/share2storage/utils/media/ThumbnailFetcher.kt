@@ -41,15 +41,18 @@ class ThumbnailFetcher(
 
     override suspend fun fetch(): FetchResult? {
         return try {
-            val mimeType = context.contentResolver.getType(data.uri) ?: ""
-            val primaryType = mimeType.substringBefore('/')
+            val resolvedMimeType = runCatching {
+                context.contentResolver.getType(data.uri)
+            }.getOrNull()?.takeIf { it.isNotBlank() } ?: data.mimeType
+
+            val primaryType = resolvedMimeType.substringBefore('/')
 
             val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 runCatching {
                     context.contentResolver.loadThumbnail(data.uri, data.size, null)
-                }.getOrNull() ?: fetchFallbackBitmap(mimeType, primaryType)
+                }.getOrNull() ?: fetchFallbackBitmap(resolvedMimeType, primaryType)
             } else {
-                fetchFallbackBitmap(mimeType, primaryType)
+                fetchFallbackBitmap(resolvedMimeType, primaryType)
             }
 
             bitmap?.let {
@@ -70,15 +73,17 @@ class ThumbnailFetcher(
                 runCatching {
                     val retriever = MediaMetadataRetriever()
                     try {
-                        retriever.setDataSource(context, data.uri)
-                        retriever.getScaledFrameAtTime(
-                            -1L,
-                            MediaMetadataRetriever.OPTION_CLOSEST_SYNC,
-                            data.size.width,
-                            data.size.height
-                        ) ?: retriever.frameAtTime
+                        context.contentResolver.openFileDescriptor(data.uri, "r")?.use { pfd ->
+                            retriever.setDataSource(pfd.fileDescriptor)
+                            retriever.getScaledFrameAtTime(
+                                -1L,
+                                MediaMetadataRetriever.OPTION_CLOSEST_SYNC,
+                                data.size.width,
+                                data.size.height
+                            ) ?: retriever.frameAtTime
+                        }
                     } finally {
-                        retriever.release()
+                        runCatching { retriever.release() }
                     }
                 }.getOrNull()
             }
@@ -87,19 +92,21 @@ class ThumbnailFetcher(
                 runCatching {
                     val retriever = MediaMetadataRetriever()
                     try {
-                        retriever.setDataSource(context, data.uri)
-                        val picture = retriever.embeddedPicture
-                        picture?.let { bytes ->
-                            val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, boundsOptions)
-                            val sampleSize = ThumbnailUtils.calculateInSampleSize(
-                                boundsOptions, data.size.width, data.size.height
-                            )
-                            val decodeOptions = BitmapFactory.Options().apply { inSampleSize = sampleSize }
-                            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, decodeOptions)
+                        context.contentResolver.openFileDescriptor(data.uri, "r")?.use { pfd ->
+                            retriever.setDataSource(pfd.fileDescriptor)
+                            val picture = retriever.embeddedPicture
+                            picture?.let { bytes ->
+                                val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                                BitmapFactory.decodeByteArray(bytes, 0, bytes.size, boundsOptions)
+                                val sampleSize = ThumbnailUtils.calculateInSampleSize(
+                                    boundsOptions, data.size.width, data.size.height
+                                )
+                                val decodeOptions = BitmapFactory.Options().apply { inSampleSize = sampleSize }
+                                BitmapFactory.decodeByteArray(bytes, 0, bytes.size, decodeOptions)
+                            }
                         }
                     } finally {
-                        retriever.release()
+                        runCatching { retriever.release() }
                     }
                 }.getOrNull()
             }
