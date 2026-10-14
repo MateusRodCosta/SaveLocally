@@ -56,9 +56,9 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
         onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)?
     ): Result<Unit> =
         withContext(Dispatchers.IO) {
+            val targetUri = targetUriString.toUri()
             runCatching {
                 val sourceUri = sourceUriString.toUri()
-                val targetUri = targetUriString.toUri()
                 val size = totalBytes.takeIf { it > 0L }
                     ?: throw IllegalArgumentException("Invalid totalBytes ($totalBytes) for URI: $sourceUriString")
 
@@ -88,18 +88,22 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                 } ?: throw IOException("Could not open target output stream for URI: $targetUri")
                 Unit
             }.onFailure { e ->
+                deleteFile(targetUri)
                 if (e is CancellationException) throw e
             }
         }
 
     override suspend fun saveText(text: String, targetUriString: String): Result<Unit> =
         withContext(Dispatchers.IO) {
+            val targetUri = targetUriString.toUri()
             runCatching {
-                val targetUri = targetUriString.toUri()
                 contentResolver.openOutputStream(targetUri)?.use { outputStream ->
                     outputStream.write(text.toByteArray(Charsets.UTF_8))
                 } ?: throw IOException("Could not open target output stream for URI: $targetUri")
                 Unit
+            }.onFailure { e ->
+                deleteFile(targetUri)
+                if (e is CancellationException) throw e
             }
         }
 
@@ -109,9 +113,8 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
         onProgress: ((bytesCopied: Long, totalBytes: Long, currentFileName: String) -> Unit)?
     ): Result<Unit> =
         withContext(Dispatchers.IO) {
+            val targetZipUri = targetZipUriString.toUri()
             runCatching {
-                val targetZipUri = targetZipUriString.toUri()
-
                 val totalInputBytes = files.sumOf { (sourceUriString, _) ->
                     getFileMetadata(sourceUriString).getOrNull()?.size ?: 0L
                 }
@@ -177,9 +180,22 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
                 }
                 Unit
             }.onFailure { e ->
+                deleteFile(targetZipUri)
                 if (e is CancellationException) throw e
             }
         }
+
+    private fun deleteFile(uri: Uri) {
+        runCatching {
+            if (DocumentsContract.isDocumentUri(context, uri)) {
+                DocumentsContract.deleteDocument(contentResolver, uri)
+            } else {
+                contentResolver.delete(uri, null, null)
+            }
+        }.onFailure { e ->
+            Log.e("FileRepositoryImpl", "Failed to delete partially written file: $uri", e)
+        }
+    }
 
     private fun getUniqueZipEntryName(fileName: String, usedNames: Set<String>): String {
         if (!usedNames.contains(fileName)) return fileName
