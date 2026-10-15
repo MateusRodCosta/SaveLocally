@@ -39,7 +39,7 @@ kotlin {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.window.core)
+    api(libs.androidx.window.core)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
@@ -52,5 +52,4 @@ dependencies {
     implementation(libs.compose.material.icons.core)
 
     implementation(project(":core:ui"))
-    implementation(project(":core"))
 }

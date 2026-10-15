@@ -117,7 +117,6 @@ kotlin {
 dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.exifinterface)
 
     implementation(libs.kotlinx.serialization.core)
 
@@ -138,10 +137,6 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
-    implementation(libs.compose.material3)
-    implementation(libs.compose.material3.adaptive)
-    implementation(libs.compose.material.icons.core)
-    implementation(libs.compose.material.icons.extended)
     implementation(libs.activity.compose)
 
     implementation(platform(libs.koin.bom))
@@ -152,13 +147,6 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.core)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.compose.core)
-
-    implementation(libs.lazycolumnscrollbar)
-    implementation(libs.aboutlibraries.core)
-    implementation(libs.aboutlibraries.compose.core)
-    implementation(libs.aboutlibraries.compose.m3)
 
     testImplementation(libs.junit)
     androidTestRuntimeOnly(libs.test.runner)

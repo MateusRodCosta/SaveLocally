@@ -25,6 +25,4 @@ dependencies {
     api(platform(libs.koin.bom))
     api(libs.koin.core)
     api(libs.koin.annotations)
-
-    api(project(":core"))
 }

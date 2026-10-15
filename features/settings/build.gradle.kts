@@ -39,8 +39,11 @@ kotlin {
 }
 
 dependencies {
+    implementation(libs.androidx.core)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.window.core)
+    implementation(libs.androidx.activity)
+
+    api(libs.coroutines.core)
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
@@ -48,19 +51,15 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
-    implementation(libs.compose.material3)
-    implementation(libs.compose.material3.adaptive)
+    api(libs.compose.material3)
     implementation(libs.compose.material.icons.core)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.activity.compose)
 
     implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.core.viewmodel)
-    implementation(libs.koin.annotations)
-    implementation(libs.koin.android)
+    api(libs.koin.annotations)
 
     implementation(project(":core:ui"))
-    implementation(project(":domain"))
+    api(project(":domain"))
     implementation(project(":core"))
 }
