@@ -173,4 +173,5 @@ dependencies {
     implementation(project(":features:main"))
     implementation(project(":features:about"))
     implementation(project(":features:settings"))
+    implementation(project(":features:details"))
 }

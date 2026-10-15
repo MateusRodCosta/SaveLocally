@@ -15,23 +15,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.model
+package com.mateusrodcosta.apps.share2storage.features.details.screens
 
-import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
-
-class SampleUriDataProviderShared {
-    companion object {
-        val settingSailComingHome = UriData(
-            uri = "content://media/external/file/1",
-            displayName = "21. Setting Sail, Coming Home (End Theme).flac",
-            mimeType = "audio/flac",
-            size = 35280673
-        )
-        val lonelyRollingStar = UriData(
-            uri = "content://media/external/file/2",
-            displayName = "03. Lonely Rolling Star (Missing You).flac",
-            mimeType = "audio/flac",
-            size = 41123343
-        )
-    }
-}
+data class DetailsScreenStrings(
+    val fileDetails: String = "File details",
+    val saveButton: String = "Save",
+    val noFileFound: String = "No file found",
+    val savingFile: String = "Saving file...",
+    val selectAll: String = "Select all",
+    val deselectAll: String = "Deselect all",
+    val saveFilesSeparately: String = "Save files separately",
+    val saveAsZip: String = "Save as ZIP",
+    val fileName: String = "File name",
+    val fileType: String = "File type",
+    val fileSize: String = "File size",
+    val appName: String = "Save Locally"
+)

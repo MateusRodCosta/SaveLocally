@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens.shared
+package com.mateusrodcosta.apps.share2storage.features.details.screens.shared
 
 import android.text.format.Formatter
 import androidx.compose.foundation.layout.Arrangement
@@ -44,15 +44,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.core.ui.model.MediaThumbnail
+import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
+import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsScreenStrings
 
 @Composable
 fun FileInfoLine(label: String, content: String) {
@@ -75,6 +74,7 @@ fun FileInfo(
     uriData: UriData,
     modifier: Modifier = Modifier,
     scrollable: Boolean = true,
+    strings: DetailsScreenStrings = DetailsScreenStrings()
 ) {
     val columnModifier = if (scrollable) modifier.verticalScroll(rememberScrollState()) else modifier
     Column(
@@ -82,22 +82,27 @@ fun FileInfo(
         verticalArrangement = Arrangement.Center
     ) {
         FileInfoLine(
-            label = stringResource(R.string.file_name),
+            label = strings.fileName,
             content = uriData.displayName
         )
         FileInfoLine(
-            label = stringResource(R.string.file_type),
+            label = strings.fileType,
             content = uriData.mimeType
         )
         FileInfoLine(
-            label = stringResource(R.string.file_size),
+            label = strings.fileSize,
             content = Formatter.formatFileSize(LocalContext.current, uriData.size)
         )
     }
 }
 
 @Composable
-fun FilePreview(uriData: UriData, modifier: Modifier = Modifier, showFilePreview: Boolean = true) {
+fun FilePreview(
+    uriData: UriData,
+    modifier: Modifier = Modifier,
+    showFilePreview: Boolean = true,
+    strings: DetailsScreenStrings = DetailsScreenStrings()
+) {
     val mimeType = uriData.mimeType
     val primaryType = mimeType.substringBefore('/')
     val fallbackFileIcon = when (primaryType) {
@@ -115,7 +120,7 @@ fun FilePreview(uriData: UriData, modifier: Modifier = Modifier, showFilePreview
             SubcomposeAsyncImage(
                 modifier = Modifier.align(Alignment.Center),
                 model = MediaThumbnail(uriData.uri.toUri(), mimeType = uriData.mimeType),
-                contentDescription = stringResource(R.string.app_name),
+                contentDescription = strings.appName,
                 contentScale = ContentScale.Fit,
             ) {
                 val state by painter.state.collectAsState()
@@ -131,7 +136,7 @@ fun FilePreview(uriData: UriData, modifier: Modifier = Modifier, showFilePreview
                                 .size(128.dp)
                                 .align(Alignment.Center),
                             imageVector = fallbackFileIcon,
-                            contentDescription = stringResource(R.string.app_name),
+                            contentDescription = strings.appName,
                             tint = MaterialTheme.colorScheme.tertiary
                         )
                     }
@@ -147,7 +152,7 @@ fun FilePreview(uriData: UriData, modifier: Modifier = Modifier, showFilePreview
                     .size(128.dp)
                     .align(Alignment.Center),
                 imageVector = fallbackFileIcon,
-                contentDescription = stringResource(R.string.app_name),
+                contentDescription = strings.appName,
                 tint = MaterialTheme.colorScheme.tertiary
             )
         }

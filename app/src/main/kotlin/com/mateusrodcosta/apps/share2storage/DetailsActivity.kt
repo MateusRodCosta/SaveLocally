@@ -39,12 +39,13 @@ import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
-import com.mateusrodcosta.apps.share2storage.screens.DetailsScreen
-import com.mateusrodcosta.apps.share2storage.screens.DetailsScreenSavingFileFeedback
-import com.mateusrodcosta.apps.share2storage.screens.DetailsViewModel
-import com.mateusrodcosta.apps.share2storage.screens.MultiDetailsScreen
+import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsScreen
+import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsScreenSavingFileFeedback
+import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsScreenStrings
+import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsViewModel
+import com.mateusrodcosta.apps.share2storage.features.details.screens.MultiDetailsScreen
+import com.mateusrodcosta.apps.share2storage.features.details.utils.result.CreateDocumentWithInitialUri
 import com.mateusrodcosta.apps.share2storage.service.SaveLocallyService
-import com.mateusrodcosta.apps.share2storage.utils.result.CreateDocumentWithInitialUri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -311,6 +312,21 @@ class DetailsActivity : ComponentActivity() {
                 }
             }
 
+            val detailsStrings = DetailsScreenStrings(
+                fileDetails = getString(R.string.file_details),
+                saveButton = getString(R.string.save_button),
+                noFileFound = getString(R.string.no_file_found),
+                savingFile = getString(R.string.saving_file),
+                selectAll = getString(R.string.select_all),
+                deselectAll = getString(R.string.deselect_all),
+                saveFilesSeparately = getString(R.string.save_files_separately),
+                saveAsZip = getString(R.string.save_as_zip),
+                fileName = getString(R.string.file_name),
+                fileType = getString(R.string.file_type),
+                fileSize = getString(R.string.file_size),
+                appName = getString(R.string.app_name)
+            )
+
             // Wait for skipDetails to be loaded from preferences
             if (skipDetails != null) {
                 if (skipDetails == true) {
@@ -319,17 +335,19 @@ class DetailsActivity : ComponentActivity() {
                             launchFilePicker(null, false)
                         }
                     }
-                    DetailsScreenSavingFileFeedback()
+                    DetailsScreenSavingFileFeedback(strings = detailsStrings)
                 } else {
                     if (!uriDataList.isNullOrEmpty() && uriDataList!!.size > 1) {
                         MultiDetailsScreen(
                             detailsViewModel = viewModel,
-                            launchFilePicker = { selectedList, asZip -> launchFilePicker(selectedList, asZip) }
+                            launchFilePicker = { selectedList, asZip -> launchFilePicker(selectedList, asZip) },
+                            strings = detailsStrings
                         )
                     } else {
                         DetailsScreen(
                             detailsViewModel = viewModel,
-                            launchFilePicker = { launchFilePicker(null, false) }
+                            launchFilePicker = { launchFilePicker(null, false) },
+                            strings = detailsStrings
                         )
                     }
                 }

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.features.details.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,19 +50,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
-import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
-import com.mateusrodcosta.apps.share2storage.model.SampleUriDataProvider
-import com.mateusrodcosta.apps.share2storage.screens.shared.FileInfo
-import com.mateusrodcosta.apps.share2storage.screens.shared.FilePreview
 import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
 import com.mateusrodcosta.apps.share2storage.core.ui.utils.shouldShowLandscape
+import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
+import com.mateusrodcosta.apps.share2storage.features.details.model.SampleUriDataProvider
+import com.mateusrodcosta.apps.share2storage.features.details.screens.shared.FileInfo
+import com.mateusrodcosta.apps.share2storage.features.details.screens.shared.FilePreview
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
@@ -70,21 +68,9 @@ fun DetailsScreenPreview(@PreviewParameter(SampleUriDataProvider::class) uriData
     DetailsScreen(uriData = uriData)
 }
 
-@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun DetailsScreenPreviewPtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-    DetailsScreen(uriData = uriData)
-}
-
 @Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenPreviewLandscape(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
-    DetailsScreen(uriData = uriData)
-}
-
-@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun DetailsScreenPreviewLandscapePtBr(@PreviewParameter(SampleUriDataProvider::class) uriData: UriData?) {
     DetailsScreen(uriData = uriData)
 }
 
@@ -96,6 +82,7 @@ fun DetailsScreen(
     showFilePreview: Boolean = true,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
     launchFilePicker: () -> Unit? = {},
+    strings: DetailsScreenStrings = DetailsScreenStrings()
 ) {
     val collectedUriData by detailsViewModel?.uriData?.collectAsState() ?: remember { mutableStateOf(uriData) }
     val collectedShowFilePreview by detailsViewModel?.showFilePreview?.collectAsState()
@@ -106,7 +93,7 @@ fun DetailsScreen(
     SaveLocallyTheme {
         Scaffold(topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.file_details)) },
+                title = { Text(strings.fileDetails) },
             )
         }, floatingActionButton = {
             if (collectedUriData != null) {
@@ -120,7 +107,7 @@ fun DetailsScreen(
                     content = {
                         Icon(
                             Icons.Rounded.Download,
-                            contentDescription = stringResource(R.string.save_button)
+                            contentDescription = strings.saveButton
                         )
                     },
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -135,10 +122,10 @@ fun DetailsScreen(
                     .padding(paddingValues)
             ) {
                 if (collectedUriData != null) {
-                    if (useLandscapeLayout) FileDetailsLandscape(collectedUriData!!, collectedShowFilePreview == true)
-                    else FileDetailsPortrait(collectedUriData!!, collectedShowFilePreview == true)
+                    if (useLandscapeLayout) FileDetailsLandscape(collectedUriData!!, collectedShowFilePreview == true, strings = strings)
+                    else FileDetailsPortrait(collectedUriData!!, collectedShowFilePreview == true, strings = strings)
                 } else Text(
-                    stringResource(R.string.no_file_found),
+                    strings.noFileFound,
                     style = MaterialTheme.typography.headlineMedium
                 )
             }
@@ -147,7 +134,11 @@ fun DetailsScreen(
 }
 
 @Composable
-fun FileDetailsPortrait(uriData: UriData, showFilePreview: Boolean) {
+fun FileDetailsPortrait(
+    uriData: UriData,
+    showFilePreview: Boolean,
+    strings: DetailsScreenStrings = DetailsScreenStrings()
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -161,27 +152,32 @@ fun FileDetailsPortrait(uriData: UriData, showFilePreview: Boolean) {
             FilePreview(
                 uriData,
                 showFilePreview = showFilePreview,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
+                strings = strings
             )
         }
         Box {
-            FileInfo(uriData)
+            FileInfo(uriData, strings = strings)
         }
     }
 }
 
 @Composable
-fun FileDetailsLandscape(uriData: UriData, showFilePreview: Boolean) {
+fun FileDetailsLandscape(
+    uriData: UriData,
+    showFilePreview: Boolean,
+    strings: DetailsScreenStrings = DetailsScreenStrings()
+) {
     Row(
         modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = Modifier.weight(1.0f)) {
-            FilePreview(uriData, showFilePreview = showFilePreview)
+            FilePreview(uriData, showFilePreview = showFilePreview, strings = strings)
         }
         Box(modifier = Modifier.weight(1.0f)) {
-            FileInfo(uriData)
+            FileInfo(uriData, strings = strings)
         }
     }
 }
@@ -192,21 +188,9 @@ fun DetailsScreenSavingFileFeedbackPreview() {
     DetailsScreenSavingFileFeedback()
 }
 
-@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun DetailsScreenSavingFileFeedbackPreviewPtBr() {
-    DetailsScreenSavingFileFeedback()
-}
-
 @Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true)
 @Composable
 fun DetailsScreenSavingFileFeedbackPreviewLandscape() {
-    DetailsScreenSavingFileFeedback()
-}
-
-@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun DetailsScreenSavingFileFeedbackPreviewLandscapePtBr() {
     DetailsScreenSavingFileFeedback()
 }
 
@@ -214,13 +198,14 @@ fun DetailsScreenSavingFileFeedbackPreviewLandscapePtBr() {
 @Composable
 fun DetailsScreenSavingFileFeedback(
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
+    strings: DetailsScreenStrings = DetailsScreenStrings()
 ) {
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 
     SaveLocallyTheme {
         Scaffold(topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.file_details)) },
+                title = { Text(strings.fileDetails) },
             )
         }) { paddingValues ->
             if(useLandscapeLayout) {
@@ -232,7 +217,7 @@ fun DetailsScreenSavingFileFeedback(
                     CircularProgressIndicator(modifier = Modifier.size(64.dp))
                     Spacer(modifier = Modifier.width(32.dp))
                     Text(
-                        stringResource(R.string.saving_file),
+                        strings.savingFile,
                         style = MaterialTheme.typography.headlineMedium
                     )
                 }
@@ -245,7 +230,7 @@ fun DetailsScreenSavingFileFeedback(
                     CircularProgressIndicator(modifier = Modifier.size(64.dp))
                     Spacer(modifier = Modifier.height(32.dp))
                     Text(
-                        stringResource(R.string.saving_file),
+                        strings.savingFile,
                         style = MaterialTheme.typography.headlineMedium
                     )
                 }

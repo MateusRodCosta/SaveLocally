@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils.result
+package com.mateusrodcosta.apps.share2storage.features.details.utils.result
 
 import android.app.Activity
 import android.content.Context

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.features.details.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

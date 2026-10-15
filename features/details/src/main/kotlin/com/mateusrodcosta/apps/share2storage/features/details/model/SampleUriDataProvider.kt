@@ -15,17 +15,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.model
+package com.mateusrodcosta.apps.share2storage.features.details.model
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 
-class SampleMultiUriDataProvider : PreviewParameterProvider<List<UriData>?> {
+class SampleUriDataProvider : PreviewParameterProvider<UriData?> {
     override val values = sequenceOf(
-        listOf(
-            SampleUriDataProviderShared.settingSailComingHome,
-            SampleUriDataProviderShared.lonelyRollingStar,
-        ),
+        SampleUriDataProviderShared.settingSailComingHome,
+        SampleUriDataProviderShared.lonelyRollingStar,
         null,
     )
 }

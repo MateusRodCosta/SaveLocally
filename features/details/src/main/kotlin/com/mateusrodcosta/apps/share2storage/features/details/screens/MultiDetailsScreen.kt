@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.features.details.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -72,41 +72,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
-import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
-import com.mateusrodcosta.apps.share2storage.model.SampleMultiUriDataProvider
-import com.mateusrodcosta.apps.share2storage.screens.shared.FileInfo
-import com.mateusrodcosta.apps.share2storage.screens.shared.FilePreview
 import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
 import com.mateusrodcosta.apps.share2storage.core.ui.utils.shouldShowLandscape
+import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
+import com.mateusrodcosta.apps.share2storage.features.details.model.SampleMultiUriDataProvider
+import com.mateusrodcosta.apps.share2storage.features.details.screens.shared.FileInfo
+import com.mateusrodcosta.apps.share2storage.features.details.screens.shared.FilePreview
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
-fun MultiDetailsScreenPreview(@PreviewParameter(SampleMultiUriDataProvider ::class) uriDataList: List<UriData>?) {
-    MultiDetailsScreen(uriDataList = uriDataList)
-}
-
-@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun MultiDetailsScreenPreviewPtBr(@PreviewParameter(SampleMultiUriDataProvider ::class) uriDataList: List<UriData>?) {
+fun MultiDetailsScreenPreview(@PreviewParameter(SampleMultiUriDataProvider::class) uriDataList: List<UriData>?) {
     MultiDetailsScreen(uriDataList = uriDataList)
 }
 
 @Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true)
 @Composable
-fun MultiDetailsScreenPreviewLandscape(@PreviewParameter(SampleMultiUriDataProvider ::class) uriDataList: List<UriData>?) {
-    MultiDetailsScreen(uriDataList = uriDataList)
-}
-
-@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun MultiDetailsScreenPreviewLandscapePtBr(@PreviewParameter(SampleMultiUriDataProvider ::class) uriDataList: List<UriData>?) {
+fun MultiDetailsScreenPreviewLandscape(@PreviewParameter(SampleMultiUriDataProvider::class) uriDataList: List<UriData>?) {
     MultiDetailsScreen(uriDataList = uriDataList)
 }
 
@@ -118,6 +104,7 @@ fun MultiDetailsScreen(
     showFilePreview: Boolean = true,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
     launchFilePicker: (List<UriData>, Boolean) -> Unit = { _, _ -> },
+    strings: DetailsScreenStrings = DetailsScreenStrings()
 ) {
     val collectedUriDataList by detailsViewModel?.uriDataList?.collectAsState() ?: remember { mutableStateOf(uriDataList) }
     val collectedShowFilePreview by detailsViewModel?.showFilePreview?.collectAsState()
@@ -163,15 +150,15 @@ fun MultiDetailsScreen(
                     if (totalCount > 0) {
                         Text("${selectedItems.size} / $totalCount")
                     } else {
-                        Text(stringResource(R.string.file_details))
+                        Text(strings.fileDetails)
                     }
                 },
                 actions = {
                     if (totalCount > 0) {
                         TextButton(onClick = toggleSelectAll) {
                             Text(
-                                if (allSelected) stringResource(R.string.deselect_all)
-                                else stringResource(R.string.select_all)
+                                if (allSelected) strings.deselectAll
+                                else strings.selectAll
                             )
                         }
                     }
@@ -198,7 +185,7 @@ fun MultiDetailsScreen(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             FabMenuItem(
-                                text = stringResource(R.string.save_files_separately),
+                                text = strings.saveFilesSeparately,
                                 icon = Icons.Rounded.Download,
                                 onClick = {
                                     isMenuExpanded = false
@@ -206,7 +193,7 @@ fun MultiDetailsScreen(
                                 }
                             )
                             FabMenuItem(
-                                text = stringResource(R.string.save_as_zip),
+                                text = strings.saveAsZip,
                                 icon = Icons.Rounded.Archive,
                                 onClick = {
                                     isMenuExpanded = false
@@ -229,7 +216,7 @@ fun MultiDetailsScreen(
                         content = {
                             Icon(
                                 imageVector = if (isMenuExpanded && selectedItems.size > 1) Icons.Rounded.Close else Icons.Rounded.Download,
-                                contentDescription = stringResource(R.string.save_button)
+                                contentDescription = strings.saveButton
                             )
                         },
                         containerColor = if (hasSelection) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
@@ -258,7 +245,8 @@ fun MultiDetailsScreen(
                                     onSaveIndividualFile = {
                                         launchFilePicker(listOf(data), false)
                                     },
-                                    modifier = Modifier.fillParentMaxSize()
+                                    modifier = Modifier.fillParentMaxSize(),
+                                    strings = strings
                                 )
                             }
                         }
@@ -274,7 +262,8 @@ fun MultiDetailsScreen(
                                     },
                                     onSaveIndividualFile = {
                                         launchFilePicker(listOf(data), false)
-                                    }
+                                    },
+                                    strings = strings
                                 )
                             }
                         }
@@ -292,7 +281,7 @@ fun MultiDetailsScreen(
                         )
                     }
                 } else Text(
-                    stringResource(R.string.no_file_found),
+                    strings.noFileFound,
                     style = MaterialTheme.typography.headlineMedium
                 )
             }
@@ -306,6 +295,7 @@ fun SingleFileHeader(
     onToggleSelection: () -> Unit,
     modifier: Modifier = Modifier,
     onSaveIndividualFile: () -> Unit = {},
+    strings: DetailsScreenStrings = DetailsScreenStrings()
 ) {
     Row(
         modifier = modifier
@@ -329,7 +319,7 @@ fun SingleFileHeader(
         IconButton(onClick = onSaveIndividualFile) {
             Icon(
                 Icons.Rounded.Download,
-                contentDescription = stringResource(R.string.save_button)
+                contentDescription = strings.saveButton
             )
         }
     }
@@ -342,7 +332,8 @@ fun SingleFileDetailsPortrait(
     isChecked: Boolean,
     modifier: Modifier = Modifier,
     onToggleSelection: () -> Unit,
-    onSaveIndividualFile: () -> Unit = {}
+    onSaveIndividualFile: () -> Unit = {},
+    strings: DetailsScreenStrings = DetailsScreenStrings()
 ) {
     Card(
         modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -354,11 +345,12 @@ fun SingleFileDetailsPortrait(
             SingleFileHeader(
                 isChecked = isChecked,
                 onToggleSelection = onToggleSelection,
-                onSaveIndividualFile = onSaveIndividualFile
+                onSaveIndividualFile = onSaveIndividualFile,
+                strings = strings
             )
-            FilePreview(uriData, showFilePreview = showFilePreview)
+            FilePreview(uriData, showFilePreview = showFilePreview, strings = strings)
             Box {
-                FileInfo(uriData, scrollable = false)
+                FileInfo(uriData, scrollable = false, strings = strings)
             }
         }
     }
@@ -372,6 +364,7 @@ fun SingleFileDetailsLandscape(
     onToggleSelection: () -> Unit,
     modifier: Modifier = Modifier,
     onSaveIndividualFile: () -> Unit = {},
+    strings: DetailsScreenStrings = DetailsScreenStrings()
 ) {
     Card(
         modifier.padding(horizontal = 64.dp, vertical = 32.dp)
@@ -380,7 +373,8 @@ fun SingleFileDetailsLandscape(
             SingleFileHeader(
                 isChecked = isChecked,
                 onToggleSelection = onToggleSelection,
-                onSaveIndividualFile = onSaveIndividualFile
+                onSaveIndividualFile = onSaveIndividualFile,
+                strings = strings
             )
             Row(
                 modifier = Modifier
@@ -394,10 +388,11 @@ fun SingleFileDetailsLandscape(
                         uriData,
                         showFilePreview = showFilePreview,
                         modifier = Modifier.align(Alignment.Center),
+                        strings = strings
                     )
                 }
                 Box(modifier = Modifier.weight(3.0f)) {
-                    FileInfo(uriData)
+                    FileInfo(uriData, strings = strings)
                 }
             }
         }

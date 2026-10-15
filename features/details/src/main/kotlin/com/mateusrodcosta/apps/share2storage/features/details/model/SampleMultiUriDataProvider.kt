@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2022 - 2026 Mateus Rodrigues Costa
+ *     Copyright (C) 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -15,15 +15,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.model
+package com.mateusrodcosta.apps.share2storage.features.details.model
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 
-class SampleUriDataProvider : PreviewParameterProvider<UriData?> {
+class SampleMultiUriDataProvider : PreviewParameterProvider<List<UriData>?> {
     override val values = sequenceOf(
-        SampleUriDataProviderShared.settingSailComingHome,
-        SampleUriDataProviderShared.lonelyRollingStar,
+        listOf(
+            SampleUriDataProviderShared.settingSailComingHome,
+            SampleUriDataProviderShared.lonelyRollingStar,
+        ),
         null,
     )
 }
