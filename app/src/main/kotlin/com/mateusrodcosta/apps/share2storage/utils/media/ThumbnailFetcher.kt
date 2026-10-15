@@ -114,17 +114,17 @@ class ThumbnailFetcher(
             mimeType == "application/pdf" -> {
                 runCatching {
                     context.contentResolver.openFileDescriptor(data.uri, "r")?.use { pfd ->
-                        val renderer = PdfRenderer(pfd)
-                        if (renderer.pageCount > 0) {
-                            val page = renderer.openPage(0)
-                            val targetWidth = if (page.width > 0) page.width.coerceAtMost(data.size.width) else data.size.width
-                            val targetHeight = if (page.height > 0) page.height.coerceAtMost(data.size.height) else data.size.height
-                            val bitmap = createBitmap(targetWidth, targetHeight)
-                            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                            page.close()
-                            renderer.close()
-                            bitmap
-                        } else null
+                        PdfRenderer(pfd).use { renderer ->
+                            if (renderer.pageCount > 0) {
+                                renderer.openPage(0).use { page ->
+                                    val targetWidth = if (page.width > 0) page.width.coerceAtMost(data.size.width) else data.size.width
+                                    val targetHeight = if (page.height > 0) page.height.coerceAtMost(data.size.height) else data.size.height
+                                    createBitmap(targetWidth, targetHeight).also { bitmap ->
+                                        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                                    }
+                                }
+                            } else null
+                        }
                     }
                 }.getOrNull()
             }

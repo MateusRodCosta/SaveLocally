@@ -64,12 +64,12 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
             val sourceUri = runCatching { sourceUriString.toUri() }.getOrNull()
             val targetUri = targetUriString.toUri()
             runCatching {
-                val size = totalBytes.takeIf { it > 0L }
-                    ?: throw IllegalArgumentException("Invalid totalBytes ($totalBytes) for URI: $sourceUriString")
-
-                val availableFreeBytes = getAvailableFreeBytes(targetUri)
-                if (availableFreeBytes in 0..<size) {
-                    throw InsufficientStorageException(requiredBytes = size, availableBytes = availableFreeBytes)
+                val size = totalBytes.takeIf { it >= 0L } ?: -1L
+                if (size > 0L) {
+                    val availableFreeBytes = getAvailableFreeBytes(targetUri)
+                    if (availableFreeBytes in 0..<size) {
+                        throw InsufficientStorageException(requiredBytes = size, availableBytes = availableFreeBytes)
+                    }
                 }
 
                 val actualSourceUri = sourceUri
@@ -299,13 +299,13 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
     private fun getAvailableFreeBytes(uri: Uri): Long {
         val safBytes = runCatching {
-            contentResolver.openFileDescriptor(uri, "w")?.use { pfd ->
+            contentResolver.openFileDescriptor(uri, "r")?.use { pfd ->
                 val stats = Os.fstatvfs(pfd.fileDescriptor)
                 stats.f_bavail * stats.f_frsize
             }
         }.getOrNull()
 
-        if (safBytes != null && safBytes > 0L) {
+        if (safBytes != null && safBytes >= 0L) {
             return safBytes
         }
 

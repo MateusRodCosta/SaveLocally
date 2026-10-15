@@ -196,7 +196,7 @@ class SaveLocallyService: Service(), KoinComponent {
                         val sourceUri = intent.getStringExtra(EXTRA_SOURCE_URI)
                         val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
                         val fileName = intent.getStringExtra(EXTRA_FILE_NAME)
-                        val fileSize = intent.getLongExtra(EXTRA_FILE_SIZE, -1L).takeIf { it > 0L }
+                        val fileSize = intent.getLongExtra(EXTRA_FILE_SIZE, -1L).takeIf { it >= 0L }
 
                         if (sourceUri != null && targetUri != null && fileName != null && fileSize != null) {
                             var lastUpdateMs = 0L
@@ -216,7 +216,7 @@ class SaveLocallyService: Service(), KoinComponent {
                                         totalBytes
                                     )
 
-                                    val percent = ((bytesCopied * 100) / totalBytes).toInt()
+                                    val percent = if (totalBytes > 0L) ((bytesCopied * 100) / totalBytes).toInt() else 100
 
                                     val updatedNotification =
                                         NotificationCompat.Builder(this@SaveLocallyService, PROGRESS_CHANNEL_ID)

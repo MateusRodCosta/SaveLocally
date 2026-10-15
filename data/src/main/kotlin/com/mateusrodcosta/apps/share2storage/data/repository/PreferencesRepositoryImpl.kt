@@ -29,10 +29,12 @@ import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.data.utils.SharedPreferenceUtils
 import com.mateusrodcosta.apps.share2storage.data.utils.getTypedValue
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
 
 @Single
@@ -43,7 +45,6 @@ class PreferencesRepositoryImpl(private val context: Context) : PreferencesRepos
     private val contentResolver: ContentResolver = context.contentResolver
     private val sharedPreferences: SharedPreferences =
         SharedPreferenceUtils.getDefaultSharedPreferences(context)
-
 
     private companion object SharedPreferenceKeys {
         const val DEFAULT_SAVE_LOCATION_KEY: String = "default_save_location"
@@ -94,55 +95,40 @@ class PreferencesRepositoryImpl(private val context: Context) : PreferencesRepos
     }
 
     override suspend fun setDefaultSaveLocation(saveLocation: String?) {
-        val currentSaveLocationString = sharedPreferences.getString(DEFAULT_SAVE_LOCATION_KEY, null)
-        val currentSaveLocation =
-            currentSaveLocationString.let {
-                try {
-                    it?.toUri()
-                } catch (_: Exception) {
-                    null
-                }
+        withContext(Dispatchers.IO) {
+            val currentSaveLocationString = sharedPreferences.getString(DEFAULT_SAVE_LOCATION_KEY, null)
+            val currentSaveLocation = currentSaveLocationString?.let {
+                runCatching { it.toUri() }.getOrNull()
             }
 
-        sharedPreferences.edit {
-            if (saveLocation != null) putString(
-                DEFAULT_SAVE_LOCATION_KEY, saveLocation
-            )
-            else remove(DEFAULT_SAVE_LOCATION_KEY)
-        }
-
-        val saveLocationUri = saveLocation.let {
-            try {
-                it?.toUri()
-            } catch (_: Exception) {
-                null
+            sharedPreferences.edit {
+                if (saveLocation != null) putString(DEFAULT_SAVE_LOCATION_KEY, saveLocation)
+                else remove(DEFAULT_SAVE_LOCATION_KEY)
             }
-        }
-        if (currentSaveLocation != saveLocationUri) {
-            currentSaveLocation?.let { oldUri ->
-                if (oldUri.scheme == ContentResolver.SCHEME_CONTENT) {
-                    contentResolver.persistedUriPermissions.find { it.uri == oldUri }
-                        ?.let { permission ->
-                            val flags =
-                                (if (permission.isReadPermission) Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                else 0) or (if (permission.isWritePermission) Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                                else 0)
+
+            val saveLocationUri = saveLocation?.let {
+                runCatching { it.toUri() }.getOrNull()
+            }
+
+            if (currentSaveLocation != saveLocationUri) {
+                currentSaveLocation?.let { oldUri ->
+                    if (oldUri.scheme == ContentResolver.SCHEME_CONTENT) {
+                        contentResolver.persistedUriPermissions.find { it.uri == oldUri }?.let { permission ->
+                            val flags = (if (permission.isReadPermission) Intent.FLAG_GRANT_READ_URI_PERMISSION else 0) or
+                                    (if (permission.isWritePermission) Intent.FLAG_GRANT_WRITE_URI_PERMISSION else 0)
 
                             runCatching {
-                                contentResolver.releasePersistableUriPermission(
-                                    oldUri, flags
-                                )
+                                contentResolver.releasePersistableUriPermission(oldUri, flags)
                             }
                         }
+                    }
                 }
-            }
 
-            saveLocationUri?.let { newUri ->
-                if (newUri.scheme == ContentResolver.SCHEME_CONTENT) {
-                    runCatching {
-                        contentResolver.takePersistableUriPermission(
-                            newUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                        )
+                saveLocationUri?.let { newUri ->
+                    if (newUri.scheme == ContentResolver.SCHEME_CONTENT) {
+                        runCatching {
+                            contentResolver.takePersistableUriPermission(newUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        }
                     }
                 }
             }
@@ -150,22 +136,28 @@ class PreferencesRepositoryImpl(private val context: Context) : PreferencesRepos
     }
 
     override suspend fun setSkipFileDetails(skipDetails: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(SKIP_FILE_DETAILS_KEY, skipDetails)
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit {
+                putBoolean(SKIP_FILE_DETAILS_KEY, skipDetails)
+            }
         }
     }
 
     override suspend fun setShowFilePreview(showPreview: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(SHOW_FILE_PREVIEW_KEY, showPreview)
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit {
+                putBoolean(SHOW_FILE_PREVIEW_KEY, showPreview)
+            }
         }
     }
 
     override suspend fun setInterceptActionViewIntents(interceptIntents: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(INTERCEPT_ACTION_VIEW_INTENTS_KEY, interceptIntents)
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit {
+                putBoolean(INTERCEPT_ACTION_VIEW_INTENTS_KEY, interceptIntents)
+            }
 
-            try {
+            runCatching {
                 val component = ComponentName(
                     packageName,
                     "com.mateusrodcosta.apps.share2storage.DetailsActivityActionViewIntentInterceptor"
@@ -175,15 +167,17 @@ class PreferencesRepositoryImpl(private val context: Context) : PreferencesRepos
                     if (interceptIntents) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP
                 )
-            } catch (e: Exception) {
+            }.onFailure { e ->
                 Log.e("PreferencesRepositoryImpl", "updateInterceptActionViewIntents error", e)
             }
         }
     }
 
     override suspend fun setSkipFilePicker(skipPicker: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(SKIP_FILE_PICKER_KEY, skipPicker)
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit {
+                putBoolean(SKIP_FILE_PICKER_KEY, skipPicker)
+            }
         }
     }
 }
