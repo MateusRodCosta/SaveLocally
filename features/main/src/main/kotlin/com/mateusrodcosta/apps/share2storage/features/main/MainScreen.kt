@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.features.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -44,26 +44,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
-import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.core.ui.utils.shouldShowLandscape
+
+data class MainScreenStrings(
+    val appName: String = "Save Locally",
+    val settingsTitle: String = "Settings",
+    val howToUseTitle: String = "How to Use",
+    val step1: String = "Open any file, image, or text in another app.",
+    val step2: String = "Tap Share and select Save Locally.",
+    val step3: String = "Choose the folder where you want to save the file.",
+    val step4: String = "Your file is saved locally to your device!"
+)
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen()
-}
-
-@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun MainScreenPreviewPtBr() {
     MainScreen()
 }
 
@@ -73,64 +75,69 @@ fun MainScreenPreviewLandscape() {
     MainScreen()
 }
 
-@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun MainScreenPreviewLandscapePtBr() {
-    MainScreen()
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
-    openSettings: () -> Unit = {}
+    openSettings: () -> Unit = {},
+    strings: MainScreenStrings = MainScreenStrings(),
+    headerIcon: Painter? = null
 ) {
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
 
     Scaffold(topBar = {
         TopAppBar(
-            title = { Text(stringResource(R.string.app_name)) },
+            title = { Text(strings.appName) },
             actions = {
                 IconButton(onClick = openSettings) {
-                    Icon(Icons.Rounded.Settings, stringResource(R.string.settings_title))
+                    Icon(Icons.Rounded.Settings, strings.settingsTitle)
                 }
             },
         )
     }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            if (useLandscapeLayout) HowToUseLandscape()
-            else HowToUsePortrait()
+            if (useLandscapeLayout) HowToUseLandscape(strings = strings, headerIcon = headerIcon)
+            else HowToUsePortrait(strings = strings, headerIcon = headerIcon)
         }
     }
 }
 
 @Composable
-fun HowToUseLandscape() {
+fun HowToUseLandscape(
+    strings: MainScreenStrings,
+    headerIcon: Painter? = null
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(modifier = Modifier.weight(1.0f)) {
-            HowToUseHeader()
+            HowToUseHeader(strings = strings, headerIcon = headerIcon)
         }
         Box(modifier = Modifier.weight(3.0f)) {
-            HowToUseContent(isLandscape = true)
+            HowToUseContent(strings = strings, isLandscape = true)
         }
     }
 }
 
 @Composable
-fun HowToUsePortrait() {
+fun HowToUsePortrait(
+    strings: MainScreenStrings,
+    headerIcon: Painter? = null
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
     ) {
-        HowToUseHeader()
-        HowToUseContent()
+        HowToUseHeader(strings = strings, headerIcon = headerIcon)
+        HowToUseContent(strings = strings)
     }
 }
 
 @Composable
-fun HowToUseHeader() {
+fun HowToUseHeader(
+    strings: MainScreenStrings,
+    headerIcon: Painter? = null
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -138,13 +145,15 @@ fun HowToUseHeader() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painterResource(R.drawable.ic_launcher_foreground),
-            stringResource(R.string.app_name),
-            modifier = Modifier.scale(1.5f),
-        )
+        if (headerIcon != null) {
+            Image(
+                painter = headerIcon,
+                contentDescription = strings.appName,
+                modifier = Modifier.scale(1.5f),
+            )
+        }
         Text(
-            stringResource(R.string.how_to_use),
+            text = strings.howToUseTitle,
             style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.secondary),
             textAlign = TextAlign.Center
         )
@@ -152,20 +161,17 @@ fun HowToUseHeader() {
 }
 
 @Composable
-fun HowToUseContent(isLandscape: Boolean = false) {
+fun HowToUseContent(
+    strings: MainScreenStrings,
+    isLandscape: Boolean = false
+) {
     Column(
         modifier = if (isLandscape) Modifier.verticalScroll(rememberScrollState()) else Modifier.fillMaxSize()
     ) {
-        HowToUseRow(1, stringResource(R.string.how_to_use_step_1))
-        HowToUseRow(
-            2, String.format(
-                stringResource(R.string.how_to_use_step_2), stringResource(
-                    R.string.app_name
-                )
-            )
-        )
-        HowToUseRow(3, stringResource(R.string.how_to_use_step_3))
-        HowToUseRow(4, stringResource(R.string.how_to_use_step_4))
+        HowToUseRow(1, strings.step1)
+        HowToUseRow(2, strings.step2)
+        HowToUseRow(3, strings.step3)
+        HowToUseRow(4, strings.step4)
         Spacer(modifier = Modifier.height(16.dp))
     }
 }

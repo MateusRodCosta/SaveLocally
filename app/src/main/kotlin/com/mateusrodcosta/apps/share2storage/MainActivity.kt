@@ -46,12 +46,15 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
+import com.mateusrodcosta.apps.share2storage.features.main.MainScreen
+import com.mateusrodcosta.apps.share2storage.features.main.MainScreenStrings
 import com.mateusrodcosta.apps.share2storage.navigation.Routes
 import com.mateusrodcosta.apps.share2storage.screens.AboutScreen
-import com.mateusrodcosta.apps.share2storage.screens.MainScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
-import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -146,7 +149,20 @@ class MainActivity : ComponentActivity() {
                                 MainScreen(
                                     openSettings = {
                                         navController.navigate(Routes.Settings)
-                                    }
+                                    },
+                                    strings = MainScreenStrings(
+                                        appName = stringResource(R.string.app_name),
+                                        settingsTitle = stringResource(R.string.settings_title),
+                                        howToUseTitle = stringResource(R.string.how_to_use),
+                                        step1 = stringResource(R.string.how_to_use_step_1),
+                                        step2 = String.format(
+                                            stringResource(R.string.how_to_use_step_2),
+                                            stringResource(R.string.app_name)
+                                        ),
+                                        step3 = stringResource(R.string.how_to_use_step_3),
+                                        step4 = stringResource(R.string.how_to_use_step_4),
+                                    ),
+                                    headerIcon = painterResource(R.drawable.ic_launcher_foreground)
                                 )
                             }
 
