@@ -15,8 +15,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.features.about
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,16 +49,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mateusrodcosta.apps.share2storage.BuildConfig
-import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.core.ui.components.SectionHeader
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
@@ -65,15 +63,20 @@ import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import my.nanihadesuka.compose.LazyColumnScrollbar
 import my.nanihadesuka.compose.ScrollbarSettings
 
+data class AboutScreenStrings(
+    val appName: String = "Save Locally",
+    val versionName: String = "2.1.2a",
+    val developerCredits: String = "Developed by Mateus Rodrigues Costa",
+    val iconCredits: String = "Icons designed by SWY",
+    val githubRepoText: String = "GitHub Repository: https://github.com/MateusRodCosta/Share2Storage",
+    val aboutTitle: String = "About",
+    val backArrowContentDescription: String = "Back",
+    val licensesCategory: String = "Third-Party Libraries & Licenses"
+)
+
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun AboutScreenPreview() {
-    AboutScreen()
-}
-
-@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun AboutScreenPreviewPtBr() {
     AboutScreen()
 }
 
@@ -83,18 +86,14 @@ fun AboutScreenPreviewLandscape() {
     AboutScreen()
 }
 
-@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun AboutScreenPreviewLandscapePtBr() {
-    AboutScreen()
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreenHeader(modifier: Modifier = Modifier) {
+fun AboutScreenHeader(
+    strings: AboutScreenStrings = AboutScreenStrings(),
+    appIcon: Painter? = null,
+    modifier: Modifier = Modifier
+) {
     val uriHandler = LocalUriHandler.current
-
-    val versionName = BuildConfig.VERSION_NAME
 
     Column(
         modifier = modifier
@@ -110,23 +109,25 @@ fun AboutScreenHeader(modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier.size(80.dp)
             ) {
-                Icon(
-                    painterResource(id = R.drawable.ic_launcher_monochrome),
-                    contentDescription = stringResource(R.string.app_name),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(8.dp)
-                )
+                if (appIcon != null) {
+                    Icon(
+                        painter = appIcon,
+                        contentDescription = strings.appName,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
             Column {
                 Text(
-                    text = stringResource(R.string.app_name),
+                    text = strings.appName,
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Text(
-                    text = "v$versionName",
+                    text = "v${strings.versionName}",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -137,21 +138,21 @@ fun AboutScreenHeader(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = stringResource(R.string.about_developer, AppConstants.APP_DEVELOPER),
+            text = strings.developerCredits,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.small)
-                .clickable{ uriHandler.openUri(AppConstants.GITHUB_PROFILE) }
+                .clickable { uriHandler.openUri(AppConstants.GITHUB_PROFILE) }
                 .padding(8.dp)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.about_icon_credits, AppConstants.APP_ICONS_DESIGNER),
+            text = strings.iconCredits,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
@@ -166,7 +167,7 @@ fun AboutScreenHeader(modifier: Modifier = Modifier) {
 
         val sourceCodeRepo = AppConstants.GITHUB_REPO
         Text(
-            text = stringResource(R.string.about_github,sourceCodeRepo),
+            text = strings.githubRepoText,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
@@ -182,7 +183,9 @@ fun AboutScreenHeader(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    strings: AboutScreenStrings = AboutScreenStrings(),
+    appIcon: Painter? = null
 ) {
     val libraries by produceLibraries()
     val listState = rememberLazyListState()
@@ -191,13 +194,13 @@ fun AboutScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(R.string.about_title))
+                    Text(strings.aboutTitle)
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back_arrow)
+                            contentDescription = strings.backArrowContentDescription
                         )
                     }
                 },
@@ -232,10 +235,13 @@ fun AboutScreen(
                         libraries = libraries,
                         header = {
                             item {
-                                AboutScreenHeader()
+                                AboutScreenHeader(
+                                    strings = strings,
+                                    appIcon = appIcon
+                                )
                             }
                             item {
-                                SectionHeader(stringResource(R.string.about_category_licenses))
+                                SectionHeader(strings.licensesCategory)
                             }
                         }
                     )

@@ -48,11 +48,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
+import com.mateusrodcosta.apps.share2storage.features.about.AboutScreen
+import com.mateusrodcosta.apps.share2storage.features.about.AboutScreenStrings
 import com.mateusrodcosta.apps.share2storage.features.main.MainScreen
 import com.mateusrodcosta.apps.share2storage.features.main.MainScreenStrings
 import com.mateusrodcosta.apps.share2storage.navigation.Routes
-import com.mateusrodcosta.apps.share2storage.screens.AboutScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -182,7 +184,18 @@ class MainActivity : ComponentActivity() {
                                 AboutScreen(
                                     onBackClick = {
                                         navController.popBackStack()
-                                    }
+                                    },
+                                    strings = AboutScreenStrings(
+                                        appName = stringResource(R.string.app_name),
+                                        versionName = BuildConfig.VERSION_NAME,
+                                        developerCredits = stringResource(R.string.about_developer, AppConstants.APP_DEVELOPER),
+                                        iconCredits = stringResource(R.string.about_icon_credits, AppConstants.APP_ICONS_DESIGNER),
+                                        githubRepoText = stringResource(R.string.about_github, AppConstants.GITHUB_REPO),
+                                        aboutTitle = stringResource(R.string.about_title),
+                                        backArrowContentDescription = stringResource(R.string.back_arrow),
+                                        licensesCategory = stringResource(R.string.about_category_licenses)
+                                    ),
+                                    appIcon = painterResource(R.drawable.ic_launcher_monochrome)
                                 )
                             }
                         }
