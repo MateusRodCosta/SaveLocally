@@ -37,5 +37,11 @@ interface FileRepository {
         onProgress: ((bytesCopied: Long, totalBytes: Long, currentFileName: String) -> Unit)? = null
     ): Result<Unit>
 
+    suspend fun createTargetUri(
+        locationUriString: String,
+        displayName: String,
+        mimeType: String
+    ): Result<String>
+
     suspend fun getFileMetadata(uriString: String): Result<UriData>
 }

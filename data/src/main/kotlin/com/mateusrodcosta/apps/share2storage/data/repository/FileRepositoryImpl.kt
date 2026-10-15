@@ -18,16 +18,21 @@
 package com.mateusrodcosta.apps.share2storage.data.repository
 
 import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.system.Os
 import android.util.Log
 import androidx.core.net.toUri
+import androidx.documentfile.provider.DocumentFile
+import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.exception.InsufficientStorageException
 import com.mateusrodcosta.apps.share2storage.domain.repository.FileRepository
@@ -228,6 +233,33 @@ class FileRepositoryImpl(private val context: Context) : FileRepository {
 
         return candidateName
     }
+
+    override suspend fun createTargetUri(
+        locationUriString: String,
+        displayName: String,
+        mimeType: String
+    ): Result<String> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                if (locationUriString == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    val values = ContentValues().apply {
+                        put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+                        put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                    }
+                    val insertedUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+                        ?: throw IOException("Could not insert entry into MediaStore Downloads for $displayName")
+                    insertedUri.toString()
+                } else {
+                    val locationUri = locationUriString.toUri()
+                    val dir = DocumentFile.fromTreeUri(context, locationUri)
+                        ?: throw IOException("Could not resolve document tree for URI: $locationUriString")
+                    val createdFile = dir.createFile(mimeType, displayName)
+                        ?: throw IOException("Could not create file $displayName in tree $locationUriString")
+                    createdFile.uri.toString()
+                }
+            }
+        }
 
     override suspend fun getFileMetadata(uriString: String): Result<UriData> =
         withContext(Dispatchers.IO) {

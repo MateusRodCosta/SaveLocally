@@ -24,7 +24,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnticipateInterpolator
 import android.widget.Toast
@@ -84,33 +83,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val getSaveLocationDirIntent =
-        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-            when (uri) {
-                null -> Log.d(
-                    "MainActivity] getSaveLocationDirIntent] uri",
-                    "cancelled directory selection",
-                )
-
-                else -> {
-                    Log.d("MainActivity] getSaveLocationDirIntent] uri", uri.toString())
-                    Log.d(
-                        "MainActivity] getSaveLocationDirIntent] uri.path", uri.path.toString()
-                    )
-
-                    settingsViewModel.updateDefaultSaveLocation(uri)
-                }
-            }
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         checkNotificationPermission()
-
-        settingsViewModel.assignSaveLocationDirIntent(getSaveLocationDirIntent)
 
         splashScreen.setKeepOnScreenCondition {
             !settingsViewModel.isReady.value

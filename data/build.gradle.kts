@@ -37,6 +37,7 @@ kotlin {
 dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.documentfile)
 
     api(libs.coroutines.core)
     runtimeOnly(libs.coroutines.android)

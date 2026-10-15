@@ -19,14 +19,11 @@ package com.mateusrodcosta.apps.share2storage
 
 import android.Manifest
 import android.content.ClipData
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -39,7 +36,6 @@ import androidx.compose.runtime.getValue
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.core.net.toUri
-import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
@@ -49,7 +45,9 @@ import com.mateusrodcosta.apps.share2storage.screens.DetailsViewModel
 import com.mateusrodcosta.apps.share2storage.screens.MultiDetailsScreen
 import com.mateusrodcosta.apps.share2storage.service.SaveLocallyService
 import com.mateusrodcosta.apps.share2storage.utils.result.CreateDocumentWithInitialUri
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailsActivity : ComponentActivity() {
@@ -115,7 +113,7 @@ class DetailsActivity : ComponentActivity() {
             treeUri?.let { folderUri ->
                 val uriDataList = pendingSelectedUriDataList ?: viewModel.uriDataList.value
                 if (!uriDataList.isNullOrEmpty()) {
-                    saveMultipleFiles(folderUri, uriDataList)
+                    saveMultipleFiles(folderUri.toString(), uriDataList)
                 }
             } ?: run {
                 if (viewModel.skipFileDetails.value == true) finish()
@@ -126,50 +124,30 @@ class DetailsActivity : ComponentActivity() {
     private var sourceFileUri: Uri? = null
     private var sourceFileUriList: List<Uri>? = null
 
-    private fun saveMultipleFiles(folderTreeUri: Uri, uriDataList: List<UriData>) {
-        lifecycleScope.launch {
-            val dir = DocumentFile.fromTreeUri(applicationContext, folderTreeUri) ?: return@launch
-
+    private fun saveMultipleFiles(locationUriString: String, uriDataList: List<UriData>) {
+        lifecycleScope.launch(Dispatchers.IO) {
             uriDataList.forEach { data ->
                 val sourceUri = data.uri.toUri()
-                val createdFile = dir.createFile(data.mimeType, data.displayName) ?: return@forEach
+                val targetUriString = viewModel.createTargetUri(
+                    locationUriString = locationUriString,
+                    displayName = data.displayName,
+                    mimeType = data.mimeType
+                ).getOrNull() ?: return@forEach
 
-                startSaveService(SaveLocallyService.ACTION_SAVE_FILE, createdFile.uri) {
-                    putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
-                    putExtra(SaveLocallyService.EXTRA_TARGET_URI, createdFile.uri.toString())
-                    putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
-                    putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
-                }
-            }
-            finish()
-        }
-    }
-
-    private fun saveMultipleFilesToDownloads(uriDataList: List<UriData>) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
-        lifecycleScope.launch {
-            uriDataList.forEach { data ->
-                val sourceUri = data.uri.toUri()
-                val values = ContentValues().apply {
-                    put(MediaStore.MediaColumns.DISPLAY_NAME, data.displayName)
-                    put(MediaStore.MediaColumns.MIME_TYPE, data.mimeType)
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-                }
-                val targetUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values) ?: return@forEach
-
+                val targetUri = targetUriString.toUri()
                 startSaveService(SaveLocallyService.ACTION_SAVE_FILE, targetUri) {
                     putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
-                    putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
+                    putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUriString)
                     putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                     putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
                 }
             }
-            finish()
+            withContext(Dispatchers.Main) { finish() }
         }
     }
 
     private fun saveZippedFiles(targetZipUri: Uri, uriDataList: List<UriData>) {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val sourceUris = uriDataList.map { it.uri }
             val fileNames = uriDataList.map { it.displayName }
             val defaultZipName = getString(R.string.save_as_zip_default_filename) + ".zip"
@@ -180,7 +158,7 @@ class DetailsActivity : ComponentActivity() {
                 putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetZipUri.toString())
                 putExtra(SaveLocallyService.EXTRA_FILE_NAME, defaultZipName)
             }
-            finish()
+            withContext(Dispatchers.Main) { finish() }
         }
     }
 
@@ -233,19 +211,21 @@ class DetailsActivity : ComponentActivity() {
                         pendingSelectedUriDataList = dataList
                         if (asZip) {
                             if (skipPicker == true && defaultLocation != null) {
-                                val targetZipUri = if (defaultLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                    val values = ContentValues().apply {
-                                        put(MediaStore.MediaColumns.DISPLAY_NAME, zipDefaultName)
-                                        put(MediaStore.MediaColumns.MIME_TYPE, "application/zip")
-                                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-                                    }
-                                    contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-                                } else if (initialUri != null) {
-                                    val dir = DocumentFile.fromTreeUri(applicationContext, initialUri)
-                                    dir?.createFile("application/zip", zipDefaultName)?.uri
-                                } else null
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    val targetZipUriString = viewModel.createTargetUri(
+                                        locationUriString = defaultLocation!!,
+                                        displayName = zipDefaultName,
+                                        mimeType = "application/zip"
+                                    ).getOrNull()
 
-                                targetZipUri?.let { saveZippedFiles(it, dataList) }
+                                    if (targetZipUriString != null) {
+                                        saveZippedFiles(targetZipUriString.toUri(), dataList)
+                                    } else {
+                                        withContext(Dispatchers.Main) {
+                                            if (viewModel.skipFileDetails.value == true) finish()
+                                        }
+                                    }
+                                }
                             } else {
                                 createZipFileLauncher.launch(
                                     CreateDocumentWithInitialUri.Input(
@@ -257,11 +237,7 @@ class DetailsActivity : ComponentActivity() {
                             }
                         } else {
                             if (skipPicker == true && defaultLocation != null) {
-                                if (defaultLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                    saveMultipleFilesToDownloads(dataList)
-                                } else if (initialUri != null) {
-                                    saveMultipleFiles(initialUri, dataList)
-                                }
+                                saveMultipleFiles(defaultLocation!!, dataList)
                             } else {
                                 openFolderLauncher.launch(initialUri)
                             }
@@ -270,31 +246,27 @@ class DetailsActivity : ComponentActivity() {
 
                     data != null -> {
                         if (skipPicker == true && defaultLocation != null) {
-                            lifecycleScope.launch {
+                            lifecycleScope.launch(Dispatchers.IO) {
                                 val saveLocation = defaultLocation ?: return@launch
-                                val targetUri = if (saveLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                    val values = ContentValues().apply {
-                                        put(MediaStore.MediaColumns.DISPLAY_NAME, data.displayName)
-                                        put(MediaStore.MediaColumns.MIME_TYPE, data.mimeType)
-                                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-                                    }
-                                    contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-                                } else {
-                                    val dir = DocumentFile.fromTreeUri(
-                                        applicationContext,
-                                        saveLocation.toUri()
-                                    )
-                                    dir?.createFile(data.mimeType, data.displayName)?.uri
-                                }
+                                val targetUriString = viewModel.createTargetUri(
+                                    locationUriString = saveLocation,
+                                    displayName = data.displayName,
+                                    mimeType = data.mimeType
+                                ).getOrNull()
 
-                                targetUri?.let { uri ->
-                                    startSaveService(SaveLocallyService.ACTION_SAVE_FILE, uri) {
+                                if (targetUriString != null) {
+                                    val targetUri = targetUriString.toUri()
+                                    startSaveService(SaveLocallyService.ACTION_SAVE_FILE, targetUri) {
                                         putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
-                                        putExtra(SaveLocallyService.EXTRA_TARGET_URI, uri.toString())
+                                        putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUriString)
                                         putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                                         putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
                                     }
-                                    finish()
+                                    withContext(Dispatchers.Main) { finish() }
+                                } else {
+                                    withContext(Dispatchers.Main) {
+                                        if (viewModel.skipFileDetails.value == true) finish()
+                                    }
                                 }
                             }
                         } else {

@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
+import com.mateusrodcosta.apps.share2storage.domain.usecases.CreateTargetUriUseCase
 import com.mateusrodcosta.apps.share2storage.domain.usecases.GetFileMetadataUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,7 +34,8 @@ import org.koin.core.annotation.KoinViewModel
 @KoinViewModel
 class DetailsViewModel(
     private val preferencesRepository: PreferencesRepository,
-    private val getFileMetadataUseCase: GetFileMetadataUseCase
+    private val getFileMetadataUseCase: GetFileMetadataUseCase,
+    private val createTargetUriUseCase: CreateTargetUriUseCase
 ) : ViewModel() {
 
     val defaultSaveLocation: StateFlow<String?> = preferencesRepository.defaultSaveLocation
@@ -72,5 +74,13 @@ class DetailsViewModel(
                 _uriData.value = list.firstOrNull()
             }
         }
+    }
+
+    suspend fun createTargetUri(
+        locationUriString: String,
+        displayName: String,
+        mimeType: String
+    ): Result<String> {
+        return createTargetUriUseCase(locationUriString, displayName, mimeType)
     }
 }

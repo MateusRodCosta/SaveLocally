@@ -17,6 +17,8 @@
 
 package com.mateusrodcosta.apps.share2storage.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -103,6 +105,12 @@ fun SettingsScreen(
     onNavigateToAbout: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
+    val selectFolderLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) {
+            settingsViewModel?.updateDefaultSaveLocation(uri)
+        }
+    }
+
     val mockDefaultSaveLocation = remember { MutableStateFlow<String?>(null) }
     val mockSkipFilePicker =
         remember { MutableStateFlow<Boolean?>(PreferencesRepository.SKIP_FILE_PICKER_DEFAULT) }
@@ -127,7 +135,7 @@ fun SettingsScreen(
             ?: mockInterceptActionViewIntents,
         onNavigateToAbout = onNavigateToAbout,
         onBackClick = onBackClick,
-        launchFilePicker = { settingsViewModel?.getSaveLocationDirIntent()?.launch(null) },
+        launchFilePicker = { selectFolderLauncher.launch(null) },
         clearDefaultSaveLocation = { settingsViewModel?.clearDefaultSaveLocation() },
         selectDownloadsFolder = { settingsViewModel?.updateDefaultSaveLocationDownloads() },
         updateSkipFilePicker = { value: Boolean ->

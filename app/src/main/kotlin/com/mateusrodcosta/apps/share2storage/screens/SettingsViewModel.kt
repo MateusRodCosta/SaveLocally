@@ -18,7 +18,6 @@
 package com.mateusrodcosta.apps.share2storage.screens
 
 import android.net.Uri
-import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
@@ -32,8 +31,6 @@ import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class SettingsViewModel(private val repository: PreferencesRepository) : ViewModel() {
-
-    private lateinit var getSaveLocationDirIntent: ActivityResultLauncher<Uri?>
 
     val defaultSaveLocation: StateFlow<String?> = repository.defaultSaveLocation.stateIn(
         viewModelScope,
@@ -61,14 +58,6 @@ class SettingsViewModel(private val repository: PreferencesRepository) : ViewMod
         repository.skipFilePicker
     ) { _, _, _, _, _ -> true }
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
-
-    fun assignSaveLocationDirIntent(intent: ActivityResultLauncher<Uri?>) {
-        getSaveLocationDirIntent = intent
-    }
-
-    fun getSaveLocationDirIntent(): ActivityResultLauncher<Uri?> {
-        return getSaveLocationDirIntent
-    }
 
     fun updateDefaultSaveLocation(value: Uri?) {
         viewModelScope.launch {
