@@ -67,7 +67,7 @@ import androidx.core.net.toUri
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
-import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
+import com.mateusrodcosta.apps.share2storage.core.ui.components.SectionHeader
 import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.DefaultFolderDialog
 import com.mateusrodcosta.apps.share2storage.utils.common.Utils
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -59,7 +59,7 @@ import androidx.compose.ui.unit.dp
 import com.mateusrodcosta.apps.share2storage.BuildConfig
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
-import com.mateusrodcosta.apps.share2storage.screens.components.SectionHeader
+import com.mateusrodcosta.apps.share2storage.core.ui.components.SectionHeader
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import my.nanihadesuka.compose.LazyColumnScrollbar

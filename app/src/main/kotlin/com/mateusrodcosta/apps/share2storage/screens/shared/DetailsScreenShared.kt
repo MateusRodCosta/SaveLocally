@@ -52,7 +52,7 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
-import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
+import com.mateusrodcosta.apps.share2storage.core.ui.model.MediaThumbnail
 
 @Composable
 fun FileInfoLine(label: String, content: String) {

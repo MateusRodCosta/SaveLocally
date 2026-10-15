@@ -15,26 +15,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils.media
+package com.mateusrodcosta.apps.share2storage.core.ui.model
 
-import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Size
 
-object ThumbnailUtils {
-    fun calculateInSampleSize(
-        options: BitmapFactory.Options,
-        reqWidth: Int,
-        reqHeight: Int
-    ): Int {
-        val (height: Int, width: Int) = options.outHeight to options.outWidth
-        var inSampleSize = 1
-
-        if (height > reqHeight || width > reqWidth) {
-            val halfHeight: Int = height / 2
-            val halfWidth: Int = width / 2
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-        return inSampleSize
-    }
-}
+data class MediaThumbnail(
+    val uri: Uri,
+    val size: Size = Size(1024, 1024),
+    val mimeType: String = ""
+)

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils.media
+package com.mateusrodcosta.apps.share2storage.core.ui.media
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -32,7 +32,7 @@ import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
 import coil3.fetch.ImageFetchResult
 import coil3.request.Options
-import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
+import com.mateusrodcosta.apps.share2storage.core.ui.model.MediaThumbnail
 
 class ThumbnailFetcher(
     private val context: Context,

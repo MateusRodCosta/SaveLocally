@@ -51,7 +51,7 @@ import com.mateusrodcosta.apps.share2storage.screens.AboutScreen
 import com.mateusrodcosta.apps.share2storage.screens.MainScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
 import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
-import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
+import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {

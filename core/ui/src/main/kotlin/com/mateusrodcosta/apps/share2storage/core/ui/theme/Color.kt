@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2024 Mateus Rodrigues Costa
+ *     Copyright (C) 2024 - 2026 Mateus Rodrigues Costa
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.ui.theme
+package com.mateusrodcosta.apps.share2storage.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -53,7 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import com.mateusrodcosta.apps.share2storage.R
-import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
+import com.mateusrodcosta.apps.share2storage.core.ui.utils.shouldShowLandscape
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable

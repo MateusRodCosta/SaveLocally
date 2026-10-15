@@ -15,13 +15,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.ui.theme
+package com.mateusrodcosta.apps.share2storage.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import com.mateusrodcosta.apps.share2storage.R
+import com.mateusrodcosta.apps.share2storage.core.ui.R
 
 val firaGoFamily = FontFamily(
     Font(R.font.firago_regular, FontWeight.Normal),

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils.ui
+package com.mateusrodcosta.apps.share2storage.core.ui.utils
 
 import androidx.window.core.layout.WindowSizeClass
 

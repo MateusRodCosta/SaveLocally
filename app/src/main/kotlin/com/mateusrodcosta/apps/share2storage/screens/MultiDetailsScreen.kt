@@ -83,8 +83,8 @@ import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.model.SampleMultiUriDataProvider
 import com.mateusrodcosta.apps.share2storage.screens.shared.FileInfo
 import com.mateusrodcosta.apps.share2storage.screens.shared.FilePreview
-import com.mateusrodcosta.apps.share2storage.ui.theme.SaveLocallyTheme
-import com.mateusrodcosta.apps.share2storage.utils.ui.shouldShowLandscape
+import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
+import com.mateusrodcosta.apps.share2storage.core.ui.utils.shouldShowLandscape
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable

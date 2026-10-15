@@ -167,6 +167,7 @@ dependencies {
     debugRuntimeOnly(libs.compose.ui.test.manifest)
 
     implementation(project(":core"))
+    implementation(project(":core:ui"))
     implementation(project(":domain"))
     implementation(project(":data"))
 }
