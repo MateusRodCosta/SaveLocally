@@ -54,18 +54,43 @@ class DetailsActivity : ComponentActivity() {
 
     private val viewModel: DetailsViewModel by viewModel()
 
-    private fun Intent.grantTargetUriPermission(targetUri: Uri?): Intent {
+    private var sharedContent: CharSequence? = null
+    private var sourceFileUri: Uri? = null
+    private var sourceFileUriList: List<Uri>? = null
+
+    private fun Intent.grantUriPermissions(sourceUris: List<Uri>?, targetUri: Uri?): Intent {
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         if (targetUri != null) {
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            this.clipData = ClipData.newUri(contentResolver, "targetUri", targetUri)
+            addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        }
+
+        val items = mutableListOf<ClipData.Item>()
+        sourceUris?.forEach { uri ->
+            items.add(ClipData.Item(uri))
+        }
+        if (targetUri != null) {
+            items.add(ClipData.Item(targetUri))
+        }
+
+        if (items.isNotEmpty()) {
+            val clipData = ClipData("uris", arrayOf("text/uri-list"), items.first())
+            for (i in 1 until items.size) {
+                clipData.addItem(items[i])
+            }
+            this.clipData = clipData
         }
         return this
     }
 
-    private fun startSaveService(action: String, targetUri: Uri, setup: Intent.() -> Unit = {}) {
+    private fun startSaveService(
+        action: String,
+        targetUri: Uri,
+        sourceUris: List<Uri>? = sourceFileUriList ?: sourceFileUri?.let { listOf(it) },
+        setup: Intent.() -> Unit = {}
+    ) {
         val intent = Intent(this, SaveLocallyService::class.java).apply {
             this.action = action
-            grantTargetUriPermission(targetUri)
+            grantUriPermissions(sourceUris, targetUri)
             setup()
         }
         ContextCompat.startForegroundService(this, intent)
@@ -120,10 +145,6 @@ class DetailsActivity : ComponentActivity() {
             }
         }
 
-    private var sharedContent: CharSequence? = null
-    private var sourceFileUri: Uri? = null
-    private var sourceFileUriList: List<Uri>? = null
-
     private fun saveMultipleFiles(locationUriString: String, uriDataList: List<UriData>) {
         lifecycleScope.launch(Dispatchers.IO) {
             uriDataList.forEach { data ->
@@ -135,7 +156,11 @@ class DetailsActivity : ComponentActivity() {
                 ).getOrNull() ?: return@forEach
 
                 val targetUri = targetUriString.toUri()
-                startSaveService(SaveLocallyService.ACTION_SAVE_FILE, targetUri) {
+                startSaveService(
+                    action = SaveLocallyService.ACTION_SAVE_FILE,
+                    targetUri = targetUri,
+                    sourceUris = listOf(sourceUri)
+                ) {
                     putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
                     putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUriString)
                     putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
@@ -152,7 +177,11 @@ class DetailsActivity : ComponentActivity() {
             val fileNames = uriDataList.map { it.displayName }
             val defaultZipName = getString(R.string.save_as_zip_default_filename) + ".zip"
 
-            startSaveService(SaveLocallyService.ACTION_SAVE_ZIPPED_FILES, targetZipUri) {
+            startSaveService(
+                action = SaveLocallyService.ACTION_SAVE_ZIPPED_FILES,
+                targetUri = targetZipUri,
+                sourceUris = sourceUris.map { it.toUri() }
+            ) {
                 putStringArrayListExtra(SaveLocallyService.EXTRA_SOURCE_URIS, ArrayList(sourceUris))
                 putStringArrayListExtra(SaveLocallyService.EXTRA_FILE_NAMES, ArrayList(fileNames))
                 putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetZipUri.toString())

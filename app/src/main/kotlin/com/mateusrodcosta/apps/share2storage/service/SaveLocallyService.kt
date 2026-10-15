@@ -40,6 +40,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -118,6 +119,11 @@ class SaveLocallyService: Service(), KoinComponent {
         createNotificationChannels()
     }
 
+    override fun onDestroy() {
+        serviceScope.cancel()
+        super.onDestroy()
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notificationManager = getSystemService(NotificationManager::class.java)
 
@@ -128,6 +134,11 @@ class SaveLocallyService: Service(), KoinComponent {
                 jobToCancel?.cancel()
                 notificationManager?.cancel(notificationIdToCancel)
                 Toast.makeText(applicationContext, R.string.message_save_cancelled, Toast.LENGTH_SHORT).show()
+            }
+            if (activeJobsCount.get() <= 0) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                notificationManager?.cancel(PRIMARY_FOREGROUND_ID)
+                stopSelf()
             }
             return START_NOT_STICKY
         }
@@ -394,8 +405,8 @@ class SaveLocallyService: Service(), KoinComponent {
                 if (remainingJobs <= 0) {
                     stopForeground(STOP_FOREGROUND_REMOVE)
                     notificationManager?.cancel(PRIMARY_FOREGROUND_ID)
+                    stopSelf()
                 }
-                stopSelf(startId)
             }
         }
 
