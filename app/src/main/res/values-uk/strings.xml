@@ -51,4 +51,9 @@
     <string name="save_as_zip_default_filename">Архів</string>
     <string name="select_all">Вибрати все</string>
     <string name="deselect_all">Зняти вибір</string>
+    <string name="settings_show_file_preview_info_all_types">Показувати передперегляд файлів сумісних типів.</string>
+    <string name="message_save_cancelled">Збереження скасовано.</string>
+    <string name="cancel_button">Скасувати</string>
+    <string name="open_file_button">Відкрити файл</string>
+    <string name="open_location_button">Відкрити розташування</string>
 </resources>
