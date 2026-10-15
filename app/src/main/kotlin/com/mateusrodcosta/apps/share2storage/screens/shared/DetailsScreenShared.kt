@@ -18,7 +18,6 @@
 package com.mateusrodcosta.apps.share2storage.screens.shared
 
 import android.text.format.Formatter
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,7 +57,6 @@ import com.mateusrodcosta.apps.share2storage.model.MediaThumbnail
 @Composable
 fun FileInfoLine(label: String, content: String) {
     ListItem(
-        modifier = Modifier.clickable { },
         headlineContent = {
             Text(label)
         },

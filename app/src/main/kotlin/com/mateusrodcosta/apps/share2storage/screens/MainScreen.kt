@@ -18,7 +18,6 @@
 package com.mateusrodcosta.apps.share2storage.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -173,7 +172,7 @@ fun HowToUseContent(isLandscape: Boolean = false) {
 
 @Composable
 fun HowToUseRow(num: Int?, string: String) {
-    ListItem(modifier = Modifier.clickable { }, leadingContent = {
+    ListItem(leadingContent = {
         Text(
             if (num == null) "   " else "$num.",
             style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold),

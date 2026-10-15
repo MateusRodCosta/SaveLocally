@@ -313,23 +313,30 @@ fun SkipFilePickerSetting(
     val isDownloadsFolder = defaultSaveLocation == AppConstants.MEDIASTORE_DOWNLOADS_URI
     val isEnabled = defaultSaveLocation != null && !isDownloadsFolder
 
-    ListItem(modifier = if (isEnabled) Modifier.toggleable(
-        value = checked,
-        onValueChange = { updateSkipFilePicker(it) },
-        role = Role.Switch
-    ) else Modifier.alpha(Utils.CONTENT_ALPHA_DISABLED), headlineContent = {
-        Text(stringResource(R.string.settings_skip_file_picker))
-    }, supportingContent = {
-        Text(stringResource(R.string.settings_skip_file_picker_info))
-    }, leadingContent = {
-        Icon(Icons.Default.FastForward, null)
-    }, trailingContent = {
-        Switch(
-            enabled = isEnabled,
-            checked = checked,
-            onCheckedChange = null,
-        )
-    }, colors = listItemColors)
+    ListItem(
+        modifier = if (isEnabled) Modifier.toggleable(
+            value = checked,
+            onValueChange = { updateSkipFilePicker(it) },
+            role = Role.Switch
+        ) else Modifier,
+        headlineContent = {
+            Text(stringResource(R.string.settings_skip_file_picker))
+        },
+        supportingContent = {
+            Text(stringResource(R.string.settings_skip_file_picker_info))
+        },
+        leadingContent = {
+            Icon(Icons.Default.FastForward, null)
+        },
+        trailingContent = {
+            Switch(
+                enabled = isEnabled,
+                checked = checked,
+                onCheckedChange = null,
+            )
+        },
+        colors = listItemColors
+    )
 }
 
 @Composable

@@ -11,7 +11,7 @@ android {
     namespace = "com.mateusrodcosta.apps.share2storage.data"
     compileSdk {
         version = release(37) {
-            minorApiLevel = 1
+            minorApiLevel = 2
         }
     }
 
@@ -50,6 +50,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
 
-    api(project(":core"))
+    implementation(project(":core"))
     api(project(":domain"))
 }
