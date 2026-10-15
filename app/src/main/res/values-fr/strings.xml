@@ -3,7 +3,6 @@
     <string name="app_name">Sauvegarder sur l\'appareil</string>
     <string name="about_github">Code source disponible sur Github à l\'adresse %s, licence AGPLv3+</string>
     <string name="settings_default_save_location_select_folder">Choisissez un répertoire…</string>
-    <string name="settings_show_file_preview_info">Montre un aperçu du fichier pour les types de fichiers compatibles. Pour l\'instant seulement certaines types d\'images sont gérés.</string>
     <string name="saving_file">Enregistrement du fichier…</string>
     <string name="settings_skip_file_picker">Sauter le navigateur de fichier</string>
     <string name="how_to_use">Mode d\'emploi</string>

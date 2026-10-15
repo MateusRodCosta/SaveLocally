@@ -18,6 +18,5 @@
     <string name="settings_category_file_details">檔案詳細資訊</string>
     <string name="settings_skip_file_details_page">略過檔案詳細資訊頁面</string>
     <string name="settings_show_file_preview">顯示檔案預覽</string>
-    <string name="settings_show_file_preview_info">顯示相容的檔案預覽。目前僅支援部分圖片檔案格式。</string>
     <string name="settings_category_intents">意圖</string>
 </resources>

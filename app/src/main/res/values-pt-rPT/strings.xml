@@ -21,7 +21,6 @@
     <string name="settings_skip_file_details_page">Pular página de Pormenores do ficheiro</string>
     <string name="settings_skip_file_details_page_info">Abrir seletor de ficheiros assim que receber ficheiro</string>
     <string name="settings_show_file_preview">Mostrar prévia do ficheiro</string>
-    <string name="settings_show_file_preview_info">Mostrar pré-visualização para tipos de ficheiro compatíveis. Atualmente apenas alguns tipos de ficheiros de imagem são suportados.</string>
     <string name="settings_category_intents">Intenções</string>
     <string name="settings_intercept_action_view_intents">Intercepta intents do tipo ACTION_VIEW</string>
     <string name="settings_intercept_action_view_intents_info">Permite registar como uma opção quando apps tentam abrir um visualizador de ficheiros automaticamente</string>

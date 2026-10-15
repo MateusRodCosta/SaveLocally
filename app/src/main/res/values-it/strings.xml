@@ -16,7 +16,6 @@
     <string name="settings_skip_file_picker_info">Salta il selettore file e salva immediatamente i file (disponibile solo quando è impostata una cartella predefinita)</string>
     <string name="settings_category_file_details">Dettagli del file</string>
     <string name="settings_show_file_preview">Mostra anteprima file</string>
-    <string name="settings_show_file_preview_info">Mostra anteprime di file per tipi di file compatibili. Attualmente sono supportati solo alcuni file immagine.</string>
     <string name="settings_category_intents">Intenti</string>
     <string name="no_file_found">Nessun file trovato</string>
     <string name="saving_file">Salvataggio del file…</string>

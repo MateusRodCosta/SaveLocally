@@ -21,7 +21,6 @@
     <string name="settings_skip_file_details_page">Ansicht mit Dateiinformationen überspringen</string>
     <string name="settings_skip_file_details_page_info">Dateiauswahl öffnen, sobald eine Datei geteilt wird</string>
     <string name="settings_show_file_preview">Dateivorschau zeigen</string>
-    <string name="settings_show_file_preview_info">Zeige eine Vorschau für kompatible Dateitypen. Aktuell werden nur einige Bilddateitypen unterstützt.</string>
     <string name="settings_category_intents">Intents</string>
     <string name="settings_intercept_action_view_intents">ACTION_VIEW Intents abfangen</string>
     <string name="settings_intercept_action_view_intents_info">Erlaube die Registrierung als Option, wenn Apps versuchen automatisch die Dateiauswahl zu öffnen</string>

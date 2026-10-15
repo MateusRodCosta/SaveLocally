@@ -21,7 +21,6 @@
     <string name="settings_skip_file_details_page">Přeskočit podrobnosti o souboru</string>
     <string name="settings_skip_file_details_page_info">Otevřít výběr souborů ihned po přijetí souboru</string>
     <string name="settings_show_file_preview">Zobrazit náhled</string>
-    <string name="settings_show_file_preview_info">Zobrazovat náhledy u kompatibilních typů souborů. V současné době jsou podporovány pouze některé obrázky.</string>
     <string name="settings_category_intents">Akce</string>
     <string name="settings_intercept_action_view_intents">Zachytávat akce ACTION_VIEW</string>
     <string name="settings_intercept_action_view_intents_info">Nabízet aplikaci jako možnost při automatickém otevírání souborů jinými aplikacemi</string>

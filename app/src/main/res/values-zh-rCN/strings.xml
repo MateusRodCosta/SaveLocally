@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="how_to_use_step_1">通过共享图标共享文件</string>
-    <string name="settings_show_file_preview_info">显示兼容文件类型的文件预览。目前仅支持部分图像文件。</string>
     <string name="how_to_use_step_2">在分享选项中选择“%s”</string>
     <string name="how_to_use_step_3">文件详情页面打开后，请点击「保存」按钮</string>
     <string name="app_name">本地保存</string>

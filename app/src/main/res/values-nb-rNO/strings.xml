@@ -22,7 +22,6 @@
     <string name="settings_skip_file_details_page">Hopp over fildetaljersiden</string>
     <string name="settings_skip_file_details_page_info">Åpne filvelger så snart fil er mottatt</string>
     <string name="settings_show_file_preview">Vis forhåndsvisning av fil</string>
-    <string name="settings_show_file_preview_info">Vis forhåndsvisning av kompatible filtyper. Per nå er kun noen bildeformater støttet.</string>
     <string name="settings_category_intents">Intents</string>
     <string name="settings_intercept_action_view_intents">Overstyr ACTION_VIEW intents</string>
     <string name="settings_intercept_action_view_intents_info">Tillat å registrere som et valg når apper prøver å automatisk åpne en filvisningsapp</string>

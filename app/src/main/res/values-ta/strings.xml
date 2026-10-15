@@ -20,7 +20,6 @@
     <string name="settings_skip_file_details_page">கோப்பு விவரங்கள் பக்கத்தைத் தவிர்க்கவும்</string>
     <string name="settings_skip_file_details_page_info">கோப்பு கிடைத்தவுடன் கோப்பு பிக்கர் திறக்கவும்</string>
     <string name="settings_show_file_preview">கோப்பு முன்னோட்டத்தைக் காட்டு</string>
-    <string name="settings_show_file_preview_info">இணக்கமான கோப்பு வகைகளுக்கான கோப்பு முன்னோட்டங்களைக் காட்டு. தற்போது சில படக் கோப்புகள் மட்டுமே ஆதரிக்கப்படுகின்றன.</string>
     <string name="settings_category_intents">நோக்கங்கள்</string>
     <string name="settings_intercept_action_view_intents">இடைமறிப்பு அதிரடி_வியூ நோக்கங்கள்</string>
     <string name="settings_intercept_action_view_intents_info">பயன்பாடுகள் தானாகவே கோப்பு பார்வையாளரைத் திறக்க முயற்சிக்கும்போது பதிவு செய்வதை ஒரு விருப்பமாக அனுமதிக்கவும்</string>

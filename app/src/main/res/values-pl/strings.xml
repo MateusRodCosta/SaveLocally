@@ -21,7 +21,6 @@
     <string name="settings_skip_file_picker">Pomiń selektor plików</string>
     <string name="settings_category_file_details">Szczegóły pliku</string>
     <string name="settings_show_file_preview">Pokaż podgląd pliku</string>
-    <string name="settings_show_file_preview_info">Pokaż podglądy plików dla zgodnych typów plików. Obecnie obsługiwane są tylko niektóre pliki graficzne.</string>
     <string name="settings_category_intents">Intencje</string>
     <string name="no_file_found">Nie znaleziono pliku</string>
     <string name="saving_file">Zapisywanie pliku…</string>

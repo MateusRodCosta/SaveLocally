@@ -33,7 +33,6 @@
     <string name="settings_skip_file_picker_info">Пропустити «Вибір файлів» і негайно зберегти файли (доступно лише у випадку, коли встановлено типову теку)</string>
     <string name="settings_skip_file_details_page_info">Відкрити «Вибір файлів» одразу після отримання файлу</string>
     <string name="settings_show_file_preview">Показувати передперегляд файлу</string>
-    <string name="settings_show_file_preview_info">Показувати передперегляд файлів для сумісних типів файлів. Наразі підтримуються лише деякі файли зображень.</string>
     <string name="settings_category_intents">Наміри</string>
     <string name="about_category_licenses">Ліцензії</string>
     <string name="settings_category_about">Про застосунок</string>

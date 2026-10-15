@@ -21,7 +21,6 @@
     <string name="settings_skip_file_details_page">Saltar la página de detalles del archivo</string>
     <string name="settings_skip_file_details_page_info">Abrir el selector de archivos tan pronto como se recibe el archivo</string>
     <string name="settings_show_file_preview">Mostrar vista previa del archivo</string>
-    <string name="settings_show_file_preview_info">Mostrar vistas previas para tipos de archivos compatibles. Solo algunos tipos de imágenes están disponibles.</string>
     <string name="settings_category_intents">Intents</string>
     <string name="settings_intercept_action_view_intents">Interceptar intents de ACTION_VIEW</string>
     <string name="settings_intercept_action_view_intents_info">Permitir que esta app sea una opción cuando una app necesita usar otra app para abrir un archivo</string>

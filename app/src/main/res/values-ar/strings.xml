@@ -21,7 +21,6 @@
     <string name="settings_skip_file_details_page">تخطي صفحة تفاصيل الملف</string>
     <string name="settings_skip_file_details_page_info">افتح منتقي الملفات بمجرد استلام الملف</string>
     <string name="settings_show_file_preview">اعرض معاينة الملف</string>
-    <string name="settings_show_file_preview_info">اعرض معاينات للملفات من الأنواع المتوافقة. حاليًا، يتم دعم بعض ملفات الصور فقط.</string>
     <string name="settings_category_intents">نوايا</string>
     <string name="settings_intercept_action_view_intents">اعتراض نوايا ACTION_VIEW</string>
     <string name="settings_intercept_action_view_intents_info">السماح بالتسجيل كخيار عندما تحاول التطبيقات فتح عارض ملفات تلقائيًا</string>
