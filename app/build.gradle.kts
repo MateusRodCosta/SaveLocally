@@ -126,7 +126,6 @@ dependencies {
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
-    implementation(libs.androidx.documentfile)
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.window.core)
 
