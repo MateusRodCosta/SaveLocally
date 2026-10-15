@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.features.settings
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -58,31 +58,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.core.AppConstants
-import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
 import com.mateusrodcosta.apps.share2storage.core.ui.components.SectionHeader
-import com.mateusrodcosta.apps.share2storage.screens.components.dialogs.DefaultFolderDialog
-import com.mateusrodcosta.apps.share2storage.utils.common.Utils
+import com.mateusrodcosta.apps.share2storage.core.ui.utils.Utils
+import com.mateusrodcosta.apps.share2storage.domain.repository.PreferencesRepository
+import com.mateusrodcosta.apps.share2storage.features.settings.components.dialogs.DefaultFolderDialog
+import com.mateusrodcosta.apps.share2storage.features.settings.components.dialogs.DefaultFolderDialogStrings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
+data class SettingsScreenStrings(
+    val settingsTitle: String = "Settings",
+    val backArrow: String = "Back",
+    val categoryFilePicker: String = "File Picker",
+    val defaultSaveLocation: String = "Default save location",
+    val defaultSaveLocationLastUsed: String = "Last used location",
+    val defaultSaveLocationDownloads: String = "Downloads folder",
+    val skipFilePicker: String = "Skip file picker",
+    val skipFilePickerInfo: String = "Automatically save files to default folder without prompting",
+    val categoryFileDetails: String = "File Details Page",
+    val skipFileDetailsPage: String = "Skip file details page",
+    val skipFileDetailsPageInfo: String = "Directly open file picker when sharing",
+    val showFilePreview: String = "Show file preview",
+    val showFilePreviewInfoAllTypes: String = "Display preview images for supported files",
+    val categoryIntents: String = "Intent Handling",
+    val interceptActionViewIntents: String = "Intercept View Intents",
+    val interceptActionViewIntentsInfo: String = "Allow opening files with Save Locally",
+    val categoryAbout: String = "About",
+    val aboutTitle: String = "About Save Locally",
+    val folderDialogStrings: DefaultFolderDialogStrings = DefaultFolderDialogStrings()
+)
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen()
-}
-
-
-@Preview(apiLevel = 36, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun SettingsScreenPreviewPtBr() {
     SettingsScreen()
 }
 
@@ -92,18 +106,12 @@ fun SettingsScreenPreviewLandscape() {
     SettingsScreen()
 }
 
-@Preview(apiLevel = 36, device = Devices.PIXEL_TABLET, showSystemUi = true, showBackground = true, locale = "pt-rBR")
-@Composable
-fun SettingsScreenPreviewLandscapePtBr() {
-    SettingsScreen()
-}
-
-
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel? = null,
     onNavigateToAbout: () -> Unit = {},
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    strings: SettingsScreenStrings = SettingsScreenStrings()
 ) {
     val selectFolderLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         if (uri != null) {
@@ -151,6 +159,7 @@ fun SettingsScreen(
             settingsViewModel?.updateShowFilePreview(value)
         },
         listItemColors = listItemColors,
+        strings = strings
     )
 }
 
@@ -172,15 +181,16 @@ private fun SettingsScreenContent(
     updateInterceptActionViewIntents: (Boolean) -> Unit = {},
     updateShowFilePreview: (Boolean) -> Unit = {},
     listItemColors: ListItemColors = ListItemDefaults.colors(),
+    strings: SettingsScreenStrings = SettingsScreenStrings()
 ) {
     Scaffold(topBar = {
         TopAppBar(
-            title = { Text(stringResource(R.string.settings_title)) },
+            title = { Text(strings.settingsTitle) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
-                        stringResource(R.string.back_arrow),
+                        strings.backArrow,
                     )
                 }
             },
@@ -202,47 +212,52 @@ private fun SettingsScreenContent(
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
             ) {
-                SectionHeader(stringResource(R.string.settings_category_file_picker))
+                SectionHeader(strings.categoryFilePicker)
                 DefaultSaveLocationSetting(
                     launchFilePicker = launchFilePicker,
                     clearDefaultSaveLocation = clearDefaultSaveLocation,
                     selectDownloadsFolder = selectDownloadsFolder,
                     spDefaultSaveLocation = spDefaultSaveLocation,
                     listItemColors = listItemColors,
+                    strings = strings
                 )
                 SkipFilePickerSetting(
                     spDefaultSaveLocation = spDefaultSaveLocation,
                     updateSkipFilePicker = updateSkipFilePicker,
                     spSkipFilePicker = spSkipFilePicker,
                     listItemColors = listItemColors,
+                    strings = strings
                 )
-                SectionHeader(stringResource(R.string.settings_category_file_details))
+                SectionHeader(strings.categoryFileDetails)
                 SkipFileDetailsSetting(
                     updateSkipFileDetails = updateSkipFileDetails,
                     spSkipFileDetails = spSkipFileDetails,
                     listItemColors = listItemColors,
+                    strings = strings
                 )
                 ShowFilePreviewSetting(
                     updateShowFilePreview = updateShowFilePreview,
                     spShowFilePreview = spShowFilePreview,
                     spSkipFileDetails = spSkipFileDetails,
                     listItemColors = listItemColors,
+                    strings = strings
                 )
-                SectionHeader(stringResource(R.string.settings_category_intents))
+                SectionHeader(strings.categoryIntents)
                 InterceptActionViewIntentsSetting(
                     updateInterceptActionViewIntents = updateInterceptActionViewIntents,
                     spInterceptActionViewIntents = spInterceptActionViewIntents,
                     listItemColors = listItemColors,
+                    strings = strings
                 )
-                SectionHeader(stringResource(R.string.settings_category_about))
+                SectionHeader(strings.categoryAbout)
                 ListItem(
                     headlineContent = {
-                        Text(stringResource(R.string.settings_about))
+                        Text(strings.aboutTitle)
                     },
                     leadingContent = {
                         Icon(
                             Icons.AutoMirrored.Filled.HelpOutline,
-                            contentDescription = stringResource(R.string.settings_about)
+                            contentDescription = strings.aboutTitle
                         )
                     },
                     colors = listItemColors,
@@ -260,6 +275,7 @@ fun DefaultSaveLocationSetting(
     selectDownloadsFolder: () -> Unit = {},
     spDefaultSaveLocation: StateFlow<String?>,
     listItemColors: ListItemColors,
+    strings: SettingsScreenStrings = SettingsScreenStrings()
 ) {
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
     val openDefaultFolderDialog = remember { mutableStateOf(false) }
@@ -272,19 +288,20 @@ fun DefaultSaveLocationSetting(
             clearDefaultSaveLocation = clearDefaultSaveLocation,
             selectDownloadsFolder = selectDownloadsFolder,
             launchFilePicker = launchFilePicker,
+            strings = strings.folderDialogStrings
         )
     }
 
     ListItem(
         modifier = Modifier.clickable { openDefaultFolderDialog.value = true },
         headlineContent = {
-            Text(stringResource(R.string.settings_default_save_location))
+            Text(strings.defaultSaveLocation)
         },
         supportingContent = {
             val text = when (defaultSaveLocation) {
-                null -> stringResource(R.string.settings_default_save_location_last_used)
-                AppConstants.MEDIASTORE_DOWNLOADS_URI -> stringResource(R.string.settings_default_save_location_downloads)
-                else -> defaultSaveLocation?.toUri()?.path ?: stringResource(R.string.settings_default_save_location_last_used)
+                null -> strings.defaultSaveLocationLastUsed
+                AppConstants.MEDIASTORE_DOWNLOADS_URI -> strings.defaultSaveLocationDownloads
+                else -> defaultSaveLocation?.toUri()?.path ?: strings.defaultSaveLocationLastUsed
             }
             Text(text)
         },
@@ -301,6 +318,7 @@ fun SkipFilePickerSetting(
     updateSkipFilePicker: (Boolean) -> Unit,
     spSkipFilePicker: StateFlow<Boolean?>,
     listItemColors: ListItemColors,
+    strings: SettingsScreenStrings = SettingsScreenStrings()
 ) {
     val skipFilePicker by spSkipFilePicker.collectAsState()
     val defaultSaveLocation by spDefaultSaveLocation.collectAsState()
@@ -320,10 +338,10 @@ fun SkipFilePickerSetting(
             role = Role.Switch
         ) else Modifier,
         headlineContent = {
-            Text(stringResource(R.string.settings_skip_file_picker))
+            Text(strings.skipFilePicker)
         },
         supportingContent = {
-            Text(stringResource(R.string.settings_skip_file_picker_info))
+            Text(strings.skipFilePickerInfo)
         },
         leadingContent = {
             Icon(Icons.Default.FastForward, null)
@@ -344,6 +362,7 @@ fun SkipFileDetailsSetting(
     updateSkipFileDetails: (Boolean) -> Unit,
     spSkipFileDetails: StateFlow<Boolean?>,
     listItemColors: ListItemColors,
+    strings: SettingsScreenStrings = SettingsScreenStrings()
 ) {
     val skipFileDetails by spSkipFileDetails.collectAsState()
 
@@ -356,10 +375,10 @@ fun SkipFileDetailsSetting(
             role = Role.Switch
         ),
         headlineContent = {
-            Text(stringResource(R.string.settings_skip_file_details_page))
+            Text(strings.skipFileDetailsPage)
         },
         supportingContent = {
-            Text(stringResource(R.string.settings_skip_file_details_page_info))
+            Text(strings.skipFileDetailsPageInfo)
         },
         leadingContent = {
             Icon(Icons.Default.Description, null)
@@ -379,6 +398,7 @@ fun ShowFilePreviewSetting(
     updateShowFilePreview: (Boolean) -> Unit,
     spShowFilePreview: StateFlow<Boolean?>,
     listItemColors: ListItemColors,
+    strings: SettingsScreenStrings = SettingsScreenStrings()
 ) {
     val skipFileDetails by spSkipFileDetails.collectAsState()
     val showFilePreview by spShowFilePreview.collectAsState()
@@ -390,9 +410,9 @@ fun ShowFilePreviewSetting(
         onValueChange = { updateShowFilePreview(it) },
         role = Role.Switch
     ), headlineContent = {
-        Text(stringResource(R.string.settings_show_file_preview))
+        Text(strings.showFilePreview)
     }, supportingContent = {
-        Text(stringResource(R.string.settings_show_file_preview_info_all_types))
+        Text(strings.showFilePreviewInfoAllTypes)
     }, leadingContent = {
         Icon(Icons.Default.Image, null)
     }, trailingContent = {
@@ -409,6 +429,7 @@ fun InterceptActionViewIntentsSetting(
     updateInterceptActionViewIntents: (Boolean) -> Unit,
     spInterceptActionViewIntents: StateFlow<Boolean?>,
     listItemColors: ListItemColors,
+    strings: SettingsScreenStrings = SettingsScreenStrings()
 ) {
     val interceptActionViewIntents by spInterceptActionViewIntents.collectAsState()
 
@@ -421,10 +442,10 @@ fun InterceptActionViewIntentsSetting(
             role = Role.Switch
         ),
         headlineContent = {
-            Text(stringResource(R.string.settings_intercept_action_view_intents))
+            Text(strings.interceptActionViewIntents)
         },
         supportingContent = {
-            Text(stringResource(R.string.settings_intercept_action_view_intents_info))
+            Text(strings.interceptActionViewIntentsInfo)
         },
         leadingContent = {
             Icon(Icons.Default.Link, null)

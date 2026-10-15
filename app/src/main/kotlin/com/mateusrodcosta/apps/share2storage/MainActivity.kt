@@ -55,8 +55,10 @@ import com.mateusrodcosta.apps.share2storage.features.about.AboutScreenStrings
 import com.mateusrodcosta.apps.share2storage.features.main.MainScreen
 import com.mateusrodcosta.apps.share2storage.features.main.MainScreenStrings
 import com.mateusrodcosta.apps.share2storage.navigation.Routes
-import com.mateusrodcosta.apps.share2storage.screens.SettingsScreen
-import com.mateusrodcosta.apps.share2storage.screens.SettingsViewModel
+import com.mateusrodcosta.apps.share2storage.features.settings.SettingsScreen
+import com.mateusrodcosta.apps.share2storage.features.settings.SettingsScreenStrings
+import com.mateusrodcosta.apps.share2storage.features.settings.SettingsViewModel
+import com.mateusrodcosta.apps.share2storage.features.settings.components.dialogs.DefaultFolderDialogStrings
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -176,7 +178,32 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onBackClick = {
                                         if (isFromAppInfo) finish() else navController.popBackStack()
-                                    }
+                                    },
+                                    strings = SettingsScreenStrings(
+                                        settingsTitle = stringResource(R.string.settings_title),
+                                        backArrow = stringResource(R.string.back_arrow),
+                                        categoryFilePicker = stringResource(R.string.settings_category_file_picker),
+                                        defaultSaveLocation = stringResource(R.string.settings_default_save_location),
+                                        defaultSaveLocationLastUsed = stringResource(R.string.settings_default_save_location_last_used),
+                                        defaultSaveLocationDownloads = stringResource(R.string.settings_default_save_location_downloads),
+                                        skipFilePicker = stringResource(R.string.settings_skip_file_picker),
+                                        skipFilePickerInfo = stringResource(R.string.settings_skip_file_picker_info),
+                                        categoryFileDetails = stringResource(R.string.settings_category_file_details),
+                                        skipFileDetailsPage = stringResource(R.string.settings_skip_file_details_page),
+                                        skipFileDetailsPageInfo = stringResource(R.string.settings_skip_file_details_page_info),
+                                        showFilePreview = stringResource(R.string.settings_show_file_preview),
+                                        showFilePreviewInfoAllTypes = stringResource(R.string.settings_show_file_preview_info_all_types),
+                                        categoryIntents = stringResource(R.string.settings_category_intents),
+                                        interceptActionViewIntents = stringResource(R.string.settings_intercept_action_view_intents),
+                                        interceptActionViewIntentsInfo = stringResource(R.string.settings_intercept_action_view_intents_info),
+                                        categoryAbout = stringResource(R.string.settings_category_about),
+                                        aboutTitle = stringResource(R.string.settings_about),
+                                        folderDialogStrings = DefaultFolderDialogStrings(
+                                            lastUsed = stringResource(R.string.settings_default_save_location_last_used),
+                                            downloads = stringResource(R.string.settings_default_save_location_downloads),
+                                            selectFolder = stringResource(R.string.settings_default_save_location_select_folder)
+                                        )
+                                    )
                                 )
                             }
 

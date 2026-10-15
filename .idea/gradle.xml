@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/about" />
             <option value="$PROJECT_DIR$/features/main" />
+            <option value="$PROJECT_DIR$/features/settings" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens
+package com.mateusrodcosta.apps.share2storage.features.settings
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

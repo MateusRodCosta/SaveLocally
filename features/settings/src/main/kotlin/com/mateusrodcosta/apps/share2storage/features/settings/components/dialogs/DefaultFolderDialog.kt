@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.screens.components.dialogs
+package com.mateusrodcosta.apps.share2storage.features.settings.components.dialogs
 
 import android.os.Build
 import androidx.compose.foundation.clickable
@@ -25,22 +25,19 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
-import com.mateusrodcosta.apps.share2storage.R
 import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
 
+data class DefaultFolderDialogStrings(
+    val lastUsed: String = "Last used location",
+    val downloads: String = "Downloads folder",
+    val selectFolder: String = "Select another folder..."
+)
 
 @Preview(apiLevel = 36)
 @Composable
 fun DefaultFolderDialogContentPreview() {
-    DefaultFolderDialogContent()
-}
-
-@Preview(apiLevel = 36, locale = "pt-rBR")
-@Composable
-fun DefaultFolderDialogContentPreviewPtBr() {
     DefaultFolderDialogContent()
 }
 
@@ -49,14 +46,16 @@ fun DefaultFolderDialog(
     onDismissRequest: () -> Unit,
     clearDefaultSaveLocation: () -> Unit = {},
     selectDownloadsFolder: () -> Unit = {},
-    launchFilePicker: () -> Unit = {}
+    launchFilePicker: () -> Unit = {},
+    strings: DefaultFolderDialogStrings = DefaultFolderDialogStrings()
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         DefaultFolderDialogContent(
             onDismissRequest = onDismissRequest,
             clearDefaultSaveLocation = clearDefaultSaveLocation,
             selectDownloadsFolder = selectDownloadsFolder,
-            launchFilePicker = launchFilePicker
+            launchFilePicker = launchFilePicker,
+            strings = strings
         )
     }
 }
@@ -67,27 +66,34 @@ fun DefaultFolderDialogContent(
     clearDefaultSaveLocation: () -> Unit = {},
     selectDownloadsFolder: () -> Unit = {},
     launchFilePicker: () -> Unit = {},
+    strings: DefaultFolderDialogStrings = DefaultFolderDialogStrings()
 ) {
     SaveLocallyTheme {
         Card {
             Column {
-                ListItem(modifier = Modifier.clickable(onClick = {
-                    clearDefaultSaveLocation()
-                    onDismissRequest()
-                }),
-                    headlineContent = { Text(stringResource(R.string.settings_default_save_location_last_used)) })
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    ListItem(modifier = Modifier.clickable(onClick = {
-                        selectDownloadsFolder()
+                ListItem(
+                    modifier = Modifier.clickable(onClick = {
+                        clearDefaultSaveLocation()
                         onDismissRequest()
                     }),
-                        headlineContent = { Text(stringResource(R.string.settings_default_save_location_downloads)) })
+                    headlineContent = { Text(strings.lastUsed) }
+                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    ListItem(
+                        modifier = Modifier.clickable(onClick = {
+                            selectDownloadsFolder()
+                            onDismissRequest()
+                        }),
+                        headlineContent = { Text(strings.downloads) }
+                    )
                 }
-                ListItem(modifier = Modifier.clickable(onClick = {
-                    launchFilePicker()
-                    onDismissRequest()
-                }),
-                    headlineContent = { Text(stringResource(R.string.settings_default_save_location_select_folder)) })
+                ListItem(
+                    modifier = Modifier.clickable(onClick = {
+                        launchFilePicker()
+                        onDismissRequest()
+                    }),
+                    headlineContent = { Text(strings.selectFolder) }
+                )
             }
         }
     }

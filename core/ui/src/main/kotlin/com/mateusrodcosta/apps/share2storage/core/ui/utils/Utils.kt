@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mateusrodcosta.apps.share2storage.utils.common
+package com.mateusrodcosta.apps.share2storage.core.ui.utils
 
 object Utils {
     const val CONTENT_ALPHA_DISABLED = 0.38f
