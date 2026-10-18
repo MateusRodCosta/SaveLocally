@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="21" />
+    <bytecodeTargetLevel target="21">
+      <module name="Save_Locally.core.ui" target="25" />
+      <module name="Save_Locally.data" target="25" />
+      <module name="Save_Locally.features.about" target="25" />
+      <module name="Save_Locally.features.details" target="25" />
+      <module name="Save_Locally.features.main" target="25" />
+      <module name="Save_Locally.features.settings" target="25" />
+    </bytecodeTargetLevel>
   </component>
 </project>

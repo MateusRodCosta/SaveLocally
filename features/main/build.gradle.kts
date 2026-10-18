@@ -51,5 +51,5 @@ dependencies {
     implementation(libs.compose.material3.adaptive)
     implementation(libs.compose.material.icons.core)
 
-    implementation(project(":core:ui"))
+    implementation(projects.core.ui)
 }

@@ -59,7 +59,7 @@ dependencies {
     implementation(platform(libs.koin.bom))
     api(libs.koin.annotations)
 
-    implementation(project(":core:ui"))
-    api(project(":domain"))
-    implementation(project(":core"))
+    implementation(projects.core.ui)
+    api(projects.domain)
+    implementation(projects.core)
 }

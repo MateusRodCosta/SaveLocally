@@ -64,6 +64,6 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.compose.core)
 
-    implementation(project(":core:ui"))
-    api(project(":domain"))
+    implementation(projects.core.ui)
+    api(projects.domain)
 }

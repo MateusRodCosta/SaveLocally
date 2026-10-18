@@ -50,6 +50,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
 
-    implementation(project(":core"))
-    api(project(":domain"))
+    implementation(projects.core)
+    api(projects.domain)
 }

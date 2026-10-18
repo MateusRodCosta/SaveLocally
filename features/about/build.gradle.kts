@@ -54,6 +54,6 @@ dependencies {
     implementation(libs.aboutlibraries.compose.core)
     implementation(libs.aboutlibraries.compose.m3)
 
-    implementation(project(":core:ui"))
-    implementation(project(":core"))
+    implementation(projects.core.ui)
+    implementation(projects.core)
 }
