@@ -59,24 +59,18 @@ class DetailsActivity : ComponentActivity() {
     private var sourceFileUri: Uri? = null
     private var sourceFileUriList: List<Uri>? = null
 
-    private fun Intent.grantUriPermissions(sourceUris: List<Uri>?, targetUri: Uri?): Intent {
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    private fun Intent.grantUriPermissions(
+        sourceUris: List<Uri>? = null,
+        targetUri: Uri? = null
+    ): Intent {
         if (targetUri != null) {
-            addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        }
-
-        val items = mutableListOf<ClipData.Item>()
-        sourceUris?.forEach { uri ->
-            items.add(ClipData.Item(uri))
-        }
-        if (targetUri != null) {
-            items.add(ClipData.Item(targetUri))
-        }
-
-        if (items.isNotEmpty()) {
-            val clipData = ClipData("uris", arrayOf("text/uri-list"), items.first())
-            for (i in 1 until items.size) {
-                clipData.addItem(items[i])
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            this.clipData = ClipData.newUri(contentResolver, "targetUri", targetUri)
+        } else if (!sourceUris.isNullOrEmpty()) {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val clipData = ClipData("sourceUris", arrayOf("text/uri-list"), ClipData.Item(sourceUris.first()))
+            for (i in 1 until sourceUris.size) {
+                clipData.addItem(ClipData.Item(sourceUris[i]))
             }
             this.clipData = clipData
         }
@@ -91,7 +85,7 @@ class DetailsActivity : ComponentActivity() {
     ) {
         val intent = Intent(this, SaveLocallyService::class.java).apply {
             this.action = action
-            grantUriPermissions(sourceUris, targetUri)
+            grantUriPermissions(sourceUris = sourceUris, targetUri = targetUri)
             setup()
         }
         ContextCompat.startForegroundService(this, intent)
