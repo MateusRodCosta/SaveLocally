@@ -51,4 +51,9 @@
     <string name="save_as_zip">Lagre som ZIP-arkiv</string>
     <string name="save_as_zip_default_filename">Arkiv</string>
     <string name="select_all">Velg alle</string>
+    <string name="settings_show_file_preview_info_all_types">Vis forhåndsvisning av kompatible filtyper.</string>
+    <string name="message_save_cancelled">Lagring avbrutt.</string>
+    <string name="cancel_button">Avbryt</string>
+    <string name="open_file_button">Åpne fil</string>
+    <string name="open_location_button">Åpne lokasjon</string>
 </resources>
