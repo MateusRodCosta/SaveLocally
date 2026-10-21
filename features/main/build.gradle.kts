@@ -52,4 +52,5 @@ dependencies {
     implementation(libs.compose.material.icons.core)
 
     implementation(projects.core.ui)
+    implementation(projects.core.resources)
 }
