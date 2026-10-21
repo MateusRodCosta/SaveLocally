@@ -156,6 +156,7 @@ dependencies {
 
     implementation(projects.core)
     implementation(projects.core.ui)
+    implementation(projects.core.resources)
     implementation(projects.domain)
     implementation(projects.data)
     implementation(projects.features.main)

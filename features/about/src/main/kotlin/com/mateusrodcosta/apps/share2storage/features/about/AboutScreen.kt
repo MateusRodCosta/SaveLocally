@@ -17,7 +17,6 @@
 
 package com.mateusrodcosta.apps.share2storage.features.about
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,6 +50,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -62,17 +62,7 @@ import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import my.nanihadesuka.compose.LazyColumnScrollbar
 import my.nanihadesuka.compose.ScrollbarSettings
-
-data class AboutScreenStrings(
-    val appName: String = "Save Locally",
-    val versionName: String = "2.1.2a",
-    val developerCredits: String = "Developed by Mateus Rodrigues Costa",
-    val iconCredits: String = "Icons designed by SWY",
-    val githubRepoText: String = "GitHub Repository: https://github.com/MateusRodCosta/Share2Storage",
-    val aboutTitle: String = "About",
-    val backArrowContentDescription: String = "Back",
-    val licensesCategory: String = "Third-Party Libraries & Licenses"
-)
+import com.mateusrodcosta.apps.share2storage.core.resources.R as RResources
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
@@ -86,14 +76,18 @@ fun AboutScreenPreviewLandscape() {
     AboutScreen()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreenHeader(
-    strings: AboutScreenStrings = AboutScreenStrings(),
-    appIcon: Painter? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    versionName: String = "",
+    appIcon: Painter? = null
 ) {
     val uriHandler = LocalUriHandler.current
+
+    val appName = stringResource(RResources.string.app_name)
+    val developerCredits = stringResource(RResources.string.about_developer, AppConstants.APP_DEVELOPER)
+    val iconCredits = stringResource(RResources.string.about_icon_credits, AppConstants.APP_ICONS_DESIGNER)
+    val githubRepoText = stringResource(RResources.string.about_github, AppConstants.GITHUB_REPO)
 
     Column(
         modifier = modifier
@@ -112,7 +106,7 @@ fun AboutScreenHeader(
                 if (appIcon != null) {
                     Icon(
                         painter = appIcon,
-                        contentDescription = strings.appName,
+                        contentDescription = appName,
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.padding(8.dp)
                     )
@@ -123,22 +117,24 @@ fun AboutScreenHeader(
 
             Column {
                 Text(
-                    text = strings.appName,
+                    text = appName,
                     style = MaterialTheme.typography.headlineSmall
                 )
-                Text(
-                    text = "v${strings.versionName}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                if (versionName.isNotEmpty()) {
+                    Text(
+                        text = "v$versionName",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = strings.developerCredits,
+            text = developerCredits,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
@@ -152,7 +148,7 @@ fun AboutScreenHeader(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = strings.iconCredits,
+            text = iconCredits,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
@@ -165,16 +161,15 @@ fun AboutScreenHeader(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        val sourceCodeRepo = AppConstants.GITHUB_REPO
         Text(
-            text = strings.githubRepoText,
+            text = githubRepoText,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.small)
-                .clickable { uriHandler.openUri(sourceCodeRepo) }
+                .clickable { uriHandler.openUri(AppConstants.GITHUB_REPO) }
                 .padding(8.dp)
         )
     }
@@ -184,23 +179,27 @@ fun AboutScreenHeader(
 @Composable
 fun AboutScreen(
     onBackClick: () -> Unit = {},
-    strings: AboutScreenStrings = AboutScreenStrings(),
+    versionName: String = "",
     appIcon: Painter? = null
 ) {
     val libraries by produceLibraries()
     val listState = rememberLazyListState()
 
+    val aboutTitle = stringResource(RResources.string.about_title)
+    val backArrowContentDescription = stringResource(RResources.string.back_arrow)
+    val licensesCategory = stringResource(RResources.string.about_category_licenses)
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(strings.aboutTitle)
+                    Text(aboutTitle)
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = strings.backArrowContentDescription
+                            contentDescription = backArrowContentDescription
                         )
                     }
                 },
@@ -236,12 +235,12 @@ fun AboutScreen(
                         header = {
                             item {
                                 AboutScreenHeader(
-                                    strings = strings,
+                                    versionName = versionName,
                                     appIcon = appIcon
                                 )
                             }
                             item {
-                                SectionHeader(strings.licensesCategory)
+                                SectionHeader(licensesCategory)
                             }
                         }
                     )

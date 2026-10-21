@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -52,16 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import com.mateusrodcosta.apps.share2storage.core.ui.utils.shouldShowLandscape
-
-data class MainScreenStrings(
-    val appName: String = "Save Locally",
-    val settingsTitle: String = "Settings",
-    val howToUseTitle: String = "How to Use",
-    val step1: String = "Open any file, image, or text in another app.",
-    val step2: String = "Tap Share and select Save Locally.",
-    val step3: String = "Choose the folder where you want to save the file.",
-    val step4: String = "Your file is saved locally to your device!"
-)
+import com.mateusrodcosta.apps.share2storage.core.resources.R as RResources
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
@@ -80,46 +72,45 @@ fun MainScreenPreviewLandscape() {
 fun MainScreen(
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
     openSettings: () -> Unit = {},
-    strings: MainScreenStrings = MainScreenStrings(),
     headerIcon: Painter? = null
 ) {
     val useLandscapeLayout = shouldShowLandscape(windowSizeClass)
+    val appName = stringResource(RResources.string.app_name)
+    val settingsTitle = stringResource(RResources.string.settings_title)
 
     Scaffold(topBar = {
         TopAppBar(
-            title = { Text(strings.appName) },
+            title = { Text(appName) },
             actions = {
                 IconButton(onClick = openSettings) {
-                    Icon(Icons.Rounded.Settings, strings.settingsTitle)
+                    Icon(Icons.Rounded.Settings, settingsTitle)
                 }
             },
         )
     }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            if (useLandscapeLayout) HowToUseLandscape(strings = strings, headerIcon = headerIcon)
-            else HowToUsePortrait(strings = strings, headerIcon = headerIcon)
+            if (useLandscapeLayout) HowToUseLandscape(headerIcon = headerIcon)
+            else HowToUsePortrait(headerIcon = headerIcon)
         }
     }
 }
 
 @Composable
 fun HowToUseLandscape(
-    strings: MainScreenStrings,
     headerIcon: Painter? = null
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(modifier = Modifier.weight(1.0f)) {
-            HowToUseHeader(strings = strings, headerIcon = headerIcon)
+            HowToUseHeader(headerIcon = headerIcon)
         }
         Box(modifier = Modifier.weight(3.0f)) {
-            HowToUseContent(strings = strings, isLandscape = true)
+            HowToUseContent(isLandscape = true)
         }
     }
 }
 
 @Composable
 fun HowToUsePortrait(
-    strings: MainScreenStrings,
     headerIcon: Painter? = null
 ) {
     Column(
@@ -128,16 +119,18 @@ fun HowToUsePortrait(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
     ) {
-        HowToUseHeader(strings = strings, headerIcon = headerIcon)
-        HowToUseContent(strings = strings)
+        HowToUseHeader(headerIcon = headerIcon)
+        HowToUseContent()
     }
 }
 
 @Composable
 fun HowToUseHeader(
-    strings: MainScreenStrings,
     headerIcon: Painter? = null
 ) {
+    val appName = stringResource(RResources.string.app_name)
+    val howToUseTitle = stringResource(RResources.string.how_to_use)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -148,12 +141,12 @@ fun HowToUseHeader(
         if (headerIcon != null) {
             Image(
                 painter = headerIcon,
-                contentDescription = strings.appName,
+                contentDescription = appName,
                 modifier = Modifier.scale(1.5f),
             )
         }
         Text(
-            text = strings.howToUseTitle,
+            text = howToUseTitle,
             style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.secondary),
             textAlign = TextAlign.Center
         )
@@ -162,16 +155,21 @@ fun HowToUseHeader(
 
 @Composable
 fun HowToUseContent(
-    strings: MainScreenStrings,
     isLandscape: Boolean = false
 ) {
+    val appName = stringResource(RResources.string.app_name)
+    val step1 = stringResource(RResources.string.how_to_use_step_1)
+    val step2 = stringResource(RResources.string.how_to_use_step_2, appName)
+    val step3 = stringResource(RResources.string.how_to_use_step_3)
+    val step4 = stringResource(RResources.string.how_to_use_step_4)
+
     Column(
         modifier = if (isLandscape) Modifier.verticalScroll(rememberScrollState()) else Modifier.fillMaxSize()
     ) {
-        HowToUseRow(1, strings.step1)
-        HowToUseRow(2, strings.step2)
-        HowToUseRow(3, strings.step3)
-        HowToUseRow(4, strings.step4)
+        HowToUseRow(1, step1)
+        HowToUseRow(2, step2)
+        HowToUseRow(3, step3)
+        HowToUseRow(4, step4)
         Spacer(modifier = Modifier.height(16.dp))
     }
 }

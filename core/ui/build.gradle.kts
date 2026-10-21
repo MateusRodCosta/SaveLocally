@@ -52,4 +52,6 @@ dependencies {
     api(libs.compose.material3)
 
     api(libs.coil.core)
+
+    api(projects.core.resources)
 }

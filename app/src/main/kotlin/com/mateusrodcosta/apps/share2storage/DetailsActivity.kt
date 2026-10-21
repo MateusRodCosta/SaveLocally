@@ -41,7 +41,6 @@ import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsScreen
 import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsScreenSavingFileFeedback
-import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsScreenStrings
 import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsViewModel
 import com.mateusrodcosta.apps.share2storage.features.details.screens.MultiDetailsScreen
 import com.mateusrodcosta.apps.share2storage.features.details.utils.result.CreateDocumentWithInitialUri
@@ -50,6 +49,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.mateusrodcosta.apps.share2storage.core.resources.R as RResources
 
 class DetailsActivity : ComponentActivity() {
 
@@ -170,7 +170,7 @@ class DetailsActivity : ComponentActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val sourceUris = uriDataList.map { it.uri }
             val fileNames = uriDataList.map { it.displayName }
-            val defaultZipName = getString(R.string.save_as_zip_default_filename) + ".zip"
+            val defaultZipName = getString(RResources.string.save_as_zip_default_filename) + ".zip"
 
             startSaveService(
                 action = SaveLocallyService.ACTION_SAVE_ZIPPED_FILES,
@@ -195,7 +195,7 @@ class DetailsActivity : ComponentActivity() {
             ) {
                 Toast.makeText(
                     this,
-                    R.string.message_notification_permission_check_denied,
+                    RResources.string.message_notification_permission_check_denied,
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -220,7 +220,7 @@ class DetailsActivity : ComponentActivity() {
                 val data = uriData
                 val dataList = selectedItems ?: uriDataList
                 val initialUri = defaultLocation?.takeIf { it != AppConstants.MEDIASTORE_DOWNLOADS_URI }?.toUri()
-                val zipDefaultName = getString(R.string.save_as_zip_default_filename) + ".zip"
+                val zipDefaultName = getString(RResources.string.save_as_zip_default_filename) + ".zip"
 
                 when {
                     sharedContent != null -> createFileLauncher.launch(
@@ -306,21 +306,6 @@ class DetailsActivity : ComponentActivity() {
                 }
             }
 
-            val detailsStrings = DetailsScreenStrings(
-                fileDetails = getString(R.string.file_details),
-                saveButton = getString(R.string.save_button),
-                noFileFound = getString(R.string.no_file_found),
-                savingFile = getString(R.string.saving_file),
-                selectAll = getString(R.string.select_all),
-                deselectAll = getString(R.string.deselect_all),
-                saveFilesSeparately = getString(R.string.save_files_separately),
-                saveAsZip = getString(R.string.save_as_zip),
-                fileName = getString(R.string.file_name),
-                fileType = getString(R.string.file_type),
-                fileSize = getString(R.string.file_size),
-                appName = getString(R.string.app_name)
-            )
-
             // Wait for skipDetails to be loaded from preferences
             if (skipDetails != null) {
                 if (skipDetails == true) {
@@ -329,19 +314,17 @@ class DetailsActivity : ComponentActivity() {
                             launchFilePicker(null, false)
                         }
                     }
-                    DetailsScreenSavingFileFeedback(strings = detailsStrings)
+                    DetailsScreenSavingFileFeedback()
                 } else {
                     if (!uriDataList.isNullOrEmpty() && uriDataList!!.size > 1) {
                         MultiDetailsScreen(
                             detailsViewModel = viewModel,
-                            launchFilePicker = { selectedList, asZip -> launchFilePicker(selectedList, asZip) },
-                            strings = detailsStrings
+                            launchFilePicker = { selectedList, asZip -> launchFilePicker(selectedList, asZip) }
                         )
                     } else {
                         DetailsScreen(
                             detailsViewModel = viewModel,
-                            launchFilePicker = { launchFilePicker(null, false) },
-                            strings = detailsStrings
+                            launchFilePicker = { launchFilePicker(null, false) }
                         )
                     }
                 }

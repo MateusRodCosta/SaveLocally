@@ -40,26 +40,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import com.mateusrodcosta.apps.share2storage.core.AppConstants
 import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
 import com.mateusrodcosta.apps.share2storage.features.about.AboutScreen
-import com.mateusrodcosta.apps.share2storage.features.about.AboutScreenStrings
 import com.mateusrodcosta.apps.share2storage.features.main.MainScreen
-import com.mateusrodcosta.apps.share2storage.features.main.MainScreenStrings
-import com.mateusrodcosta.apps.share2storage.navigation.Routes
 import com.mateusrodcosta.apps.share2storage.features.settings.SettingsScreen
-import com.mateusrodcosta.apps.share2storage.features.settings.SettingsScreenStrings
 import com.mateusrodcosta.apps.share2storage.features.settings.SettingsViewModel
-import com.mateusrodcosta.apps.share2storage.features.settings.components.dialogs.DefaultFolderDialogStrings
+import com.mateusrodcosta.apps.share2storage.navigation.Routes
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.mateusrodcosta.apps.share2storage.core.resources.R as RResources
 
 class MainActivity : ComponentActivity() {
 
@@ -68,9 +63,9 @@ class MainActivity : ComponentActivity() {
     private val requestNotificationPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             val messageRes = if (isGranted) {
-                R.string.message_notification_permission_granted
+                RResources.string.message_notification_permission_granted
             } else {
-                R.string.message_notification_permission_denied
+                RResources.string.message_notification_permission_denied
             }
             Toast.makeText(this, messageRes, Toast.LENGTH_LONG).show()
         }
@@ -83,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                    Toast.makeText(this, R.string.message_notification_permission_check_denied, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, RResources.string.message_notification_permission_check_denied, Toast.LENGTH_LONG).show()
                 }
                 requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
@@ -154,18 +149,6 @@ class MainActivity : ComponentActivity() {
                                     openSettings = {
                                         navController.navigate(Routes.Settings)
                                     },
-                                    strings = MainScreenStrings(
-                                        appName = stringResource(R.string.app_name),
-                                        settingsTitle = stringResource(R.string.settings_title),
-                                        howToUseTitle = stringResource(R.string.how_to_use),
-                                        step1 = stringResource(R.string.how_to_use_step_1),
-                                        step2 = String.format(
-                                            stringResource(R.string.how_to_use_step_2),
-                                            stringResource(R.string.app_name)
-                                        ),
-                                        step3 = stringResource(R.string.how_to_use_step_3),
-                                        step4 = stringResource(R.string.how_to_use_step_4),
-                                    ),
                                     headerIcon = painterResource(R.drawable.ic_launcher_foreground)
                                 )
                             }
@@ -178,32 +161,7 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onBackClick = {
                                         if (isFromAppInfo) finish() else navController.popBackStack()
-                                    },
-                                    strings = SettingsScreenStrings(
-                                        settingsTitle = stringResource(R.string.settings_title),
-                                        backArrow = stringResource(R.string.back_arrow),
-                                        categoryFilePicker = stringResource(R.string.settings_category_file_picker),
-                                        defaultSaveLocation = stringResource(R.string.settings_default_save_location),
-                                        defaultSaveLocationLastUsed = stringResource(R.string.settings_default_save_location_last_used),
-                                        defaultSaveLocationDownloads = stringResource(R.string.settings_default_save_location_downloads),
-                                        skipFilePicker = stringResource(R.string.settings_skip_file_picker),
-                                        skipFilePickerInfo = stringResource(R.string.settings_skip_file_picker_info),
-                                        categoryFileDetails = stringResource(R.string.settings_category_file_details),
-                                        skipFileDetailsPage = stringResource(R.string.settings_skip_file_details_page),
-                                        skipFileDetailsPageInfo = stringResource(R.string.settings_skip_file_details_page_info),
-                                        showFilePreview = stringResource(R.string.settings_show_file_preview),
-                                        showFilePreviewInfoAllTypes = stringResource(R.string.settings_show_file_preview_info_all_types),
-                                        categoryIntents = stringResource(R.string.settings_category_intents),
-                                        interceptActionViewIntents = stringResource(R.string.settings_intercept_action_view_intents),
-                                        interceptActionViewIntentsInfo = stringResource(R.string.settings_intercept_action_view_intents_info),
-                                        categoryAbout = stringResource(R.string.settings_category_about),
-                                        aboutTitle = stringResource(R.string.settings_about),
-                                        folderDialogStrings = DefaultFolderDialogStrings(
-                                            lastUsed = stringResource(R.string.settings_default_save_location_last_used),
-                                            downloads = stringResource(R.string.settings_default_save_location_downloads),
-                                            selectFolder = stringResource(R.string.settings_default_save_location_select_folder)
-                                        )
-                                    )
+                                    }
                                 )
                             }
 
@@ -212,16 +170,7 @@ class MainActivity : ComponentActivity() {
                                     onBackClick = {
                                         navController.popBackStack()
                                     },
-                                    strings = AboutScreenStrings(
-                                        appName = stringResource(R.string.app_name),
-                                        versionName = BuildConfig.VERSION_NAME,
-                                        developerCredits = stringResource(R.string.about_developer, AppConstants.APP_DEVELOPER),
-                                        iconCredits = stringResource(R.string.about_icon_credits, AppConstants.APP_ICONS_DESIGNER),
-                                        githubRepoText = stringResource(R.string.about_github, AppConstants.GITHUB_REPO),
-                                        aboutTitle = stringResource(R.string.about_title),
-                                        backArrowContentDescription = stringResource(R.string.back_arrow),
-                                        licensesCategory = stringResource(R.string.about_category_licenses)
-                                    ),
+                                    versionName = BuildConfig.VERSION_NAME,
                                     appIcon = painterResource(R.drawable.ic_launcher_monochrome)
                                 )
                             }

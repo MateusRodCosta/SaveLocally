@@ -72,6 +72,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -83,6 +84,7 @@ import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
 import com.mateusrodcosta.apps.share2storage.features.details.model.SampleMultiUriDataProvider
 import com.mateusrodcosta.apps.share2storage.features.details.screens.shared.FileInfo
 import com.mateusrodcosta.apps.share2storage.features.details.screens.shared.FilePreview
+import com.mateusrodcosta.apps.share2storage.core.resources.R as RResources
 
 @Preview(apiLevel = 36, showSystemUi = true, showBackground = true)
 @Composable
@@ -103,14 +105,21 @@ fun MultiDetailsScreen(
     uriDataList: List<UriData>? = null,
     showFilePreview: Boolean = true,
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
-    launchFilePicker: (List<UriData>, Boolean) -> Unit = { _, _ -> },
-    strings: DetailsScreenStrings = DetailsScreenStrings()
+    launchFilePicker: (List<UriData>, Boolean) -> Unit = { _, _ -> }
 ) {
     val collectedUriDataList by detailsViewModel?.uriDataList?.collectAsState() ?: remember { mutableStateOf(uriDataList) }
     val collectedShowFilePreview by detailsViewModel?.showFilePreview?.collectAsState()
         ?: remember { mutableStateOf(showFilePreview) }
 
     var isMenuExpanded by remember { mutableStateOf(false) }
+
+    val fileDetailsLabel = stringResource(RResources.string.file_details)
+    val selectAllLabel = stringResource(RResources.string.select_all)
+    val deselectAllLabel = stringResource(RResources.string.deselect_all)
+    val saveFilesSeparatelyLabel = stringResource(RResources.string.save_files_separately)
+    val saveAsZipLabel = stringResource(RResources.string.save_as_zip)
+    val saveButtonLabel = stringResource(RResources.string.save_button)
+    val noFileFoundLabel = stringResource(RResources.string.no_file_found)
 
     val selectedUris = remember(collectedUriDataList) {
         mutableStateMapOf<String, Boolean>().apply {
@@ -150,15 +159,15 @@ fun MultiDetailsScreen(
                     if (totalCount > 0) {
                         Text("${selectedItems.size} / $totalCount")
                     } else {
-                        Text(strings.fileDetails)
+                        Text(fileDetailsLabel)
                     }
                 },
                 actions = {
                     if (totalCount > 0) {
                         TextButton(onClick = toggleSelectAll) {
                             Text(
-                                if (allSelected) strings.deselectAll
-                                else strings.selectAll
+                                if (allSelected) deselectAllLabel
+                                else selectAllLabel
                             )
                         }
                     }
@@ -185,7 +194,7 @@ fun MultiDetailsScreen(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             FabMenuItem(
-                                text = strings.saveFilesSeparately,
+                                text = saveFilesSeparatelyLabel,
                                 icon = Icons.Rounded.Download,
                                 onClick = {
                                     isMenuExpanded = false
@@ -193,7 +202,7 @@ fun MultiDetailsScreen(
                                 }
                             )
                             FabMenuItem(
-                                text = strings.saveAsZip,
+                                text = saveAsZipLabel,
                                 icon = Icons.Rounded.Archive,
                                 onClick = {
                                     isMenuExpanded = false
@@ -216,7 +225,7 @@ fun MultiDetailsScreen(
                         content = {
                             Icon(
                                 imageVector = if (isMenuExpanded && selectedItems.size > 1) Icons.Rounded.Close else Icons.Rounded.Download,
-                                contentDescription = strings.saveButton
+                                contentDescription = saveButtonLabel
                             )
                         },
                         containerColor = if (hasSelection) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
@@ -245,8 +254,7 @@ fun MultiDetailsScreen(
                                     onSaveIndividualFile = {
                                         launchFilePicker(listOf(data), false)
                                     },
-                                    modifier = Modifier.fillParentMaxSize(),
-                                    strings = strings
+                                    modifier = Modifier.fillParentMaxSize()
                                 )
                             }
                         }
@@ -262,8 +270,7 @@ fun MultiDetailsScreen(
                                     },
                                     onSaveIndividualFile = {
                                         launchFilePicker(listOf(data), false)
-                                    },
-                                    strings = strings
+                                    }
                                 )
                             }
                         }
@@ -281,7 +288,7 @@ fun MultiDetailsScreen(
                         )
                     }
                 } else Text(
-                    strings.noFileFound,
+                    noFileFoundLabel,
                     style = MaterialTheme.typography.headlineMedium
                 )
             }
@@ -294,9 +301,10 @@ fun SingleFileHeader(
     isChecked: Boolean,
     onToggleSelection: () -> Unit,
     modifier: Modifier = Modifier,
-    onSaveIndividualFile: () -> Unit = {},
-    strings: DetailsScreenStrings = DetailsScreenStrings()
+    onSaveIndividualFile: () -> Unit = {}
 ) {
+    val saveButtonLabel = stringResource(RResources.string.save_button)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -319,7 +327,7 @@ fun SingleFileHeader(
         IconButton(onClick = onSaveIndividualFile) {
             Icon(
                 Icons.Rounded.Download,
-                contentDescription = strings.saveButton
+                contentDescription = saveButtonLabel
             )
         }
     }
@@ -332,8 +340,7 @@ fun SingleFileDetailsPortrait(
     isChecked: Boolean,
     modifier: Modifier = Modifier,
     onToggleSelection: () -> Unit,
-    onSaveIndividualFile: () -> Unit = {},
-    strings: DetailsScreenStrings = DetailsScreenStrings()
+    onSaveIndividualFile: () -> Unit = {}
 ) {
     Card(
         modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -345,12 +352,11 @@ fun SingleFileDetailsPortrait(
             SingleFileHeader(
                 isChecked = isChecked,
                 onToggleSelection = onToggleSelection,
-                onSaveIndividualFile = onSaveIndividualFile,
-                strings = strings
+                onSaveIndividualFile = onSaveIndividualFile
             )
-            FilePreview(uriData, showFilePreview = showFilePreview, strings = strings)
+            FilePreview(uriData, showFilePreview = showFilePreview)
             Box {
-                FileInfo(uriData, scrollable = false, strings = strings)
+                FileInfo(uriData, scrollable = false)
             }
         }
     }
@@ -363,8 +369,7 @@ fun SingleFileDetailsLandscape(
     isChecked: Boolean,
     onToggleSelection: () -> Unit,
     modifier: Modifier = Modifier,
-    onSaveIndividualFile: () -> Unit = {},
-    strings: DetailsScreenStrings = DetailsScreenStrings()
+    onSaveIndividualFile: () -> Unit = {}
 ) {
     Card(
         modifier.padding(horizontal = 64.dp, vertical = 32.dp)
@@ -373,8 +378,7 @@ fun SingleFileDetailsLandscape(
             SingleFileHeader(
                 isChecked = isChecked,
                 onToggleSelection = onToggleSelection,
-                onSaveIndividualFile = onSaveIndividualFile,
-                strings = strings
+                onSaveIndividualFile = onSaveIndividualFile
             )
             Row(
                 modifier = Modifier
@@ -387,12 +391,11 @@ fun SingleFileDetailsLandscape(
                     FilePreview(
                         uriData,
                         showFilePreview = showFilePreview,
-                        modifier = Modifier.align(Alignment.Center),
-                        strings = strings
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
                 Box(modifier = Modifier.weight(3.0f)) {
-                    FileInfo(uriData, strings = strings)
+                    FileInfo(uriData)
                 }
             }
         }

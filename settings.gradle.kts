@@ -26,6 +26,7 @@ rootProject.name = "SaveLocally"
 include(":app")
 include(":core")
 include(":core:ui")
+include(":core:resources")
 include(":domain")
 include(":data")
 include(":features:main")

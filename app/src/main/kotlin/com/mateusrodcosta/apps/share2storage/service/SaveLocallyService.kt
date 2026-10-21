@@ -47,6 +47,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
+import com.mateusrodcosta.apps.share2storage.core.resources.R as RResources
 
 class SaveLocallyService: Service(), KoinComponent {
 
@@ -84,18 +85,18 @@ class SaveLocallyService: Service(), KoinComponent {
 
         val progressChannel = NotificationChannel(
             PROGRESS_CHANNEL_ID,
-            getString(R.string.notification_channel_name_in_progress),
+            getString(RResources.string.notification_channel_name_in_progress),
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
-            description = getString(R.string.notification_channel_description_in_progress)
+            description = getString(RResources.string.notification_channel_description_in_progress)
         }
 
         val resultChannel = NotificationChannel(
             RESULT_CHANNEL_ID,
-            getString(R.string.notification_channel_name_finished),
+            getString(RResources.string.notification_channel_name_finished),
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
-            description = getString(R.string.notification_channel_description_finished)
+            description = getString(RResources.string.notification_channel_description_finished)
         }
 
         notificationManager.createNotificationChannels(listOf(progressChannel, resultChannel))
@@ -133,7 +134,7 @@ class SaveLocallyService: Service(), KoinComponent {
                 val jobToCancel = activeJobsMap.remove(notificationIdToCancel)
                 jobToCancel?.cancel()
                 notificationManager?.cancel(notificationIdToCancel)
-                Toast.makeText(applicationContext, R.string.message_save_cancelled, Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, RResources.string.message_save_cancelled, Toast.LENGTH_SHORT).show()
             }
             if (activeJobsCount.get() <= 0) {
                 stopForeground(STOP_FOREGROUND_REMOVE)
@@ -146,17 +147,17 @@ class SaveLocallyService: Service(), KoinComponent {
         val activeJobs = activeJobsCount.incrementAndGet()
         val notificationId = if (activeJobs == 1) PRIMARY_FOREGROUND_ID else startId + PRIMARY_FOREGROUND_ID
 
-        val initialFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
+        val initialFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(RResources.string.app_name)
         val cancelPendingIntent = buildCancelPendingIntent(notificationId)
 
         val progressNotification = NotificationCompat.Builder(this, PROGRESS_CHANNEL_ID)
             .setContentTitle(initialFileName)
-            .setContentText(getString(R.string.saving_file))
+            .setContentText(getString(RResources.string.saving_file))
             .setSmallIcon(R.drawable.ic_notification)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .addAction(
                 R.drawable.ic_notification,
-                getString(R.string.cancel_button),
+                getString(RResources.string.cancel_button),
                 cancelPendingIntent
             )
             .setOngoing(true)
@@ -180,7 +181,7 @@ class SaveLocallyService: Service(), KoinComponent {
             try {
                 if (setOf(ACTION_SAVE_FILE, ACTION_SAVE_TEXT, ACTION_SAVE_ZIPPED_FILES).contains(intent?.action)) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(applicationContext, R.string.saving_file, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, RResources.string.saving_file, Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -227,7 +228,7 @@ class SaveLocallyService: Service(), KoinComponent {
                                             .setProgress(100, percent, false)
                                             .addAction(
                                                 R.drawable.ic_notification,
-                                                getString(R.string.cancel_button),
+                                                getString(RResources.string.cancel_button),
                                                 cancelPendingIntent
                                             )
                                             .setOngoing(true)
@@ -283,7 +284,7 @@ class SaveLocallyService: Service(), KoinComponent {
                                             .setProgress(if (totalBytes > 0L) 100 else 0, percent, totalBytes <= 0L)
                                             .addAction(
                                                 R.drawable.ic_notification,
-                                                getString(R.string.cancel_button),
+                                                getString(RResources.string.cancel_button),
                                                 cancelPendingIntent
                                             )
                                             .setOngoing(true)
@@ -314,12 +315,12 @@ class SaveLocallyService: Service(), KoinComponent {
                     )
 
                     val messageText = when {
-                        saveResult.isSuccess -> getString(R.string.message_saved_file_success)
-                        isNoSpaceError -> getString(R.string.message_saved_file_no_space)
-                        else -> getString(R.string.message_saved_file_failure)
+                        saveResult.isSuccess -> getString(RResources.string.message_saved_file_success)
+                        isNoSpaceError -> getString(RResources.string.message_saved_file_no_space)
+                        else -> getString(RResources.string.message_saved_file_failure)
                     }
 
-                    val completedFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(R.string.app_name)
+                    val completedFileName = intent?.getStringExtra(EXTRA_FILE_NAME) ?: getString(RResources.string.app_name)
                     val resultNotificationId = notificationId + 10000
 
                     val completedNotificationBuilder = NotificationCompat.Builder(this@SaveLocallyService, RESULT_CHANNEL_ID)
@@ -385,12 +386,12 @@ class SaveLocallyService: Service(), KoinComponent {
                             .setContentIntent(openFilePendingIntent)
                             .addAction(
                                 R.drawable.ic_notification,
-                                getString(R.string.open_file_button),
+                                getString(RResources.string.open_file_button),
                                 openFilePendingIntent
                             )
                             .addAction(
                                 R.drawable.ic_notification,
-                                getString(R.string.open_location_button),
+                                getString(RResources.string.open_location_button),
                                 openFolderPendingIntent
                             )
                     }

@@ -25,15 +25,11 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import com.mateusrodcosta.apps.share2storage.core.ui.theme.SaveLocallyTheme
-
-data class DefaultFolderDialogStrings(
-    val lastUsed: String = "Last used location",
-    val downloads: String = "Downloads folder",
-    val selectFolder: String = "Select another folder..."
-)
+import com.mateusrodcosta.apps.share2storage.core.resources.R as RResources
 
 @Preview(apiLevel = 36)
 @Composable
@@ -46,16 +42,14 @@ fun DefaultFolderDialog(
     onDismissRequest: () -> Unit,
     clearDefaultSaveLocation: () -> Unit = {},
     selectDownloadsFolder: () -> Unit = {},
-    launchFilePicker: () -> Unit = {},
-    strings: DefaultFolderDialogStrings = DefaultFolderDialogStrings()
+    launchFilePicker: () -> Unit = {}
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         DefaultFolderDialogContent(
             onDismissRequest = onDismissRequest,
             clearDefaultSaveLocation = clearDefaultSaveLocation,
             selectDownloadsFolder = selectDownloadsFolder,
-            launchFilePicker = launchFilePicker,
-            strings = strings
+            launchFilePicker = launchFilePicker
         )
     }
 }
@@ -65,9 +59,12 @@ fun DefaultFolderDialogContent(
     onDismissRequest: () -> Unit = {},
     clearDefaultSaveLocation: () -> Unit = {},
     selectDownloadsFolder: () -> Unit = {},
-    launchFilePicker: () -> Unit = {},
-    strings: DefaultFolderDialogStrings = DefaultFolderDialogStrings()
+    launchFilePicker: () -> Unit = {}
 ) {
+    val lastUsed = stringResource(RResources.string.settings_default_save_location_last_used)
+    val downloads = stringResource(RResources.string.settings_default_save_location_downloads)
+    val selectFolder = stringResource(RResources.string.settings_default_save_location_select_folder)
+
     SaveLocallyTheme {
         Card {
             Column {
@@ -76,7 +73,7 @@ fun DefaultFolderDialogContent(
                         clearDefaultSaveLocation()
                         onDismissRequest()
                     }),
-                    headlineContent = { Text(strings.lastUsed) }
+                    headlineContent = { Text(lastUsed) }
                 )
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     ListItem(
@@ -84,7 +81,7 @@ fun DefaultFolderDialogContent(
                             selectDownloadsFolder()
                             onDismissRequest()
                         }),
-                        headlineContent = { Text(strings.downloads) }
+                        headlineContent = { Text(downloads) }
                     )
                 }
                 ListItem(
@@ -92,7 +89,7 @@ fun DefaultFolderDialogContent(
                         launchFilePicker()
                         onDismissRequest()
                     }),
-                    headlineContent = { Text(strings.selectFolder) }
+                    headlineContent = { Text(selectFolder) }
                 )
             }
         }

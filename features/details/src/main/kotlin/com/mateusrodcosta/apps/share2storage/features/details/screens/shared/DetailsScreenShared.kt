@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImagePainter
@@ -51,7 +52,7 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.mateusrodcosta.apps.share2storage.core.ui.model.MediaThumbnail
 import com.mateusrodcosta.apps.share2storage.domain.entity.UriData
-import com.mateusrodcosta.apps.share2storage.features.details.screens.DetailsScreenStrings
+import com.mateusrodcosta.apps.share2storage.core.resources.R as RResources
 
 @Composable
 fun FileInfoLine(label: String, content: String) {
@@ -73,24 +74,27 @@ fun FileInfoLine(label: String, content: String) {
 fun FileInfo(
     uriData: UriData,
     modifier: Modifier = Modifier,
-    scrollable: Boolean = true,
-    strings: DetailsScreenStrings = DetailsScreenStrings()
+    scrollable: Boolean = true
 ) {
+    val fileNameLabel = stringResource(RResources.string.file_name)
+    val fileTypeLabel = stringResource(RResources.string.file_type)
+    val fileSizeLabel = stringResource(RResources.string.file_size)
+
     val columnModifier = if (scrollable) modifier.verticalScroll(rememberScrollState()) else modifier
     Column(
         modifier = columnModifier,
         verticalArrangement = Arrangement.Center
     ) {
         FileInfoLine(
-            label = strings.fileName,
+            label = fileNameLabel,
             content = uriData.displayName
         )
         FileInfoLine(
-            label = strings.fileType,
+            label = fileTypeLabel,
             content = uriData.mimeType
         )
         FileInfoLine(
-            label = strings.fileSize,
+            label = fileSizeLabel,
             content = Formatter.formatFileSize(LocalContext.current, uriData.size)
         )
     }
@@ -100,9 +104,9 @@ fun FileInfo(
 fun FilePreview(
     uriData: UriData,
     modifier: Modifier = Modifier,
-    showFilePreview: Boolean = true,
-    strings: DetailsScreenStrings = DetailsScreenStrings()
+    showFilePreview: Boolean = true
 ) {
+    val appName = stringResource(RResources.string.app_name)
     val mimeType = uriData.mimeType
     val primaryType = mimeType.substringBefore('/')
     val fallbackFileIcon = when (primaryType) {
@@ -120,7 +124,7 @@ fun FilePreview(
             SubcomposeAsyncImage(
                 modifier = Modifier.align(Alignment.Center),
                 model = MediaThumbnail(uriData.uri.toUri(), mimeType = uriData.mimeType),
-                contentDescription = strings.appName,
+                contentDescription = appName,
                 contentScale = ContentScale.Fit,
             ) {
                 val state by painter.state.collectAsState()
@@ -136,7 +140,7 @@ fun FilePreview(
                                 .size(128.dp)
                                 .align(Alignment.Center),
                             imageVector = fallbackFileIcon,
-                            contentDescription = strings.appName,
+                            contentDescription = appName,
                             tint = MaterialTheme.colorScheme.tertiary
                         )
                     }
@@ -152,7 +156,7 @@ fun FilePreview(
                     .size(128.dp)
                     .align(Alignment.Center),
                 imageVector = fallbackFileIcon,
-                contentDescription = strings.appName,
+                contentDescription = appName,
                 tint = MaterialTheme.colorScheme.tertiary
             )
         }
