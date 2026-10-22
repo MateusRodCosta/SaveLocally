@@ -22,6 +22,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ClipData
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
@@ -347,29 +348,60 @@ class SaveLocallyService: Service(), KoinComponent {
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
 
-                        val docId = runCatching {
-                            if (DocumentsContract.isDocumentUri(this@SaveLocallyService, targetUri)) {
-                                DocumentsContract.getDocumentId(targetUri)
-                            } else null
-                        }.getOrNull()
+                        val openFolderIntent = runCatching {
+                            val isTreeUri = DocumentsContract.isTreeUri(targetUri)
+                            val isDocUri = DocumentsContract.isDocumentUri(this@SaveLocallyService, targetUri)
 
-                        val openFolderIntent = if (docId != null && docId.contains('/')) {
-                            val parentDocId = docId.substringBeforeLast('/')
-                            val authority = targetUri.authority ?: "com.android.externalstorage.documents"
-                            val parentUri = DocumentsContract.buildDocumentUri(authority, parentDocId)
-                            Intent(Intent.ACTION_VIEW).apply {
-                                setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
-                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            if (isTreeUri) {
+                                val docId = DocumentsContract.getDocumentId(targetUri)
+                                val parentDocId = if (docId.contains('/')) {
+                                    docId.substringBeforeLast('/')
+                                } else {
+                                    runCatching { DocumentsContract.getTreeDocumentId(targetUri) }.getOrDefault(docId)
+                                }
+                                val parentUri = DocumentsContract.buildDocumentUriUsingTree(targetUri, parentDocId)
+                                Intent(Intent.ACTION_VIEW).apply {
+                                    setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
+                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    clipData = ClipData.newRawUri("targetUri", targetUri)
+                                }
+                            } else if (isDocUri) {
+                                val docId = DocumentsContract.getDocumentId(targetUri)
+                                val authority = targetUri.authority ?: "com.android.externalstorage.documents"
+
+                                if (authority == "com.android.providers.downloads.documents" ||
+                                    docId.contains("Download", ignoreCase = true) ||
+                                    docId.startsWith("raw:")
+                                ) {
+                                    Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    }
+                                } else {
+                                    val parentDocId = if (docId.contains('/')) {
+                                        docId.substringBeforeLast('/')
+                                    } else if (docId.contains(':')) {
+                                        docId.substringBefore(':') + ":"
+                                    } else null
+
+                                    if (parentDocId != null) {
+                                        val parentUri = DocumentsContract.buildDocumentUri(authority, parentDocId)
+                                        Intent(Intent.ACTION_VIEW).apply {
+                                            setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
+                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            clipData = ClipData.newRawUri("targetUri", targetUri)
+                                        }
+                                    } else {
+                                        Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        }
+                                    }
+                                }
+                            } else {
+                                Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
                             }
-                        } else if (docId != null && docId.contains(':')) {
-                            val volume = docId.substringBefore(':')
-                            val authority = targetUri.authority ?: "com.android.externalstorage.documents"
-                            val parentUri = DocumentsContract.buildDocumentUri(authority, "$volume:")
-                            Intent(Intent.ACTION_VIEW).apply {
-                                setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
-                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            }
-                        } else {
+                        }.getOrElse {
                             Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             }
