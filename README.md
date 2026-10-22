@@ -25,7 +25,3 @@ Or download the latest APK from the [Releases Section](https://github.com/Mateus
 ## License
 
 Licensed under AGPLv3 or later.
-
-## Donation
-
-Like the app? Consider donating! For more information, visit https://mateusrodcosta.dev/donate/.
