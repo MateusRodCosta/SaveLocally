@@ -1,0 +1,7 @@
+- New notification/foreground service system, including progress reporting and cancel option
+- Multi-file saving, including option to save file only specific files
+- Option to save to Downloads folder via MediaStore on Android 10+
+- Free space checks were added
+- Modularization, Android 17 support and i18n and many optimizations
+
+Some new features are experimental and may break.

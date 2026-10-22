@@ -29,12 +29,23 @@ android {
         }
     }
 
+    // Main portion of the version code, usually implies a versionName change
+    val baseVersionCode = 37
+    // Minor portion code of the version code, usually reserved for emergencies
+    // Should only use values from 0 up to 9
+    val minorVersionCode = 0
+    // XXYZ, where XX is the baseVersionCode, Y is the minorVersionCode,
+    // and Z is reserved for ABIs (which is unused, so it's always zero)
+    val versionCodeVar = baseVersionCode * 100 + minorVersionCode * 10
+
+    val versionNameVar = "2.2.0"
+
     defaultConfig {
         applicationId = "com.mateusrodcosta.apps.share2storage"
         minSdk = 28
         targetSdk = 37
-        versionCode = 36
-        versionName = "2.1.2a"
+        versionCode = versionCodeVar
+        versionName = versionNameVar
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,0 +1,7 @@
+- Novo sistema de notificação/serviço em primeiro plano, incluindo progress and opç!ao de cancelamento
+- Salvamento de múltiplos arquivos, incluindo opção para salvar apenas arquivos específicos
+- Opção para salvar para pasta de Download via MediaStore no Android 10+
+- Novas checagens de espaço livre
+- Modularização, suporte ao Android 17 e atualizações de i18n e muitas otimizações
+
+Algumas novas funcionalidades são experimentais e podem ter problemas.
