@@ -164,17 +164,17 @@ class SaveLocallyService: Service(), KoinComponent {
             .setOngoing(true)
             .build()
 
-        if (activeJobs == 1) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startForeground(
-                    PRIMARY_FOREGROUND_ID,
-                    progressNotification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-                )
-            } else {
-                startForeground(PRIMARY_FOREGROUND_ID, progressNotification)
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                PRIMARY_FOREGROUND_ID,
+                progressNotification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            )
         } else {
+            startForeground(PRIMARY_FOREGROUND_ID, progressNotification)
+        }
+
+        if (activeJobs > 1) {
             notificationManager?.notify(notificationId, progressNotification)
         }
 
