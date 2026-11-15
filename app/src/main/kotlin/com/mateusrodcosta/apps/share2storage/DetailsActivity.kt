@@ -18,7 +18,6 @@
 package com.mateusrodcosta.apps.share2storage
 
 import android.Manifest
-import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -59,33 +58,12 @@ class DetailsActivity : ComponentActivity() {
     private var sourceFileUri: Uri? = null
     private var sourceFileUriList: List<Uri>? = null
 
-    private fun Intent.grantUriPermissions(
-        sourceUris: List<Uri>? = null,
-        targetUri: Uri? = null
-    ): Intent {
-        if (targetUri != null) {
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            this.clipData = ClipData.newUri(contentResolver, "targetUri", targetUri)
-        } else if (!sourceUris.isNullOrEmpty()) {
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            val clipData = ClipData("sourceUris", arrayOf("text/uri-list"), ClipData.Item(sourceUris.first()))
-            for (i in 1 until sourceUris.size) {
-                clipData.addItem(ClipData.Item(sourceUris[i]))
-            }
-            this.clipData = clipData
-        }
-        return this
-    }
-
     private fun startSaveService(
         action: String,
-        targetUri: Uri,
-        sourceUris: List<Uri>? = sourceFileUriList ?: sourceFileUri?.let { listOf(it) },
         setup: Intent.() -> Unit = {}
     ) {
         val intent = Intent(this, SaveLocallyService::class.java).apply {
             this.action = action
-            grantUriPermissions(sourceUris = sourceUris, targetUri = targetUri)
             setup()
         }
         ContextCompat.startForegroundService(this, intent)
@@ -95,20 +73,34 @@ class DetailsActivity : ComponentActivity() {
         registerForActivityResult(CreateDocumentWithInitialUri()) { uri ->
             uri?.let { targetUri ->
                 if (sharedContent != null) {
-                    startSaveService(SaveLocallyService.ACTION_SAVE_TEXT, targetUri) {
+                    startSaveService(SaveLocallyService.ACTION_SAVE_TEXT) {
                         putExtra(SaveLocallyService.EXTRA_TEXT, sharedContent.toString())
                         putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
                     }
+                    finish()
                 } else {
-                    val data = checkNotNull(viewModel.uriData.value) { "UriData metadata must be loaded before saving" }
-                    startSaveService(SaveLocallyService.ACTION_SAVE_FILE, targetUri) {
-                        putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
-                        putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
-                        putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
-                        putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val sourceUri = sourceFileUri
+                        val data = viewModel.uriData.value
+                            ?: viewModel.uriDataList.value?.firstOrNull()
+                            ?: sourceUri?.let { viewModel.getMetadata(it.toString()) }
+                            ?: UriData(
+                                uri = sourceUri?.toString() ?: "",
+                                displayName = sourceUri?.lastPathSegment ?: "file",
+                                size = 0L,
+                                mimeType = sourceUri?.let { contentResolver.getType(it) } ?: "*/*"
+                            )
+
+                        startSaveService(SaveLocallyService.ACTION_SAVE_FILE) {
+                            putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
+                            putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUri.toString())
+                            putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
+                            putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
+                            putExtra(SaveLocallyService.EXTRA_MIME_TYPE, data.mimeType)
+                        }
+                        withContext(Dispatchers.Main) { finish() }
                     }
                 }
-                finish()
             } ?: run {
                 if (viewModel.skipFileDetails.value == true) finish()
             }
@@ -122,6 +114,17 @@ class DetailsActivity : ComponentActivity() {
                 val uriDataList = pendingSelectedUriDataList ?: viewModel.uriDataList.value
                 if (!uriDataList.isNullOrEmpty()) {
                     saveZippedFiles(targetZipUri, uriDataList)
+                } else {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val resolvedList = sourceFileUriList?.let { viewModel.getMetadataList(it.map { uri -> uri.toString() }) }
+                        if (!resolvedList.isNullOrEmpty()) {
+                            withContext(Dispatchers.Main) { saveZippedFiles(targetZipUri, resolvedList) }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                if (viewModel.skipFileDetails.value == true) finish()
+                            }
+                        }
+                    }
                 }
             } ?: run {
                 if (viewModel.skipFileDetails.value == true) finish()
@@ -134,6 +137,17 @@ class DetailsActivity : ComponentActivity() {
                 val uriDataList = pendingSelectedUriDataList ?: viewModel.uriDataList.value
                 if (!uriDataList.isNullOrEmpty()) {
                     saveMultipleFiles(folderUri.toString(), uriDataList)
+                } else {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val resolvedList = sourceFileUriList?.let { viewModel.getMetadataList(it.map { uri -> uri.toString() }) }
+                        if (!resolvedList.isNullOrEmpty()) {
+                            withContext(Dispatchers.Main) { saveMultipleFiles(folderUri.toString(), resolvedList) }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                if (viewModel.skipFileDetails.value == true) finish()
+                            }
+                        }
+                    }
                 }
             } ?: run {
                 if (viewModel.skipFileDetails.value == true) finish()
@@ -150,16 +164,12 @@ class DetailsActivity : ComponentActivity() {
                     mimeType = data.mimeType
                 ).getOrNull() ?: return@forEach
 
-                val targetUri = targetUriString.toUri()
-                startSaveService(
-                    action = SaveLocallyService.ACTION_SAVE_FILE,
-                    targetUri = targetUri,
-                    sourceUris = listOf(sourceUri)
-                ) {
+                startSaveService(SaveLocallyService.ACTION_SAVE_FILE) {
                     putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceUri.toString())
                     putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUriString)
                     putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                     putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
+                    putExtra(SaveLocallyService.EXTRA_MIME_TYPE, data.mimeType)
                 }
             }
             withContext(Dispatchers.Main) { finish() }
@@ -172,11 +182,7 @@ class DetailsActivity : ComponentActivity() {
             val fileNames = uriDataList.map { it.displayName }
             val defaultZipName = getString(RResources.string.save_as_zip_default_filename) + ".zip"
 
-            startSaveService(
-                action = SaveLocallyService.ACTION_SAVE_ZIPPED_FILES,
-                targetUri = targetZipUri,
-                sourceUris = sourceUris.map { it.toUri() }
-            ) {
+            startSaveService(SaveLocallyService.ACTION_SAVE_ZIPPED_FILES) {
                 putStringArrayListExtra(SaveLocallyService.EXTRA_SOURCE_URIS, ArrayList(sourceUris))
                 putStringArrayListExtra(SaveLocallyService.EXTRA_FILE_NAMES, ArrayList(fileNames))
                 putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetZipUri.toString())
@@ -234,10 +240,11 @@ class DetailsActivity : ComponentActivity() {
                     !dataList.isNullOrEmpty() && dataList.size > 1 -> {
                         pendingSelectedUriDataList = dataList
                         if (asZip) {
-                            if (skipPicker == true && defaultLocation != null) {
+                            val location = defaultLocation
+                            if (skipPicker == true && location != null) {
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     val targetZipUriString = viewModel.createTargetUri(
-                                        locationUriString = defaultLocation!!,
+                                        locationUriString = location,
                                         displayName = zipDefaultName,
                                         mimeType = "application/zip"
                                     ).getOrNull()
@@ -279,12 +286,12 @@ class DetailsActivity : ComponentActivity() {
                                 ).getOrNull()
 
                                 if (targetUriString != null) {
-                                    val targetUri = targetUriString.toUri()
-                                    startSaveService(SaveLocallyService.ACTION_SAVE_FILE, targetUri) {
+                                    startSaveService(SaveLocallyService.ACTION_SAVE_FILE) {
                                         putExtra(SaveLocallyService.EXTRA_SOURCE_URI, sourceFileUri.toString())
                                         putExtra(SaveLocallyService.EXTRA_TARGET_URI, targetUriString)
                                         putExtra(SaveLocallyService.EXTRA_FILE_NAME, data.displayName)
                                         putExtra(SaveLocallyService.EXTRA_FILE_SIZE, data.size)
+                                        putExtra(SaveLocallyService.EXTRA_MIME_TYPE, data.mimeType)
                                     }
                                     withContext(Dispatchers.Main) { finish() }
                                 } else {

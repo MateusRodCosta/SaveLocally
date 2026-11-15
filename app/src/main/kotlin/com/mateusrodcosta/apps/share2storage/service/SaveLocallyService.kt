@@ -25,10 +25,12 @@ import android.app.Service
 import android.content.ClipData
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.provider.DocumentsContract
 import android.text.format.Formatter
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
@@ -57,6 +59,8 @@ class SaveLocallyService: Service(), KoinComponent {
 
     companion object {
 
+        private const val TAG = "SaveLocallyService"
+
         private const val PROGRESS_CHANNEL_ID = "save_locally_in_progress_channel"
         private const val RESULT_CHANNEL_ID = "save_locally_finished_channel"
         private const val PRIMARY_FOREGROUND_ID = 1000
@@ -74,6 +78,7 @@ class SaveLocallyService: Service(), KoinComponent {
         const val EXTRA_FILE_NAME = "fileName"
         const val EXTRA_FILE_NAMES = "fileNames"
         const val EXTRA_FILE_SIZE = "fileSize"
+        const val EXTRA_MIME_TYPE = "mimeType"
         const val EXTRA_NOTIFICATION_ID = "notificationId"
     }
 
@@ -128,6 +133,8 @@ class SaveLocallyService: Service(), KoinComponent {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notificationManager = getSystemService(NotificationManager::class.java)
+
+        Log.d(TAG, "onStartCommand: action=${intent?.action}, targetUri=${intent?.getStringExtra(EXTRA_TARGET_URI)}")
 
         if (intent?.action == ACTION_CANCEL_SAVE) {
             val notificationIdToCancel = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
@@ -190,17 +197,24 @@ class SaveLocallyService: Service(), KoinComponent {
                     ACTION_SAVE_TEXT -> {
                         val text = intent.getStringExtra(EXTRA_TEXT)
                         val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
+                        Log.d(TAG, "Executing ACTION_SAVE_TEXT: targetUri=$targetUri")
                         if (text != null && targetUri != null) {
                             saveFileUseCase.saveText(text, targetUri)
-                        } else Result.failure(IllegalArgumentException("Missing params"))
+                        } else {
+                            Log.e(TAG, "ACTION_SAVE_TEXT missing text or targetUri")
+                            Result.failure(IllegalArgumentException("Missing params"))
+                        }
                     }
                     ACTION_SAVE_FILE -> {
                         val sourceUri = intent.getStringExtra(EXTRA_SOURCE_URI)
                         val targetUri = intent.getStringExtra(EXTRA_TARGET_URI)
                         val fileName = intent.getStringExtra(EXTRA_FILE_NAME)
-                        val fileSize = intent.getLongExtra(EXTRA_FILE_SIZE, -1L).takeIf { it >= 0L }
+                        val fileSize = intent.getLongExtra(EXTRA_FILE_SIZE, -1L)
+                        val mimeType = intent.getStringExtra(EXTRA_MIME_TYPE)
 
-                        if (sourceUri != null && targetUri != null && fileName != null && fileSize != null) {
+                        Log.d(TAG, "Executing ACTION_SAVE_FILE: sourceUri=$sourceUri, targetUri=$targetUri, fileName=$fileName, fileSize=$fileSize, mimeType=$mimeType")
+
+                        if (sourceUri != null && targetUri != null && fileName != null) {
                             var lastUpdateMs = 0L
                             val updateIntervalMs = 250L
 
@@ -304,8 +318,15 @@ class SaveLocallyService: Service(), KoinComponent {
                 result?.let { saveResult ->
                     val exception = saveResult.exceptionOrNull()
                     if (exception is CancellationException) {
+                        Log.i(TAG, "Save operation cancelled for action=${intent?.action}")
                         notificationManager?.cancel(notificationId)
                         return@launch
+                    }
+
+                    if (saveResult.isSuccess) {
+                        Log.i(TAG, "Save operation succeeded for action=${intent?.action}, targetUri=${intent?.getStringExtra(EXTRA_TARGET_URI)}")
+                    } else {
+                        Log.e(TAG, "Save operation failed for action=${intent?.action}, targetUri=${intent?.getStringExtra(EXTRA_TARGET_URI)}", exception)
                     }
 
                     val isNoSpaceError = exception != null && (
@@ -333,94 +354,17 @@ class SaveLocallyService: Service(), KoinComponent {
                     val targetUriString = intent?.getStringExtra(EXTRA_TARGET_URI)
                     if (saveResult.isSuccess && targetUriString != null) {
                         val targetUri = targetUriString.toUri()
-                        val mimeType = contentResolver.getType(targetUri) ?: "*/*"
-
-                        val openFileIntent = Intent(Intent.ACTION_VIEW).apply {
-                            setDataAndType(targetUri, mimeType)
-                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-
-                        val openFilePendingIntent = PendingIntent.getActivity(
-                            this@SaveLocallyService,
-                            resultNotificationId,
-                            openFileIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                        )
-
-                        val openFolderIntent = runCatching {
-                            val isTreeUri = DocumentsContract.isTreeUri(targetUri)
-                            val isDocUri = DocumentsContract.isDocumentUri(this@SaveLocallyService, targetUri)
-
-                            if (isTreeUri) {
-                                val docId = DocumentsContract.getDocumentId(targetUri)
-                                val parentDocId = if (docId.contains('/')) {
-                                    docId.substringBeforeLast('/')
-                                } else {
-                                    runCatching { DocumentsContract.getTreeDocumentId(targetUri) }.getOrDefault(docId)
-                                }
-                                val parentUri = DocumentsContract.buildDocumentUriUsingTree(targetUri, parentDocId)
-                                Intent(Intent.ACTION_VIEW).apply {
-                                    setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
-                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    clipData = ClipData.newRawUri("targetUri", targetUri)
-                                }
-                            } else if (isDocUri) {
-                                val docId = DocumentsContract.getDocumentId(targetUri)
-                                val authority = targetUri.authority ?: "com.android.externalstorage.documents"
-
-                                if (authority == "com.android.providers.downloads.documents" ||
-                                    docId.contains("Download", ignoreCase = true) ||
-                                    docId.startsWith("raw:")
-                                ) {
-                                    Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
-                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    }
-                                } else {
-                                    val parentDocId = if (docId.contains('/')) {
-                                        docId.substringBeforeLast('/')
-                                    } else if (docId.contains(':')) {
-                                        docId.substringBefore(':') + ":"
-                                    } else null
-
-                                    if (parentDocId != null) {
-                                        val parentUri = DocumentsContract.buildDocumentUri(authority, parentDocId)
-                                        Intent(Intent.ACTION_VIEW).apply {
-                                            setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
-                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            clipData = ClipData.newRawUri("targetUri", targetUri)
-                                        }
-                                    } else {
-                                        Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
-                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        }
-                                    }
-                                }
-                            } else {
-                                Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
-                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                }
-                            }
-                        }.getOrElse {
-                            Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            }
-                        }
+                        val openFolderIntent = buildOpenFolderIntent(targetUri)
 
                         val openFolderPendingIntent = PendingIntent.getActivity(
                             this@SaveLocallyService,
-                            resultNotificationId + 1,
+                            resultNotificationId,
                             openFolderIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
 
                         completedNotificationBuilder
-                            .setContentIntent(openFilePendingIntent)
-                            .addAction(
-                                R.drawable.ic_notification,
-                                getString(RResources.string.open_file_button),
-                                openFilePendingIntent
-                            )
+                            .setContentIntent(openFolderPendingIntent)
                             .addAction(
                                 R.drawable.ic_notification,
                                 getString(RResources.string.open_location_button),
@@ -446,6 +390,67 @@ class SaveLocallyService: Service(), KoinComponent {
         activeJobsMap[notificationId] = job
 
         return START_NOT_STICKY
+    }
+
+    private fun buildOpenFolderIntent(targetUri: Uri): Intent {
+        return runCatching {
+            val isTreeUri = DocumentsContract.isTreeUri(targetUri)
+            val isDocUri = DocumentsContract.isDocumentUri(this, targetUri)
+
+            if (isTreeUri) {
+                val docId = DocumentsContract.getDocumentId(targetUri)
+                val parentDocId = if (docId.contains('/')) {
+                    docId.substringBeforeLast('/')
+                } else {
+                    runCatching { DocumentsContract.getTreeDocumentId(targetUri) }.getOrDefault(docId)
+                }
+                val parentUri = DocumentsContract.buildDocumentUriUsingTree(targetUri, parentDocId)
+                Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    clipData = ClipData.newRawUri("targetUri", targetUri)
+                }
+            } else if (isDocUri) {
+                val docId = DocumentsContract.getDocumentId(targetUri)
+                val authority = targetUri.authority ?: "com.android.externalstorage.documents"
+
+                if (authority == "com.android.providers.downloads.documents" ||
+                    docId.contains("Download", ignoreCase = true) ||
+                    docId.startsWith("raw:")
+                ) {
+                    Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                } else {
+                    val parentDocId = if (docId.contains('/')) {
+                        docId.substringBeforeLast('/')
+                    } else if (docId.contains(':')) {
+                        docId.substringBefore(':') + ":"
+                    } else null
+
+                    if (parentDocId != null) {
+                        val parentUri = DocumentsContract.buildDocumentUri(authority, parentDocId)
+                        Intent(Intent.ACTION_VIEW).apply {
+                            setDataAndType(parentUri, DocumentsContract.Document.MIME_TYPE_DIR)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            clipData = ClipData.newRawUri("targetUri", targetUri)
+                        }
+                    } else {
+                        Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                    }
+                }
+            } else {
+                Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            }
+        }.getOrElse {
+            Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }
     }
 
     override fun onBind(intent: Intent): IBinder? = null

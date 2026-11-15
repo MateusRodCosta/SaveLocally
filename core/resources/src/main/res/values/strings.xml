@@ -61,7 +61,6 @@
 
     <string name="save_button">Save</string>
     <string name="cancel_button">Cancel</string>
-    <string name="open_file_button">Open file</string>
     <string name="open_location_button">Open location</string>
 
     <string name="save_files_separately">Save files separately</string>

@@ -76,6 +76,14 @@ class DetailsViewModel(
         }
     }
 
+    suspend fun getMetadata(uriString: String): UriData? {
+        return getFileMetadataUseCase(uriString).getOrNull()
+    }
+
+    suspend fun getMetadataList(uriStrings: List<String>): List<UriData> {
+        return uriStrings.mapNotNull { getFileMetadataUseCase(it).getOrNull() }
+    }
+
     suspend fun createTargetUri(
         locationUriString: String,
         displayName: String,
